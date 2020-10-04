@@ -1,7 +1,7 @@
 # todo
 Bachelorprojekt von Benjamin Wagner und Etienne Foubert.
 ## Beschreibung
-Der Hauptbildschirm der App zeigt eine Liste, in der offene Aufgaben angezeigt werden. Der Nutzer kann in einem Dialog Aufgaben anlegen, die über verschiedene Attribute verfügen wie Name, Fälligkeitszeitpunkt, Notizen und Kategorie. Es gibt drei Arten von Aufgaben (Tasks), eine einfache Aufgabe (BasicTask), eine Aufgabe mit Deadline und optionaler Erinnerung vor der Deadline (ScheduledTask) sowie eine Einkaufsliste, die mehrere ShoppingItems verfügt. Der Nutzer kann erledigte Aufgaben nach links ziehen, um sie als abgeschlossen zu kennzeichnen oder nach rechts, um sie zu löschen.
+Der Hauptbildschirm der App zeigt eine Liste, in der offene Aufgaben angezeigt werden. Der Nutzer kann in einem Dialog Aufgaben anlegen, die über verschiedene Attribute verfügen wie Name, Fälligkeitszeitpunkt, Notizen und Kategorie. Es gibt drei Arten von Aufgaben (`Tasks`), eine einfache Aufgabe (`BasicTask`), eine Aufgabe mit Deadline und optionaler Erinnerung vor der Deadline (`ScheduledTask`) sowie eine Einkaufsliste, die mehrere `ShoppingItems` verfügt. Der Nutzer kann erledigte Aufgaben nach links ziehen, um sie als abgeschlossen zu kennzeichnen oder nach rechts, um sie zu löschen.
 ## Entwurfsmuster
 Durch die Implementierung des Kommando-Entwurfsmodells sollen die Aktionen die auf dem Hauptbildschirm ausgeführt, in Objekten gespeichert werden. So können diese rückgängig gemacht und wiederhergestellt werden. Durch die Speicherung der Aktionen können diese anschließend in einer Timeline visualisiert werden.
 Das Strategy-Muster wird eingesetzt, um Redundanz im Code der verschiedenen Task-Klassen zu vermeiden.
