@@ -1,12 +1,13 @@
 package com.example.todo;
 
+
 public class BasicTask extends Task {
 
     private String notes;
 
-    public BasicTask(String title){
-        super(title);
-
+    public BasicTask(String title, TaskCategory category, String notes){
+        super(title, category);
+        this.notes = notes;
         notificationType = new NoNotification(title);
     }
 

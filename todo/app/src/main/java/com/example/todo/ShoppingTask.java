@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class ShoppingTask extends Task{
     private ArrayList<ShoppingItem> shoppingItems;
 
-    public ShoppingTask(String title) {
-        super(title);
+    public ShoppingTask(String title, TaskCategory category) {
+        super(title, category);
     }
 
 }

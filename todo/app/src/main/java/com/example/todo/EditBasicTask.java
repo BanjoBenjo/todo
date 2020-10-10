@@ -1,6 +1,7 @@
 package com.example.todo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,6 +18,7 @@ public class EditBasicTask extends Activity {
     private EditText name_view;
     private Spinner spinner;
     private Button button;
+    private EditText notes;
 
     private ArrayAdapter<TaskCategory> cat_adapter;
 
@@ -41,4 +43,20 @@ public class EditBasicTask extends Activity {
         spinner.setAdapter(cat_adapter);
 
     }
+
+    private void addTask(){
+        name_view = findViewById(R.id.edit_name);
+        spinner = findViewById(R.id.spinner);
+        notes = findViewById(R.id.editTextTextMultiLine);
+
+        if(!(name_view.equals(""))){
+            BasicTask task = new BasicTask(name_view.getText().toString(),
+                    categories.get(spinner.getSelectedItemPosition()), notes.getText().toString());
+
+            // Todo load task in database
+            Intent to_mainactivity = new Intent(EditBasicTask.this, MainActivity.class);
+            EditBasicTask.this.startActivity(to_mainactivity);
+        }
+    }
+
 }

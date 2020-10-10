@@ -46,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //addItem(view);
+                //addItem(view)
+                // Todo change the on click method
                 Intent to_edit_basic_task = new Intent(MainActivity.this, EditBasicTask.class);
                 MainActivity.this.startActivity(to_edit_basic_task);
             }
