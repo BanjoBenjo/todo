@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">todo_tutorial</string>
+    <string name="app_name">todo</string>
     <string name="title_activity_edit_task">EditTaskActivity</string>
     <!--
     This string is used for square devices and overridden by hello_world in

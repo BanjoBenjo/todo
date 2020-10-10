@@ -1,4 +1,4 @@
-package com.example.todo_tutorial;
+package com.example.todo;
 
 public class TaskCategory {
     private String name;
