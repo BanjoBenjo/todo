@@ -1,4 +1,4 @@
-package com.example.todo_tutorial;
+package com.example.todo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
