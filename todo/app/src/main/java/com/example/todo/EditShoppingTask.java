@@ -69,10 +69,13 @@ public class EditShoppingTask extends Activity {
             if(!(inputQuantity.equals(""))) {
                 newQuantity = Integer.parseInt(inputQuantity.getText().toString());
             }
-            shoppingItems.add(new ShoppingItem(newQuantity, inputName.getText().toString()));
+            ShoppingItem newItem = new ShoppingItem(newQuantity, inputName.getText().toString());
+            shoppingItems.add(newItem);
+            shoppingItemsAdapter.add(newItem.toString());
         } else {
             Toast.makeText(getApplicationContext(), "Please enter name", Toast.LENGTH_LONG).show();
         }
+        shoppingItemsAdapter.notifyDataSetChanged();
     }
 
 }

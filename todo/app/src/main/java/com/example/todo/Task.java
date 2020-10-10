@@ -1,6 +1,6 @@
 package com.example.todo;
 
-public class Task {
+public abstract class Task {
 
     private String title;
     private String category;

@@ -11,8 +11,8 @@ public class ShoppingItem {
         name = newName;
     }
 
-    public String getName() {
-        return name;
+    public String toString() {
+        return quantity + "\t" + name;
     }
 
     public int getQuantity() {

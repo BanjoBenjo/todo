@@ -8,4 +8,5 @@ public class ScheduledTask extends Task{
 
         notificationType = new PopUpNotification(title, deadline);
     }
+
 }
