@@ -27,6 +27,9 @@
         <activity android:label="@string/app_name" android:name=".EditBasicTask">
 
         </activity>
+        <activity android:label="@string/app_name" android:name=".EditShoppingTask">
+
+        </activity>
     </application>
 
 </manifest>

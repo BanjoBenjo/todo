@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> itemsAdapter;
     private ListView listView;
     private Button button;
+    private Button etienne_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,18 @@ public class MainActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
         button = findViewById(R.id.add_button);
+        //TODO remove, is for test only
+        etienne_button = findViewById(R.id.etienne_button);
+        etienne_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //addItem(view);
+                Intent to_edit_shopping_task = new Intent(MainActivity.this, EditShoppingTask.class);
+                MainActivity.this.startActivity(to_edit_shopping_task);
+            }
+        });
+
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
