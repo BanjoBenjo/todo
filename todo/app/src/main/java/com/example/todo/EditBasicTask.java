@@ -22,7 +22,6 @@ public class EditBasicTask extends Activity {
 
     private List<TaskCategory> categories = new ArrayList<TaskCategory>();
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
