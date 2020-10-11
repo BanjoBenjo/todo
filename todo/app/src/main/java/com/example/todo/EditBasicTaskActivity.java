@@ -15,12 +15,12 @@ import java.util.List;
 
 public class EditBasicTaskActivity extends Activity {
 
-    private EditText name_view;
-    private Spinner spinner;
-    private Button button;
+    private EditText nameView;
+    private Spinner notiSpinner;
+    private Button submitButton;
     private EditText notes;
 
-    private ArrayAdapter<TaskCategory> cat_adapter;
+    private ArrayAdapter<TaskCategory> catAdapter;
 
     private List<TaskCategory> categories = new ArrayList<TaskCategory>();
 
@@ -34,24 +34,24 @@ public class EditBasicTaskActivity extends Activity {
         categories.add(new TaskCategory("Arbeit", "grau"));
         categories.add(new TaskCategory("Sport", "grün"));
 
-        name_view = findViewById(R.id.edit_name);
-        spinner = findViewById(R.id.spinner);
-        button = findViewById(R.id.submit_button);
+        nameView = findViewById(R.id.editName);
+        notiSpinner = findViewById(R.id.spinner);
+        submitButton = findViewById(R.id.submitButton);
 
-        cat_adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
-        cat_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(cat_adapter);
+        catAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+        catAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        notiSpinner.setAdapter(catAdapter);
 
     }
 
     private void addTask(){
-        name_view = findViewById(R.id.edit_name);
-        spinner = findViewById(R.id.spinner);
+        nameView = findViewById(R.id.editName);
+        notiSpinner = findViewById(R.id.spinner);
         notes = findViewById(R.id.editTextTextMultiLine);
 
-        if(!(name_view.equals(""))){
-            BasicTask task = new BasicTask(name_view.getText().toString(),
-                    categories.get(spinner.getSelectedItemPosition()), notes.getText().toString());
+        if(!(nameView.equals(""))){
+            BasicTask task = new BasicTask(nameView.getText().toString(),
+                    categories.get(notiSpinner.getSelectedItemPosition()), notes.getText().toString());
 
             // Todo load task in database
             Intent to_mainactivity = new Intent(EditBasicTaskActivity.this, MainActivity.class);

@@ -7,16 +7,21 @@
     android:layout_height="match_parent">
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/spinner_category"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_name" />
+        app:layout_constraintTop_toBottomOf="@+id/editName" />
 
+    <Spinner
+        android:id="@+id/spinner_notifications"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/standard_height"
+        app:layout_constraintStart_toEndOf="@+id/spinner"/>
     <Button
-        android:id="@+id/submit_button"
+        android:id="@+id/submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -40,7 +45,7 @@
         app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
     <EditText
-        android:id="@+id/edit_name"
+        android:id="@+id/editName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
@@ -48,7 +53,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        app:layout_constraintEnd_toStartOf="@+id/submit_button"
+        app:layout_constraintEnd_toStartOf="@+id/submitButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

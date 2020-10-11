@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Task> items;
     private ArrayAdapter<Task> itemsAdapter;
     private ListView listView;
-    private Button add_button;
+    private Button addbutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
 
-        add_button = findViewById(R.id.add_button);
+        addbutton = findViewById(R.id.add_button);
 
-        registerForContextMenu(add_button);
-        add_button.setOnClickListener(new View.OnClickListener() {
+        registerForContextMenu(addbutton);
+        addbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addBasicTask();
