@@ -7,4 +7,9 @@
     -->
     <string name="hello_world">Hello Square World!</string>
     <string name="title_activity_edit_basic_task">EditBasicTaskActivity</string>
+
+    <string name="basic_task">Basic</string>
+    <string name="scheduled_task">Appointment</string>
+    <string name="shopping_list">Shopping List</string>
+    <string name="location_task">Location Task</string>
 </resources>

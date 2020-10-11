@@ -1,10 +1,13 @@
 package com.example.todo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> items;
     private ArrayAdapter<String> itemsAdapter;
     private ListView listView;
-    private Button button;
+    private Button add_button;
     private Button etienne_button;
 
     @Override
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listView = findViewById(R.id.listView);
-        button = findViewById(R.id.add_button);
+
         //TODO remove, is for test only
         etienne_button = findViewById(R.id.etienne_button);
         etienne_button.setOnClickListener(new View.OnClickListener() {
@@ -42,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        add_button = findViewById(R.id.add_button);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        registerForContextMenu(add_button);
+        add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //addItem(view)
@@ -57,6 +62,29 @@ public class MainActivity extends AppCompatActivity {
         itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
         listView.setAdapter(itemsAdapter);
         setUpListViewListener();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        getMenuInflater().inflate(R.menu.choose_task_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.basic_task_option:
+                Intent to_edit_basic_task = new Intent(MainActivity.this, EditBasicTask.class);
+                MainActivity.this.startActivity(to_edit_basic_task);
+                return true;
+            case R.id.shopping_list_option:
+                Intent to_edit_shopping_task = new Intent(MainActivity.this, EditShoppingTask.class);
+                MainActivity.this.startActivity(to_edit_shopping_task);
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     private void setUpListViewListener() {
