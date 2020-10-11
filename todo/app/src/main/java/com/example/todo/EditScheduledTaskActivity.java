@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditBasicTask extends Activity {
+public class EditScheduledTaskActivity extends Activity {
 
     private EditText name_view;
     private Spinner spinner;
@@ -54,8 +54,8 @@ public class EditBasicTask extends Activity {
                     categories.get(spinner.getSelectedItemPosition()), notes.getText().toString());
 
             // Todo load task in database
-            Intent to_mainactivity = new Intent(EditBasicTask.this, MainActivity.class);
-            EditBasicTask.this.startActivity(to_mainactivity);
+            Intent to_mainactivity = new Intent(EditScheduledTaskActivity.this, MainActivity.class);
+            EditScheduledTaskActivity.this.startActivity(to_mainactivity);
         }
     }
 

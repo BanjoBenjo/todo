@@ -18,7 +18,7 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class EditShoppingTask extends Activity {
+public class EditShoppingTaskActivity extends Activity {
     private ArrayList<ShoppingItem> shoppingItems;
     private ArrayAdapter<String> shoppingItemsAdapter;
     private ListView shoppingListView;

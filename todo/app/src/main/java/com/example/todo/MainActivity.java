@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<String> items;
-    private ArrayAdapter<String> itemsAdapter;
+    private ArrayList<Task> items;
+    private ArrayAdapter<Task> itemsAdapter;
     private ListView listView;
     private Button add_button;
 
@@ -38,10 +38,7 @@ public class MainActivity extends AppCompatActivity {
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //addItem(view)
-                // Todo change the on click method
-                Intent to_edit_basic_task = new Intent(MainActivity.this, EditBasicTask.class);
-                MainActivity.this.startActivity(to_edit_basic_task);
+                addBasicTask();
             }
         });
 
@@ -62,13 +59,16 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.basic_task_option:
-                Intent to_edit_basic_task = new Intent(MainActivity.this, EditBasicTask.class);
+                Intent to_edit_basic_task = new Intent(MainActivity.this, EditBasicTaskActivity.class);
                 MainActivity.this.startActivity(to_edit_basic_task);
                 return true;
             case R.id.shopping_list_option:
-                Intent to_edit_shopping_task = new Intent(MainActivity.this, EditShoppingTask.class);
+                Intent to_edit_shopping_task = new Intent(MainActivity.this, EditShoppingTaskActivity.class);
                 MainActivity.this.startActivity(to_edit_shopping_task);
                 return true;
+            case R.id.scheduled_task_option:
+                Intent to_edit_scheduled_task = new Intent(MainActivity.this, EditScheduledTaskActivity.class);
+                MainActivity.this.startActivity(to_edit_scheduled_task);
             default:
                 return super.onContextItemSelected(item);
         }
@@ -88,12 +88,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void addItem(View view){
-        EditText input = findViewById(R.id.editText2);
-        String itemText = input.getText().toString();
+    private void addBasicTask(){
+        EditText input = findViewById(R.id.editTaskName);
+        String task_name = input.getText().toString();
 
-        if(!(itemText.equals(""))){
-            itemsAdapter.add(itemText);
+        BasicTask new_task = new BasicTask(task_name);
+        if(!(task_name.equals(""))){
+            //todo add task to database
+            itemsAdapter.add(new_task);
             input.setText("");
         }
         else{
