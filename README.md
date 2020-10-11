@@ -11,3 +11,7 @@ Außerdem werden die verschiedenen Tasks nach dem Template-Muster von der Oberkl
 Durch die unkomplizierten Hauptfunktionen sollte die App leicht erweiterbar sein, um weitere funktionelle Entwurfsmuster einzufügen, beispielsweise über Einkaufslisten oder einen Fitnessplan.
 ## Weitere Informationen
 Die Entwicklung der App erfolgt in Android Studio in Java. Das UML-Diagramm wurde mithilfe von [Draw.io](https://draw.io) erstellt.
+
+## Colors
+Basic colors: `595959`,`7f7f7f`,`a5a5a5`,`cccccc`,`f2f2f2`
+Category colors: `7400b8`,`6930c3`,`5e60ce`,`5390d9`,`4ea8de`,`48bfe3`,`56cfe1`,`64dfdf`,`72efdd`,`80ffdb`
