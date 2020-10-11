@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Debug;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -73,12 +74,12 @@ public class EditShoppingTask extends Activity {
 
 
     private void addItemToList(View v) {
-        Log.d("DEBUG", inputName.getText().toString());
-        Log.d("DEBUG", inputQuantity.getText().toString());
-        if(!(inputName.toString().equals(""))) {
+
+        if(!(TextUtils.isEmpty(inputName.getText().toString()))) {
+
             int newQuantity = 1;
 
-            if(!(inputQuantity.toString().equals(""))) {
+            if(!(TextUtils.isEmpty(inputQuantity.getText().toString()))) {
                 newQuantity = Integer.parseInt(inputQuantity.getText().toString());
             }
             ShoppingItem newItem = new ShoppingItem(newQuantity, inputName.getText().toString());
