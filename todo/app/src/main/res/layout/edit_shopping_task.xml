@@ -65,7 +65,7 @@
         android:layout_width="409dp"
         android:layout_height="648dp"
         android:layout_marginStart="@dimen/component_padding"
-        android:layout_marginTop="@dimen/component_padding"
+        android:layout_marginTop="@dimen/top_padding"
         android:layout_marginEnd="@dimen/component_padding"
         android:layout_marginBottom="@dimen/component_padding"
         android:orientation="vertical"

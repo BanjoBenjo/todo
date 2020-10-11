@@ -8,16 +8,6 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/etienne_button"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/standard_height"
-        android:layout_marginStart="@dimen/component_padding"
-        android:layout_marginTop="10dp"
-        android:text="shopping list"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
         android:id="@+id/redo_button"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/standard_height"

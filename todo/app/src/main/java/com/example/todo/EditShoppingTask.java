@@ -3,6 +3,8 @@ package com.example.todo;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Debug;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -71,11 +73,12 @@ public class EditShoppingTask extends Activity {
 
 
     private void addItemToList(View v) {
-
-        if(!(inputName.equals(""))) {
+        Log.d("DEBUG", inputName.getText().toString());
+        Log.d("DEBUG", inputQuantity.getText().toString());
+        if(!(inputName.toString().equals(""))) {
             int newQuantity = 1;
 
-            if(!(inputQuantity.equals(""))) {
+            if(!(inputQuantity.toString().equals(""))) {
                 newQuantity = Integer.parseInt(inputQuantity.getText().toString());
             }
             ShoppingItem newItem = new ShoppingItem(newQuantity, inputName.getText().toString());
