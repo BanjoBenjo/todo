@@ -51,7 +51,9 @@ public class EditScheduledTaskActivity extends Activity {
         categoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(categoryArrayAdapter);
 
-        // notificationArrayAdapter
+        notificationArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, notifications);
+        notificationArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        notificationSpinner.setAdapter(notificationArrayAdapter);
 
     }
 
