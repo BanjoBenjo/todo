@@ -72,6 +72,8 @@ public class EditShoppingTask extends Activity {
             ShoppingItem newItem = new ShoppingItem(newQuantity, inputName.getText().toString());
             shoppingItems.add(newItem);
             shoppingItemsAdapter.add(newItem.toString());
+            inputName.setText("");
+            inputQuantity.setText("");
         } else {
             Toast.makeText(getApplicationContext(), "Please enter name", Toast.LENGTH_LONG).show();
         }
