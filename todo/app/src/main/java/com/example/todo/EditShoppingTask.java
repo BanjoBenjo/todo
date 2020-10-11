@@ -21,6 +21,10 @@ public class EditShoppingTask extends Activity {
     private ListView shoppingListView;
     private Button addShoppingItem;
 
+    private EditText inputName;
+    private EditText inputQuantity;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,7 +45,14 @@ public class EditShoppingTask extends Activity {
         shoppingItemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         shoppingListView.setAdapter(shoppingItemsAdapter);
         setUpListViewListener();
+
+
+
+        inputName = findViewById(R.id.nameOfShoppingItem);
+        inputQuantity = findViewById(R.id.numberOfShoppingItems);
     }
+
+
 
     private void setUpListViewListener() {
         shoppingListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -60,8 +71,6 @@ public class EditShoppingTask extends Activity {
 
 
     private void addItemToList(View v) {
-        EditText inputName = findViewById(R.id.nameOfShoppingItem);
-        EditText inputQuantity = findViewById(R.id.numberOfShoppingItems);
 
         if(!(inputName.equals(""))) {
             int newQuantity = 1;
