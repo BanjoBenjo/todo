@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    //basic app colors
+    <color name="DavysGrey">#595959</color>
+    <color name="GrayWeb">#7F7F7F</color>
+    <color name="QuickSilver">#A5A5A5</color>
+    <color name="LightGray">#CCCCCC</color>
+    <color name="Cultured">#F2F2F2</color>
+    //category colors
+    <color name="Purple">#7400B8</color>
+    <color name="FrenchViolet">#6930C3</color>
+    <color name="SlateBlue">#5E60CE</color>
+    <color name="TuftsBlue">#5390D9</color>
+    <color name="BlueJeans">#4EA8DE</color>
+    <color name="VividSkyBlue">#48BFE3</color>
+    <color name="SkyBlueCrayola">#56CFE1</color>
+    <color name="MediumTurquoise">#64DFDF</color>
+    <color name="Turquoise">#72EFDD</color>
+    <color name="Aquamarine">#80FFDB</color>
 </resources>
