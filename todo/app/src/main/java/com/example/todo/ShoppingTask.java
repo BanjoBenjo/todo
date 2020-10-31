@@ -6,7 +6,7 @@ public class ShoppingTask extends Task{
     private ArrayList<ShoppingItem> shoppingItems;
 
     public ShoppingTask(String title, TaskCategory category) {
-        super(title);
+        super(title, category);
     }
 
 }

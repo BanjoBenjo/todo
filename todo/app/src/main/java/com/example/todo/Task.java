@@ -1,14 +1,18 @@
 package com.example.todo;
 
 
-public class Task {
+import java.io.Serializable;
+
+public class Task implements Serializable {
 
     private String title;
+    private TaskCategory category;
 
     public Notification notificationType;
 
-    public Task(String title){
+    public Task(String title, TaskCategory category){
         this.title = title;
+        this.category = category;
     }
 
     public void setTitle(String newTitle){ this.title = newTitle; }
@@ -27,6 +31,8 @@ public class Task {
         System.out.format("NotificationType of %s changed \n", title);
         this.notificationType = notificationType;
     }
+
+    public TaskCategory getCategory(){ return this.category; }
 
     @Override
     public String toString() {

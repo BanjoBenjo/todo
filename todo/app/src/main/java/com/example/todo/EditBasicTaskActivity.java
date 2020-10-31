@@ -65,13 +65,14 @@ public class EditBasicTaskActivity extends Activity {
         });
     }
 
-    public void addTask(Task mTask) {
+    public void addTask(BasicTask mTask) {
         // Todo load task obejct in database / test with name only
-        boolean insertData = mDatabaseHelper.addData(mTask.getTitle());
+        boolean insertData = mDatabaseHelper.addBasicTaskActive(mTask);
 
         if (insertData) {
             Intent to_mainactivity = new Intent(EditBasicTaskActivity.this, MainActivity.class);
             EditBasicTaskActivity.this.startActivity(to_mainactivity);
+
         } else {
             toastMessage("There went something wrong..");
         }

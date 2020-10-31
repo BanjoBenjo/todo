@@ -7,6 +7,8 @@ public class EmailNotification implements Notification{
         this.address = address;
     }
 
+    public String toString(){ return "EmailNotification"; }
+
     public void do_notify(){
         System.out.format("Sent Email to %s%n ! EmailNotification", address);
     }

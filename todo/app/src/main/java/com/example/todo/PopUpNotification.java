@@ -10,6 +10,8 @@ public class PopUpNotification implements Notification{
         this.deadline = deadline;
     }
 
+    public String toString(){ return  "PopUpNotification"; }
+
     public void do_notify(){
         System.out.format("It's %s, %s! PopUp Notification \n", deadline, title);
     }

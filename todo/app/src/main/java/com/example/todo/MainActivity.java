@@ -48,14 +48,17 @@ public class MainActivity extends AppCompatActivity {
 
         registerForContextMenu(addbutton);
 
+        populateListView();
+
+
         addbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addBasicTask();
+                //addBasicTask();
             }
         });
 
-        populateListView();
+
 
         /*
         items = new ArrayList<>();
@@ -121,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }*/
 
+/*
     private void addBasicTask(){
         EditText input = findViewById(R.id.editTaskName);
         String task_name = input.getText().toString();
@@ -135,4 +139,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Please enter Text..", Toast.LENGTH_LONG).show();
         }
     }
+
+ */
 }

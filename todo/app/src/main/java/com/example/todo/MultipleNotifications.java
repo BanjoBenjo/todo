@@ -10,6 +10,8 @@ public class MultipleNotifications {
         this.deadline = deadline;
     }
 
+    public String toString(){ return "MultipleNotifications"; }
+
     public void do_notify(){
         System.out.format("It's %s, %s! PopUp Notification \n", deadline, title);
     }
