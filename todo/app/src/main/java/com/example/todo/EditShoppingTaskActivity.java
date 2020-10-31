@@ -23,7 +23,6 @@ public class EditShoppingTaskActivity extends Activity {
     private Button addShoppingItem;
 
     private EditText inputName;
-    private EditText inputQuantity;
 
 
 
@@ -51,7 +50,6 @@ public class EditShoppingTaskActivity extends Activity {
 
 
         inputName = findViewById(R.id.nameOfShoppingItem);
-        inputQuantity = findViewById(R.id.numberOfShoppingItems);
     }
 
 
@@ -70,19 +68,16 @@ public class EditShoppingTaskActivity extends Activity {
     }
 
 
-    private void addItemToList(View v) {
-        if(!(TextUtils.isEmpty(inputName.getText().toString()))) {
+    private void addItemToList(View view) {
+        String userName = inputName.getText().toString();
 
-            int newQuantity = 1;
+        if(!(TextUtils.isEmpty(userName))) {
 
-            if(!(TextUtils.isEmpty(inputQuantity.getText().toString()))) {
-                newQuantity = Integer.parseInt(inputQuantity.getText().toString());
-            }
-            ShoppingItem newItem = new ShoppingItem(newQuantity, inputName.getText().toString());
+
+            ShoppingItem newItem = new ShoppingItem(userName);
             shoppingItems.add(newItem);
             shoppingItemsAdapter.add(newItem.toString());
             inputName.setText("");
-            inputQuantity.setText("");
         } else {
             Toast.makeText(getApplicationContext(), "Please enter name", Toast.LENGTH_LONG).show();
         }

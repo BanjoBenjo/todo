@@ -7,7 +7,6 @@
 
     <EditText
         android:id="@+id/nameOfShoppingItem"
-        android:hint="Enter Name"
         android:layout_width="0dp"
         android:layout_height="@dimen/standard_height"
         android:layout_marginStart="@dimen/component_padding"
@@ -15,23 +14,10 @@
         android:layout_marginBottom="@dimen/component_padding"
         android:ems="10"
         android:foregroundTint="@color/DavysGrey"
+        android:hint="Enter Name"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/addShoppingItem"
-        app:layout_constraintStart_toEndOf="@+id/numberOfShoppingItems" />
-
-    <EditText
-        android:id="@+id/numberOfShoppingItems"
-        android:hint="#"
-        android:layout_width="60dp"
-        android:layout_height="@dimen/standard_height"
-        android:layout_marginStart="@dimen/component_padding"
-        android:layout_marginEnd="@dimen/component_padding"
-        android:layout_marginBottom="@dimen/component_padding"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nameOfShoppingItem"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
