@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<Task> itemsAdapter;
     private ListView listView;
     private Button addbutton;
+    private Button undoButton;
+    private Button redoButton;
 
     DatabaseHelper mDatabaseHelper;
 
@@ -41,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
         mDatabaseHelper = new DatabaseHelper(this);
 
         addbutton = findViewById(R.id.add_button);
+        undoButton = findViewById(R.id.undo_button);
+        redoButton = findViewById(R.id.redo_button);
+
         registerForContextMenu(addbutton);
 
         addbutton.setOnClickListener(new View.OnClickListener() {
