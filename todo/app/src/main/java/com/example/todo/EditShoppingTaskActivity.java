@@ -1,15 +1,13 @@
 package com.example.todo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Debug;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -25,7 +23,7 @@ public class EditShoppingTaskActivity extends Activity {
     private Button addShoppingItem;
 
     private EditText inputName;
-    private EditText inputQuantity;
+
 
 
 
@@ -45,48 +43,41 @@ public class EditShoppingTaskActivity extends Activity {
         });
 
         shoppingItems = new ArrayList<>();
-        shoppingItemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        shoppingItemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice);
         shoppingListView.setAdapter(shoppingItemsAdapter);
         setUpListViewListener();
 
 
 
         inputName = findViewById(R.id.nameOfShoppingItem);
-        inputQuantity = findViewById(R.id.numberOfShoppingItems);
     }
 
 
 
     private void setUpListViewListener() {
-        shoppingListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        shoppingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                //changes checked field in ShoppingItem
-                //Context context = getApplicationContext();
-                //Toast.makeText(context, "Item has been removed.", Toast.LENGTH_LONG).show();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ShoppingItem itemToCheck = shoppingItems.get(position);
                 itemToCheck.toggleCheck();
+                CheckedTextView checkedTextView = (CheckedTextView) view;
+                checkedTextView.setChecked(itemToCheck.isChecked());
                 shoppingItemsAdapter.notifyDataSetChanged();
-                return true;
             }
         });
     }
 
 
-    private void addItemToList(View v) {
+    private void addItemToList(View view) {
+        String userName = inputName.getText().toString();
 
-        if(!(TextUtils.isEmpty(inputName.getText().toString()))) {
+        if(!(TextUtils.isEmpty(userName))) {
 
-            int newQuantity = 1;
 
-            if(!(TextUtils.isEmpty(inputQuantity.getText().toString()))) {
-                newQuantity = Integer.parseInt(inputQuantity.getText().toString());
-            }
-            ShoppingItem newItem = new ShoppingItem(newQuantity, inputName.getText().toString());
+            ShoppingItem newItem = new ShoppingItem(userName);
             shoppingItems.add(newItem);
             shoppingItemsAdapter.add(newItem.toString());
             inputName.setText("");
-            inputQuantity.setText("");
         } else {
             Toast.makeText(getApplicationContext(), "Please enter name", Toast.LENGTH_LONG).show();
         }
