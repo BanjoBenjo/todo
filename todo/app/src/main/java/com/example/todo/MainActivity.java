@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<Task> itemsAdapter;
     private ListView listView;
     private Button addbutton;
+    private Button undoButton;
+    private Button redoButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +33,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listView = findViewById(R.id.listView);
-
         addbutton = findViewById(R.id.add_button);
+        undoButton = findViewById(R.id.undo_button);
+        redoButton = findViewById(R.id.redo_button);
 
         registerForContextMenu(addbutton);
         addbutton.setOnClickListener(new View.OnClickListener() {

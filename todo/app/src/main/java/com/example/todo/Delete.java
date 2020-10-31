@@ -22,8 +22,4 @@ public class Delete implements Command {
         openTasks.add(theTask);
         System.out.println("undo delete");
     }
-
-    public void redo() {
-        execute();
-    }
 }

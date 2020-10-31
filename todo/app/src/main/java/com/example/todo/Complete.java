@@ -26,8 +26,4 @@ public class Complete implements Command {
         openTasks.add(theIndex, theTask);
         completedTasks.remove(theTask);
     }
-
-    public void redo() {
-        execute();
-    }
 }
