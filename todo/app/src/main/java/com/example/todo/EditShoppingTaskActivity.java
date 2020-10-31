@@ -1,15 +1,13 @@
 package com.example.todo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Debug;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,6 +27,7 @@ public class EditShoppingTaskActivity extends Activity {
 
 
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +44,7 @@ public class EditShoppingTaskActivity extends Activity {
         });
 
         shoppingItems = new ArrayList<>();
-        shoppingItemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        shoppingItemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice);
         shoppingListView.setAdapter(shoppingItemsAdapter);
         setUpListViewListener();
 
@@ -58,23 +57,20 @@ public class EditShoppingTaskActivity extends Activity {
 
 
     private void setUpListViewListener() {
-        shoppingListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        shoppingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                //changes checked field in ShoppingItem
-                //Context context = getApplicationContext();
-                //Toast.makeText(context, "Item has been removed.", Toast.LENGTH_LONG).show();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ShoppingItem itemToCheck = shoppingItems.get(position);
                 itemToCheck.toggleCheck();
+                CheckedTextView checkedTextView = (CheckedTextView) view;
+                checkedTextView.setChecked(itemToCheck.isChecked());
                 shoppingItemsAdapter.notifyDataSetChanged();
-                return true;
             }
         });
     }
 
 
     private void addItemToList(View v) {
-
         if(!(TextUtils.isEmpty(inputName.getText().toString()))) {
 
             int newQuantity = 1;
