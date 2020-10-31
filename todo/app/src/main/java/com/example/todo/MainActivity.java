@@ -29,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<Task> itemsAdapter;
     private ListView listView;
     private Button addbutton;
+    private Button shopping_button;
+    private Button scheduled_button;
+    private Button location_button;
     private Button undoButton;
     private Button redoButton;
 
@@ -43,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
         mDatabaseHelper = new DatabaseHelper(this);
 
         addbutton = findViewById(R.id.add_button);
+        scheduled_button = findViewById(R.id.scheduled_button);
+        shopping_button = findViewById(R.id.shopping_button);
+        location_button = findViewById(R.id.location_button);
+
         undoButton = findViewById(R.id.undo_button);
         redoButton = findViewById(R.id.redo_button);
 
@@ -54,19 +61,26 @@ public class MainActivity extends AppCompatActivity {
         addbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //addBasicTask();
+                Intent to_edit_basic_task = new Intent(MainActivity.this, EditBasicTaskActivity.class);
+                MainActivity.this.startActivity(to_edit_basic_task);
             }
         });
 
+        scheduled_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent to_edit_scheduled_task = new Intent(MainActivity.this, EditScheduledTaskActivity.class);
+                MainActivity.this.startActivity(to_edit_scheduled_task);
+            }
+        });
 
-
-        /*
-        items = new ArrayList<>();
-        itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
-        listView.setAdapter(itemsAdapter);
-        setUpListViewListener();
-        */
-
+        shopping_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent to_edit_shopping_task = new Intent(MainActivity.this, EditShoppingTaskActivity.class);
+                MainActivity.this.startActivity(to_edit_shopping_task);
+            }
+        });
     }
 
     @Override
@@ -102,8 +116,9 @@ public class MainActivity extends AppCompatActivity {
         Cursor data = mDatabaseHelper.getData();
         ArrayList<String> listData = new ArrayList<>();
         while(data.moveToNext()){
-            //get the value from col 1 and add to arraylist
-            listData.add(data.getString(1));
+            // TODO make sure task object is accessable ( same index as in array list, task has to be created in databasehelper)
+            //get the value from col 3 which is the name and add to arraylist
+            listData.add(data.getString(2));
         }
         //create list adapter and set the adapter
         ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listData);
@@ -124,21 +139,5 @@ public class MainActivity extends AppCompatActivity {
         });
     }*/
 
-/*
-    private void addBasicTask(){
-        EditText input = findViewById(R.id.editTaskName);
-        String task_name = input.getText().toString();
 
-        BasicTask new_task = new BasicTask(task_name);
-        if(!(task_name.equals(""))){
-            //todo add task to database
-            itemsAdapter.add(new_task);
-            input.setText("");
-        }
-        else{
-            Toast.makeText(getApplicationContext(), "Please enter Text..", Toast.LENGTH_LONG).show();
-        }
-    }
-
- */
 }

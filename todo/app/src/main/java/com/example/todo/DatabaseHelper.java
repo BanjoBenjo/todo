@@ -29,9 +29,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COL7 = "NOTES";
 
     private static final String DATABASE_CREATE_TABLE_ACTIVE = "CREATE TABLE " +
-            TABLE_ACTIVE + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COL2 + " TEXT ," + COL3 + " TEXT ," + COL4 + " TEXT ," + COL5 + " TEXT ," + COL6 +
-            " TEXT ," + COL7 + ")";
+            TABLE_ACTIVE + "(ID INTEGER, TYPE TEXT, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
+            "NOTIFICATION TEXT, NOTES TEXT)";
 
     private static final String DATABASE_CREATE_TABLE_COMPLETED = "CREATE TABLE " +
             TABLE_COMPLETED + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -62,32 +61,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * adds Data/Task to database
+     * =========================================================================
+     * Methods to add a BASIC TASK to a specific Table in the DB
      */
 
-    public boolean addBasicTaskActive(BasicTask task){
-        return addBasicTask(task, TABLE_ACTIVE);
-    }
+    public boolean addTask(Task task){
 
-    public boolean addBasicTaskCompleted(BasicTask task){
-        return addBasicTask(task, TABLE_COMPLETED);
-    }
-
-    public boolean addBasicTaskDeleted(BasicTask task){
-        return addBasicTask(task, TABLE_DELETED);
-    }
-
-    public boolean addBasicTask(BasicTask task, String table_type){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("TYPE", "BASIC");
-        contentValues.put("TITLE", task.getTitle());
-        contentValues.put("CATEGORY", task.getCategory().toString());
-        contentValues.put("NOTES", task.getNotes());
+
+        String task_type = task.getType();
+        switch(task_type)
+        {
+            case "BASIC":
+                BasicTask b_task = (BasicTask)task;
+                contentValues.put("ID", b_task.getID());
+                contentValues.put("TYPE", "BASIC");
+                contentValues.put("TITLE", b_task.getTitle());
+                contentValues.put("CATEGORY", b_task.getCategory().toString());
+                contentValues.put("DEADLINE", "");
+                contentValues.put("NOTIFICATION", "");
+                contentValues.put("NOTES", b_task.getNotes());
+                break;
+
+            case "SCHEDULED":
+                ScheduledTask sched_task = (ScheduledTask)task;
+                contentValues.put("ID", sched_task.getID());
+                contentValues.put("TYPE", "SCHEDULED");
+                contentValues.put("TITLE", sched_task.getTitle());
+                contentValues.put("CATEGORY", sched_task.getCategory().toString());
+                contentValues.put("DEADLINE", sched_task.getDeadline());
+                contentValues.put("NOTIFICATION", sched_task.getNotification().toString());
+                contentValues.put("NOTES", sched_task.getNotes());
+                break;
+
+            case "SHOPPING":
+                ShoppingTask shop_task = (ShoppingTask)task;
+                contentValues.put("ID", shop_task.getID());
+                contentValues.put("TYPE", "SHOPPING");
+                contentValues.put("TITLE", shop_task.getTitle());
+                contentValues.put("CATEGORY", "");
+                contentValues.put("DEADLINE", "");
+                contentValues.put("NOTIFICATION", "");
+                contentValues.put("NOTES", "");
+                break;
+
+                //TODO ADD DEFAULT EXCEPTION
+        }
 
         // Log.d(TAG, "addData: Adding " + item + " to " + TABLE_COMPLETED);
 
-        long result = db.insert(table_type, null, contentValues);
+        long result = db.insert("TABLE_ACTIVE", null, contentValues);
 
         // if data is inserted incorrectly result will be -1
         if (result == -1) {
@@ -97,21 +121,70 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    /*
-    public boolean addData(String title, TaskCategory category, String notes, String deadline){}
-
-    public boolean addData(String title, TaskCategory category, String notes, String deadline,
-                           ArrayList<ShoppingItem> shoppingItems){}
-
-
-     */
 
     /**
-     * TODO returns all the data from the database
+     * Methods to move Data from one Tabel to another
+     */
+
+    public void completeTask(int task_id) {
+        //TODO add return statement if function was successfull
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            db.execSQL("INSERT INTO TABLE_COMPLETED SELECT * FROM TABLE_ACTIVE WHERE ID =" + task_id);
+            db.execSQL("DELETE FROM TABLE_ACTIVE WHERE ID =" + task_id);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void undoTask(int task_id) {
+        //TODO add return statement if function was successfull
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            db.execSQL("INSERT INTO TABLE_ACTIVE SELECT * FROM TABLE_COMPLETED WHERE ID =" + task_id);
+            db.execSQL("DELETE FROM TABLE_COMPLETED WHERE ID =" + task_id);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void deleteTask(int task_id) {
+        //TODO add return statement if function was successfull
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            db.execSQL("INSERT INTO TABLE_DELETED SELECT * FROM TABLE_ACTIVE WHERE ID =" + task_id);
+            db.execSQL("DELETE FROM TABLE_ACTIVE WHERE ID =" + task_id);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void reloadTask(int task_id) {
+        //TODO add return statement if function was successfull
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            db.execSQL("INSERT INTO TABLE_ACTIVE SELECT * FROM TABLE_DELETED WHERE ID =" + task_id);
+            db.execSQL("DELETE FROM TABLE_DELETED WHERE ID =" + task_id);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+
+    /**
+     * TODO maybe Build TASK objects here
      */
     public Cursor getData(){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT ID, TITLE FROM " + TABLE_ACTIVE;
+        String query = "SELECT * FROM " + TABLE_ACTIVE;
         Cursor data = db.rawQuery(query, null);
         return data;
     }

@@ -1,16 +1,22 @@
 package com.example.todo;
 
 
+import android.content.SharedPreferences;
+
 import java.io.Serializable;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class Task implements Serializable {
 
     private String title;
     private TaskCategory category;
+    private int ID;
 
     public Notification notificationType;
 
-    public Task(String title, TaskCategory category){
+    public Task(int ID, String title, TaskCategory category){
+        this.ID = ID;
         this.title = title;
         this.category = category;
     }
@@ -33,6 +39,10 @@ public class Task implements Serializable {
     }
 
     public TaskCategory getCategory(){ return this.category; }
+
+    public int getID(){ return this.ID; }
+
+    public String getType(){ return "TASK"; }
 
     @Override
     public String toString() {

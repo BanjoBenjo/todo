@@ -2,6 +2,7 @@ package com.example.todo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -54,7 +55,7 @@ public class EditBasicTaskActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!isEmpty(nameView)) {
-                    BasicTask task = new BasicTask(nameView.getText().toString(),
+                    BasicTask task = new BasicTask(getGlobalTaskId(), nameView.getText().toString(),
                             categories.get(notiSpinner.getSelectedItemPosition()), notes.getText().toString());
                     toastMessage("Task created");
                     addTask(task);
@@ -67,7 +68,7 @@ public class EditBasicTaskActivity extends Activity {
 
     public void addTask(BasicTask mTask) {
         // Todo load task obejct in database / test with name only
-        boolean insertData = mDatabaseHelper.addBasicTaskActive(mTask);
+        boolean insertData = mDatabaseHelper.addTask(mTask);
 
         if (insertData) {
             Intent to_mainactivity = new Intent(EditBasicTaskActivity.this, MainActivity.class);
@@ -86,4 +87,16 @@ public class EditBasicTaskActivity extends Activity {
         return etText.getText().toString().trim().length() == 0;
     }
 
+    private int getGlobalTaskId(){
+        SharedPreferences mPreferences = getSharedPreferences("CurrentUser",
+                MODE_PRIVATE);
+
+        int task_id = mPreferences.getInt("GlobalTaskID", 1);
+
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putInt("GlobalTaskID", task_id+1);
+        editor.commit();
+
+        return task_id;
+    }
 }

@@ -6,8 +6,8 @@ public class BasicTask extends Task {
     private String notes;
     private TaskCategory category;
 
-    public BasicTask(String title, TaskCategory category, String notes){
-        super(title, category);
+    public BasicTask(int ID, String title, TaskCategory category, String notes){
+        super(ID, title, category);
 
         this.notes = notes;
         notificationType = new NoNotification(title);
@@ -19,4 +19,6 @@ public class BasicTask extends Task {
     public void setCategory(TaskCategory category) { this.category=category; }
 
     public String getNotes(){ return this.notes; }
+
+    public String getType(){ return "BASIC"; }
 }

@@ -33,23 +33,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <EditText
-        android:id="@+id/editTaskName"
-        android:hint="new Task"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/component_padding"
-        android:layout_marginEnd="@dimen/component_padding"
-        android:layout_marginBottom="@dimen/component_padding"
-        android:backgroundTint="@color/DavysGrey"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:textColor="@color/DavysGrey"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/add_button"
-        app:layout_constraintHorizontal_bias="0.41"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <Button
         android:id="@+id/add_button"
         android:layout_width="wrap_content"
@@ -62,20 +45,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="409dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="@dimen/component_padding"
-        android:layout_marginEnd="@dimen/component_padding"
-        android:layout_marginBottom="@dimen/component_padding"
-        android:background="?android:attr/listDivider"
-        android:backgroundTint="@color/DavysGrey"
-        android:foregroundTint="@color/DavysGrey"
-        app:layout_constraintBottom_toTopOf="@+id/editTaskName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="409dp"
@@ -83,7 +52,7 @@
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/editTaskName"
+        app:layout_constraintBottom_toTopOf="@+id/add_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/undo_button">
@@ -94,5 +63,32 @@
             android:layout_height="match_parent"
             android:cacheColorHint="@color/Cultured" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/scheduled_button"
+        android:layout_width="@dimen/standard_height"
+        android:layout_height="@dimen/standard_height"
+        android:layout_marginStart="@dimen/component_padding"
+        android:text="APPOINT"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/shopping_button"
+        android:layout_width="@dimen/standard_height"
+        android:layout_height="@dimen/standard_height"
+        android:layout_marginStart="@dimen/component_padding"
+        android:text="SHOP"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/scheduled_button" />
+
+    <Button
+        android:id="@+id/location_button"
+        android:layout_width="@dimen/standard_height"
+        android:layout_height="@dimen/standard_height"
+        android:layout_marginStart="@dimen/component_padding"
+        android:text="LOC"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/shopping_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
