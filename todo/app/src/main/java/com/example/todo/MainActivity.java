@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,10 +23,14 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+
     private ArrayList<Task> items;
     private ArrayAdapter<Task> itemsAdapter;
     private ListView listView;
     private Button addbutton;
+
+    DatabaseHelper mDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +38,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listView = findViewById(R.id.listView);
+        mDatabaseHelper = new DatabaseHelper(this);
 
         addbutton = findViewById(R.id.add_button);
-
         registerForContextMenu(addbutton);
+
         addbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,10 +50,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        populateListView();
+
+        /*
         items = new ArrayList<>();
         itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
         listView.setAdapter(itemsAdapter);
         setUpListViewListener();
+        */
+
     }
 
     @Override
@@ -74,7 +87,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setUpListViewListener() {
+    private void populateListView(){
+        Log.d(TAG, "populateListeView : Displaying data from DB in ListView");
+
+        // get the Data and append to a list
+        Cursor data = mDatabaseHelper.getData();
+        ArrayList<String> listData = new ArrayList<>();
+        while(data.moveToNext()){
+            //get the value from col 1 and add to arraylist
+            listData.add(data.getString(1));
+        }
+        //create list adapter and set the adapter
+        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listData);
+        listView.setAdapter(adapter);
+    }
+
+/*    private void setUpListViewListener() {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -86,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-    }
+    }*/
 
     private void addBasicTask(){
         EditText input = findViewById(R.id.editTaskName);
