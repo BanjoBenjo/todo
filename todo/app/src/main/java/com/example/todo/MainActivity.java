@@ -148,8 +148,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Context context = getApplicationContext();
                 Task selected_task = activeTasks.get(position);
-                String title = selected_task.getTitle();
-                Toast.makeText(context,"Title of task is " + title, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"ID of task is " + Integer.toString(selected_task.getID()), Toast.LENGTH_SHORT).show();
                 //itemsAdapter.notifyDataSetChanged();
                 return true;
             }

@@ -282,8 +282,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public ContentValues createContentFromCommand(Command myCommand) {
+
         ContentValues contentValues = new ContentValues();
         String commandType = myCommand.getType();
+
         switch (commandType) {
             case "COMPLETE":
                 contentValues.put("COMMAND", "COMPLETE");
@@ -315,7 +317,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * gets Task with the given ID
      */
-    public Pair<Integer, String> getCommand(int ID) {
+    public Command getCommand(int ID) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM TABEL_COMMANDS WHERE ID = " + ID + ";";
         Cursor data = db.rawQuery(query, null);
@@ -328,11 +330,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         switch (command){
             case "COMPLETE":
-                myCommand = new Complete(taskId);
+                myCommand = new Complete(taskId, this);
+                break;
             case "DELETE":
-                myCommand = new Delete(taskId);
+                myCommand = new Delete(taskId, this);
+                break;
+            default:
+                myCommand = null;
+                break;
         }
-        return new Pair<>(taskId, command);
+        return myCommand;
     }
 
 }
