@@ -5,12 +5,12 @@ import java.util.List;
 
 public class Invoker {
     private Command theCommand;
-    private List<Command> commandHistory;
     private int counter;
+    private DatabaseHelper databaseHelper;
 
-    public Invoker() {
-        commandHistory = new ArrayList<>();
+    public Invoker(DatabaseHelper newDataBaseHelper) {
         counter = 0;
+        databaseHelper = newDataBaseHelper;
     }
 
     public void setCommand(Command newCommand) {
@@ -19,13 +19,14 @@ public class Invoker {
 
     public void clickDo() {
         theCommand.execute();
-        commandHistory.add(counter, theCommand);
+        databaseHelper.addCommand(theCommand);
         counter++;
     }
 
     public void clickUndo() {
         counter--;
-        commandHistory.get(counter).undo();
+        theCommand = databaseHelper.getCommand(counter);
+        theCommand.undo();
     }
 
     public void clickRedo() {

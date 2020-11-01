@@ -4,18 +4,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class EditScheduledTaskActivity extends Activity {
+public class EditScheduledTaskActivity extends FragmentActivity {
 
     private EditText nameview;
     private Spinner notificationSpinner;
@@ -86,4 +90,13 @@ public class EditScheduledTaskActivity extends Activity {
         return task_id;
     }
 
+    public void showTimePickerDialog(View view) {
+        DialogFragment newFragment = new TimePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "timePicker");
+    }
+
+    public void showDatePickerDialog(View view) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
 }

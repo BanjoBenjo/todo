@@ -1,29 +1,35 @@
 package com.example.todo;
 
+import android.provider.ContactsContract;
+
 import java.util.List;
 
 public class Complete implements Command {
-    private List<Task> openTasks;
-    private List<Task> completedTasks;
-    private Task theTask;
-    private int theIndex;
+    private int taskId;
+    private DatabaseHelper databaseHelper;
 
-    public Complete(List<Task> newOpenTasks, List<Task> newCompletedTasks, Task newTask) {
-        openTasks = newOpenTasks;
-        completedTasks = newCompletedTasks;
-        theTask = newTask;
+    public Complete(int newTaskId, DatabaseHelper newDateBaseHelper) {
+        taskId = newTaskId;
+        databaseHelper = newDateBaseHelper;
     }
 
     @Override
     public void execute() {
-        completedTasks.add(theTask);
-        theIndex = openTasks.indexOf(theTask);
-        openTasks.remove(theTask);
+        databaseHelper.completeTask(taskId);
     }
 
     @Override
     public void undo() {
-        openTasks.add(theIndex, theTask);
-        completedTasks.remove(theTask);
+        databaseHelper.reopenTask(taskId);
+    }
+
+    @Override
+    public String getType() {
+        return "COMPLETE";
+    }
+
+    @Override
+    public int getTaskId() {
+        return taskId;
     }
 }
