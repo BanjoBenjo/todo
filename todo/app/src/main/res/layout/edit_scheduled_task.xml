@@ -44,8 +44,9 @@
         android:gravity="start|top"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_category" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner_notifications" />
 
     <EditText
         android:id="@+id/editName"
@@ -58,4 +59,34 @@
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/date_button"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/standard_height"
+        android:layout_marginStart="@dimen/component_padding"
+        android:layout_marginTop="@dimen/component_padding"
+        android:layout_marginEnd="@dimen/component_padding"
+        android:onClick="showDatePickerDialog"
+        android:text="set date"
+        app:layout_constraintEnd_toStartOf="@+id/time_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+
+    <Button
+        android:id="@+id/time_button"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/standard_height"
+        android:layout_marginStart="@dimen/component_padding"
+        android:layout_marginTop="@dimen/component_padding"
+        android:layout_marginEnd="@dimen/component_padding"
+        android:text="set time"
+        android:onClick="showTimePickerDialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/date_button"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine"
+        />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

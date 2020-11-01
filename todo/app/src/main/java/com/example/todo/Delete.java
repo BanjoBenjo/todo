@@ -3,23 +3,31 @@ package com.example.todo;
 import java.util.List;
 
 public class Delete implements Command {
-    private List<Task> openTasks;
-    private Task theTask;
+    private int taskId;
+    private DatabaseHelper databaseHelper;
 
-    public Delete(List<Task> newTasks, Task newTask) {
-        openTasks = newTasks;
-        theTask = newTask;
+    public Delete(int newTaskId, DatabaseHelper newDatabaseHelper) {
+        taskId = newTaskId;
+        databaseHelper = newDatabaseHelper;
     }
 
     @Override
     public void execute() {
-        openTasks.remove(theTask);
-        System.out.println(theTask.toString() + " deleted");
+        databaseHelper.deleteTask(taskId);
     }
 
     @Override
     public void undo() {
-        openTasks.add(theTask);
-        System.out.println("undo delete");
+        databaseHelper.reloadTask(taskId);
+    }
+
+    @Override
+    public String getType() {
+        return "DELETE";
+    }
+
+    @Override
+    public int getTaskId() {
+        return taskId;
     }
 }

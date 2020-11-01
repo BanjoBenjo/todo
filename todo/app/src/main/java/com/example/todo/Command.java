@@ -1,7 +1,10 @@
 package com.example.todo;
 
 public interface Command {
+    // every command holds the main operation in execute() and the inverse operation in undo()
     void execute();
     void undo();
-    //redo() is optional, is implemented in Invoker.clickRedo()
+    // helper functions for Database
+    String getType();
+    int getTaskId();
 }
