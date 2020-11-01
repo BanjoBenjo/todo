@@ -1,16 +1,19 @@
 package com.example.todo;
 
 public class EmailNotification implements Notification{
-    public String address;
+    public String title;
+    public String deadline;
+    //TODO get emailadress from settings
 
-    public EmailNotification(String address){
-        this.address = address;
+    public EmailNotification(String title, String deadline){
+        this.title = title;
+        this.deadline = deadline;
     }
 
     public String toString(){ return "EmailNotification"; }
 
     public void do_notify(){
-        System.out.format("Sent Email to %s%n ! EmailNotification", address);
+        //TODO send email here
     }
 }
 

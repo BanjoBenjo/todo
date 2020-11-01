@@ -1,6 +1,6 @@
 package com.example.todo;
 
-public class MultipleNotifications {
+public class MultipleNotifications implements Notification{
 
     public String title;
     public String deadline;

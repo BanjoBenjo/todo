@@ -7,15 +7,15 @@ import java.io.Serializable;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class Task implements Serializable {
+public class Task {
 
     private String title;
-    private TaskCategory category;
+    private String category;
     private int ID;
 
     public Notification notificationType;
 
-    public Task(int ID, String title, TaskCategory category){
+    public Task(int ID, String title, String category){
         this.ID = ID;
         this.title = title;
         this.category = category;
@@ -38,7 +38,7 @@ public class Task implements Serializable {
         this.notificationType = notificationType;
     }
 
-    public TaskCategory getCategory(){ return this.category; }
+    public String getCategory(){ return this.category; }
 
     public int getID(){ return this.ID; }
 

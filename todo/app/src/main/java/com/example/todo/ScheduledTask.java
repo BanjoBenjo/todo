@@ -3,17 +3,36 @@ package com.example.todo;
 
 public class ScheduledTask extends Task {
     private String notes;
-    private TaskCategory category;
+    private String category;
     private String deadline;
     private Notification notificationType;
 
-    public ScheduledTask(int ID, String title, TaskCategory category, String notes, String deadline){
+    public ScheduledTask(int ID, String title, String category, String notes, String deadline){
         super(ID, title, category);
 
         this.category = category;
         this.notes = notes;
         this.deadline = deadline;
         this.notificationType = new PopUpNotification(title, deadline);
+    }
+
+    public ScheduledTask(int ID, String title, String category, String notes, String deadline, String notificationType){
+        super(ID, title, category);
+
+        this.category = category;
+        this.notes = notes;
+        this.deadline = deadline;
+
+        switch (notificationType){
+            case "PopUp":
+                this.notificationType = new PopUpNotification(title, deadline);
+            case "EMail":
+                this.notificationType = new EmailNotification(title, deadline);
+            case "MULTI":
+                this.notificationType = new MultipleNotifications(title, deadline);
+            case "NONE":
+                this.notificationType = new NoNotification(title);
+        }
     }
 
     public void setNotes(String notes) {

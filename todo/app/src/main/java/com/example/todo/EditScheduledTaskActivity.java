@@ -23,10 +23,10 @@ public class EditScheduledTaskActivity extends Activity {
     private Button submitButton;
     private EditText notes;
 
-    private ArrayAdapter<TaskCategory> categoryArrayAdapter;
+    private ArrayAdapter<String> categoryArrayAdapter;
     private ArrayAdapter<String> notificationArrayAdapter;
 
-    private List<TaskCategory> categories = new ArrayList<>();
+    private List<String> categories = new ArrayList<>();
     private List<String> notifications = new ArrayList<>(
             Arrays.asList("None",
                     "PopUp",
@@ -38,10 +38,10 @@ public class EditScheduledTaskActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_scheduled_task);
 
-        categories.add(new TaskCategory("Privat", "red"));
-        categories.add(new TaskCategory("Schule", "blue"));
-        categories.add(new TaskCategory("Arbeit", "grau"));
-        categories.add(new TaskCategory("Sport", "grün"));
+        categories.add("privat");
+        categories.add("school");
+        categories.add("work");
+        categories.add("sport");
 
         nameview = findViewById(R.id.editName);
         notificationSpinner = findViewById(R.id.spinner_notifications);

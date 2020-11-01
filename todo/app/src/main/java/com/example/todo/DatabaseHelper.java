@@ -96,6 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 break;
 
             case "SHOPPING":
+                // TODO save shopping list maybe in notes field??
                 ShoppingTask shop_task = (ShoppingTask)task;
                 contentValues.put("ID", shop_task.getID());
                 contentValues.put("TYPE", "SHOPPING");
@@ -178,16 +179,83 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-
-    /**
-     * TODO maybe Build TASK objects here
-     */
-    public Cursor getData(){
+    public ArrayList<Task> getAllActiveTasks(){
+        /**
+         * gets complete Active Table, builds Tasks and returns list
+         */
+        ArrayList<Task> listTasks = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
+
         String query = "SELECT * FROM " + TABLE_ACTIVE;
         Cursor data = db.rawQuery(query, null);
-        return data;
+
+        while(data.moveToNext()){
+            listTasks.add(convertRowToTask(data));
+        }
+
+        return listTasks;
     }
+
+    public Task getTask(int ID) {
+        /**
+         * gets Task with the given ID
+         */
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM TABEL_ACTIVE WHERE ID = " + ID + ";";
+        Cursor data = db.rawQuery(query, null);
+
+        // fill Task
+        Task my_task = convertRowToTask(data);
+
+        return my_task;
+    }
+
+    public Task convertRowToTask(Cursor data){
+        /**
+         * converts a Row from the DB to a Task
+         */
+
+        String task_type = data.getString(data.getColumnIndex("TYPE"));
+        int ID;
+        String title;
+        String category;
+        String notes;
+        String notificationType;
+        String deadline;
+        Task my_task;
+
+        switch (task_type) {
+            case "BASIC":
+                ID = data.getInt(data.getColumnIndex("ID"));
+                title = data.getString(data.getColumnIndex("TITLE"));
+                category = data.getString(data.getColumnIndex("CATEGORY"));
+                notes = data.getString(data.getColumnIndex("NOTES"));
+                my_task = new BasicTask(ID, title, category, notes);
+                break;
+
+            case "SCHEDULED":
+                ID = data.getInt(data.getColumnIndex("ID"));
+                title = data.getString(data.getColumnIndex("TITLE"));
+                category = data.getString(data.getColumnIndex("CATEGORY"));
+                notes = data.getString(data.getColumnIndex("NOTES"));
+                notificationType = data.getString(data.getColumnIndex("NOTIFICATION"));
+                deadline = data.getString(data.getColumnIndex("DEADLINE"));
+                my_task = new ScheduledTask(ID, title, category, notes, deadline, notificationType);
+                break;
+            case "SHOPPING":
+                ID = data.getInt(data.getColumnIndex("ID"));
+                title = data.getString(data.getColumnIndex("TITLE"));
+                category = data.getString(data.getColumnIndex("CATEGORY"));
+                // TODO save shopping list
+                my_task = new ShoppingTask(ID, title, category);
+                break;
+            default:
+                my_task = null;
+        }
+
+        return my_task;
+    }
+
 }
 
 

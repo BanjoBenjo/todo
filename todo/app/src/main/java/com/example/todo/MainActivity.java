@@ -113,13 +113,15 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "populateListeView : Displaying data from DB in ListView");
 
         // get the Data and append to a list
-        Cursor data = mDatabaseHelper.getData();
+        ArrayList<Task> activeTasks = mDatabaseHelper.getAllActiveTasks();
         ArrayList<String> listData = new ArrayList<>();
-        while(data.moveToNext()){
+
+        for (Task t : activeTasks){
             // TODO make sure task object is accessable ( same index as in array list, task has to be created in databasehelper)
             //get the value from col 3 which is the name and add to arraylist
-            listData.add(data.getString(2));
+            listData.add(t.getTitle());
         }
+
         //create list adapter and set the adapter
         ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listData);
         listView.setAdapter(adapter);

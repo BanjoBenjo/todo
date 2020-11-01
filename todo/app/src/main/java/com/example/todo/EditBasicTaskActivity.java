@@ -26,19 +26,19 @@ public class EditBasicTaskActivity extends Activity {
     private Button submitButton;
     private EditText notes;
 
-    private ArrayAdapter<TaskCategory> catAdapter;
+    private ArrayAdapter<String> catAdapter;
 
-    private List<TaskCategory> categories = new ArrayList<TaskCategory>();
+    private List<String> categories = new ArrayList<String>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_basic_task);
 
-        categories.add(new TaskCategory("Privat", "red"));
-        categories.add(new TaskCategory("Schule", "blue"));
-        categories.add(new TaskCategory("Arbeit", "grau"));
-        categories.add(new TaskCategory("Sport", "grün"));
+        categories.add("privat");
+        categories.add("school");
+        categories.add("work");
+        categories.add("sport");
 
         nameView = findViewById(R.id.editName);
         notiSpinner = findViewById(R.id.spinner);

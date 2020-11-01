@@ -6,7 +6,7 @@ public class BasicTask extends Task {
     private String notes;
     private TaskCategory category;
 
-    public BasicTask(int ID, String title, TaskCategory category, String notes){
+    public BasicTask(int ID, String title, String category, String notes){
         super(ID, title, category);
 
         this.notes = notes;
