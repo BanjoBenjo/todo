@@ -29,9 +29,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private ArrayList<Task> items;
-    private ListView listView;
+    private ArrayList<Task> activeTasks;
     private List<String> listData;
+
+    // Interface
+    private ListView listView;
     private Button addbutton;
     private Button shopping_button;
     private Button scheduled_button;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         registerForContextMenu(addbutton);
 
         populateListView();
+        setUpListViewListener();
 
         //create list adapter and set the adapter
 
@@ -121,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "populateListeView : Displaying data from DB in ListView");
 
         // get the Data and append to a list
-        ArrayList<Task> activeTasks = mDatabaseHelper.getAllActiveTasks();
+        activeTasks = mDatabaseHelper.getAllActiveTasks();
         listData = new ArrayList<>();
 
         for (Task t : activeTasks){
@@ -143,8 +146,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Context context = getApplicationContext();
-
-
+                Task selected_task = activeTasks.get(position);
+                String title = selected_task.getTitle();
+                Toast.makeText(context,"Title of task is " + title, Toast.LENGTH_SHORT).show();
                 //itemsAdapter.notifyDataSetChanged();
                 return true;
             }
