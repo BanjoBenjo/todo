@@ -17,17 +17,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
     private ArrayList<Task> items;
-    private ArrayAdapter<Task> itemsAdapter;
     private ListView listView;
+    private List<String> listData;
     private Button addbutton;
     private Button shopping_button;
     private Button scheduled_button;
@@ -57,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
         populateListView();
 
+        //create list adapter and set the adapter
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listData);
+        listView.setAdapter(adapter);
 
         addbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,32 +122,34 @@ public class MainActivity extends AppCompatActivity {
 
         // get the Data and append to a list
         ArrayList<Task> activeTasks = mDatabaseHelper.getAllActiveTasks();
-        ArrayList<String> listData = new ArrayList<>();
+        listData = new ArrayList<>();
 
         for (Task t : activeTasks){
             // TODO make sure task object is accessable ( same index as in array list, task has to be created in databasehelper)
             //get the value from col 3 which is the name and add to arraylist
             listData.add(t.getTitle());
         }
-
-        //create list adapter and set the adapter
-        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listData);
-        listView.setAdapter(adapter);
     }
 
-/*    private void setUpListViewListener() {
+    /**
+     * Set up List view Listeners
+     *
+     * TODO [HARD] click to show informations (add button for editing here as well)
+     *
+     * Long click listener to Edit a task
+     */
+    private void setUpListViewListener() {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Context context = getApplicationContext();
-                Toast.makeText(context, "Item Removed", Toast.LENGTH_LONG).show();
 
-                items.remove(position);
-                itemsAdapter.notifyDataSetChanged();
+
+                //itemsAdapter.notifyDataSetChanged();
                 return true;
             }
         });
-    }*/
+    }
 
 
 }

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.util.Pair;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_ACTIVE = "TABLE_ACTIVE";
     private static final String TABLE_COMPLETED = "TABLE_COMPLETED";
     private static final String TABLE_DELETED = "TABLE_DELETED";
+    private static final String TABLE_COMMANDS = "TABLE_COMMANDS";
 
     private static final String COL1 = "ID";
     private static final String COL2 = "TYPE";
@@ -29,18 +31,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COL7 = "NOTES";
 
     private static final String DATABASE_CREATE_TABLE_ACTIVE = "CREATE TABLE " +
-            TABLE_ACTIVE + "(ID INTEGER, TYPE TEXT, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
+            "TABLE_ACTIVE (ID INTEGER PRIMARY KEY, TYPE TEXT, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
             "NOTIFICATION TEXT, NOTES TEXT)";
 
     private static final String DATABASE_CREATE_TABLE_COMPLETED = "CREATE TABLE " +
-            TABLE_COMPLETED + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COL2 + " TEXT ," + COL3 + " TEXT ," + COL4 + " TEXT ," + COL5 + " TEXT ," + COL6 +
-            " TEXT ," + COL7 + ")";
+            "TABLE_COMPLETED (ID INTEGER PRIMARY KEY, TYPE TEXT, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
+                    "NOTIFICATION TEXT, NOTES TEXT)";
 
     private static final String DATABASE_CREATE_TABLE_DELETED = "CREATE TABLE " +
-            TABLE_DELETED + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COL2 + " TEXT ," + COL3 + " TEXT ," + COL4 + " TEXT ," + COL5 + " TEXT ," + COL6 +
-            " TEXT ," + COL7 + ")";
+            "TABLE_DELETED (ID INTEGER PRIMARY KEY, TYPE TEXT, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
+                    "NOTIFICATION TEXT, NOTES TEXT)";
+
+    // TABLE OF COMMANDS
+    private static final String DATABASE_CREATE_TABLE_COMMANDS = "CREATE TABLE " +
+            "TABLE_COMMANDS(ID INTEGER PRIMARY KEY AUTOINCREMENT, COMMAND TEXT, TASK_ID INTEGER)";
 
     public DatabaseHelper(Context context){ super(context, DATABASE_NAME, null, 1);}
 
@@ -50,6 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(DATABASE_CREATE_TABLE_ACTIVE);
         db.execSQL(DATABASE_CREATE_TABLE_COMPLETED);
         db.execSQL(DATABASE_CREATE_TABLE_DELETED);
+        db.execSQL(DATABASE_CREATE_TABLE_COMMANDS);
     }
 
     @Override
@@ -57,60 +62,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTIVE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMPLETED);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELETED);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMANDS);
+
         onCreate(db);
     }
 
     /**
-     * =========================================================================
-     * Methods to add a BASIC TASK to a specific Table in the DB
+     * Adds a Task to the Active Table
      */
-
-    public boolean addTask(Task task){
-
+    public boolean addTask(Task my_task){
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-
-        String task_type = task.getType();
-        switch(task_type)
-        {
-            case "BASIC":
-                BasicTask b_task = (BasicTask)task;
-                contentValues.put("ID", b_task.getID());
-                contentValues.put("TYPE", "BASIC");
-                contentValues.put("TITLE", b_task.getTitle());
-                contentValues.put("CATEGORY", b_task.getCategory().toString());
-                contentValues.put("DEADLINE", "");
-                contentValues.put("NOTIFICATION", "");
-                contentValues.put("NOTES", b_task.getNotes());
-                break;
-
-            case "SCHEDULED":
-                ScheduledTask sched_task = (ScheduledTask)task;
-                contentValues.put("ID", sched_task.getID());
-                contentValues.put("TYPE", "SCHEDULED");
-                contentValues.put("TITLE", sched_task.getTitle());
-                contentValues.put("CATEGORY", sched_task.getCategory().toString());
-                contentValues.put("DEADLINE", sched_task.getDeadline());
-                contentValues.put("NOTIFICATION", sched_task.getNotification().toString());
-                contentValues.put("NOTES", sched_task.getNotes());
-                break;
-
-            case "SHOPPING":
-                // TODO save shopping list maybe in notes field??
-                ShoppingTask shop_task = (ShoppingTask)task;
-                contentValues.put("ID", shop_task.getID());
-                contentValues.put("TYPE", "SHOPPING");
-                contentValues.put("TITLE", shop_task.getTitle());
-                contentValues.put("CATEGORY", "");
-                contentValues.put("DEADLINE", "");
-                contentValues.put("NOTIFICATION", "");
-                contentValues.put("NOTES", "");
-                break;
-
-                //TODO ADD DEFAULT EXCEPTION
-        }
-
-        // Log.d(TAG, "addData: Adding " + item + " to " + TABLE_COMPLETED);
+        ContentValues contentValues = createContentFromTask(my_task);
 
         long result = db.insert("TABLE_ACTIVE", null, contentValues);
 
@@ -122,11 +84,60 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * gets complete Active Table, builds Tasks and returns list
+     */
+    public ArrayList<Task> getAllActiveTasks(){
+        ArrayList<Task> listTasks = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_ACTIVE;
+        Cursor data = db.rawQuery(query, null);
+
+        while(data.moveToNext()){
+            listTasks.add(convertRowToTask(data));
+        }
+
+        return listTasks;
+    }
 
     /**
-     * Methods to move Data from one Tabel to another
+     * gets Task with the given ID
      */
+    public Task getTask(int ID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM TABEL_ACTIVE WHERE ID = " + ID + ";";
+        Cursor data = db.rawQuery(query, null);
 
+        // fill Task
+        Task my_task = convertRowToTask(data);
+
+        return my_task;
+    }
+
+    /**
+     * Pushes changes of an existing task to the database
+     */
+    public void updateTask(Task my_task){
+        // TODO add return value true/false also not tested
+        SQLiteDatabase db = this.getWritableDatabase();
+        int task_id = my_task.getID();
+        ContentValues contentValues = createContentFromTask(my_task);
+
+        db.beginTransaction();
+        try {
+            db.delete(TABLE_ACTIVE, "ID =" + task_id, null);
+            db.insert(TABLE_ACTIVE, null, contentValues);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+    }
+
+    /**
+     * Methods to move Data from one Table to another
+     */
     public void completeTask(int task_id) {
         //TODO add return statement if function was successfull
         SQLiteDatabase db = this.getWritableDatabase();
@@ -140,7 +151,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void undoTask(int task_id) {
+    public void reopenTask(int task_id) {
         //TODO add return statement if function was successfull
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
@@ -179,42 +190,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<Task> getAllActiveTasks(){
-        /**
-         * gets complete Active Table, builds Tasks and returns list
-         */
-        ArrayList<Task> listTasks = new ArrayList<>();
-        SQLiteDatabase db = this.getWritableDatabase();
+    /**
+     * Creates a ContenValue from a Task object, which now is able to be uploaded to DB
+     */
+    public ContentValues createContentFromTask(Task my_task){
+        ContentValues contentValues = new ContentValues();
+        String task_type = my_task.getType();
+        switch(task_type)
+        {
+            case "BASIC":
+                BasicTask b_task = (BasicTask)my_task;
+                contentValues.put("ID", b_task.getID());
+                contentValues.put("TYPE", "BASIC");
+                contentValues.put("TITLE", b_task.getTitle());
+                contentValues.put("CATEGORY", b_task.getCategory().toString());
+                contentValues.put("DEADLINE", "");
+                contentValues.put("NOTIFICATION", "");
+                contentValues.put("NOTES", b_task.getNotes());
+                break;
 
-        String query = "SELECT * FROM " + TABLE_ACTIVE;
-        Cursor data = db.rawQuery(query, null);
+            case "SCHEDULED":
+                ScheduledTask sched_task = (ScheduledTask)my_task;
+                contentValues.put("ID", sched_task.getID());
+                contentValues.put("TYPE", "SCHEDULED");
+                contentValues.put("TITLE", sched_task.getTitle());
+                contentValues.put("CATEGORY", sched_task.getCategory().toString());
+                contentValues.put("DEADLINE", sched_task.getDeadline());
+                contentValues.put("NOTIFICATION", sched_task.getNotification().toString());
+                contentValues.put("NOTES", sched_task.getNotes());
+                break;
 
-        while(data.moveToNext()){
-            listTasks.add(convertRowToTask(data));
+            case "SHOPPING":
+                // TODO save shopping list maybe in notes field??
+                ShoppingTask shop_task = (ShoppingTask)my_task;
+                contentValues.put("ID", shop_task.getID());
+                contentValues.put("TYPE", "SHOPPING");
+                contentValues.put("TITLE", shop_task.getTitle());
+                contentValues.put("CATEGORY", "");
+                contentValues.put("DEADLINE", "");
+                contentValues.put("NOTIFICATION", "");
+                contentValues.put("NOTES", "");
+                break;
+
+            //TODO ADD DEFAULT EXCEPTION
         }
-
-        return listTasks;
+        return contentValues;
     }
 
-    public Task getTask(int ID) {
-        /**
-         * gets Task with the given ID
-         */
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM TABEL_ACTIVE WHERE ID = " + ID + ";";
-        Cursor data = db.rawQuery(query, null);
-
-        // fill Task
-        Task my_task = convertRowToTask(data);
-
-        return my_task;
-    }
-
+    /**
+     * converts a Row from the DB to a Task
+     */
     public Task convertRowToTask(Cursor data){
-        /**
-         * converts a Row from the DB to a Task
-         */
-
         String task_type = data.getString(data.getColumnIndex("TYPE"));
         int ID;
         String title;
@@ -252,14 +278,61 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             default:
                 my_task = null;
         }
-
         return my_task;
     }
 
+    public ContentValues createContentFromCommand(Command myCommand) {
+        ContentValues contentValues = new ContentValues();
+        String commandType = myCommand.getType();
+        switch (commandType) {
+            case "COMPLETE":
+                contentValues.put("COMMAND", "COMPLETE");
+                contentValues.put("ID", myCommand.getTaskId());
+            case "DELETE":
+                contentValues.put("COMMAND", "DELETE");
+                contentValues.put("ID", myCommand.getTaskId());
+        }
+        return contentValues;
+    }
+
+    /**
+     * Adds a Command
+     */
+    public boolean addCommand(Command myCommand){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = createContentFromCommand(myCommand);
+
+        long result = db.insert("TABLE_COMMANDS", null, contentValues);
+
+        // if data is inserted incorrectly result will be -1
+        if (result == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * gets Task with the given ID
+     */
+    public Pair<Integer, String> getCommand(int ID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM TABEL_COMMANDS WHERE ID = " + ID + ";";
+        Cursor data = db.rawQuery(query, null);
+
+        // fill Task
+        String command = data.getString(data.getColumnIndex("COMMAND"));
+        int taskId = data.getInt(data.getColumnIndex("ID"));
+
+        Command myCommand;
+
+        switch (command){
+            case "COMPLETE":
+                myCommand = new Complete(taskId);
+            case "DELETE":
+                myCommand = new Delete(taskId);
+        }
+        return new Pair<>(taskId, command);
+    }
+
 }
-
-
-
-
-
-
