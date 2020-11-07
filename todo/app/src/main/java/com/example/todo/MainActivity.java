@@ -2,14 +2,18 @@ package com.example.todo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.gesture.GestureOverlayView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.GestureDetector;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,8 +45,13 @@ public class MainActivity extends AppCompatActivity {
     private Button location_button;
     private Button undoButton;
     private Button redoButton;
+    private Invoker invoker;
 
-    DatabaseHelper mDatabaseHelper;
+    DatabaseHelper databaseHelper;
+
+    //for flings, can be tuned
+    private float flingMin = 100;
+    private float velocityMin = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listView = findViewById(R.id.listView);
-        mDatabaseHelper = new DatabaseHelper(this);
+        databaseHelper = new DatabaseHelper(this);
 
         addbutton = findViewById(R.id.add_button);
         scheduled_button = findViewById(R.id.scheduled_button);
@@ -58,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
         location_button = findViewById(R.id.location_button);
 
         undoButton = findViewById(R.id.undo_button);
+        undoButton.setEnabled(false);
         redoButton = findViewById(R.id.redo_button);
+        redoButton.setEnabled(false);
 
         registerForContextMenu(addbutton);
 
@@ -66,10 +77,13 @@ public class MainActivity extends AppCompatActivity {
         setUpListViewListener();
 
         //create list adapter and set the adapter
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listData);
         listView.setAdapter(adapter);
 
+        //invoker for command pattern
+        invoker = new Invoker(new DatabaseHelper(this));
+
+        //button listeners
         addbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,6 +107,16 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(to_edit_shopping_task);
             }
         });
+        undoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                invoker.clickUndo();
+            }
+        });
+        redoButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                invoker.clickRedo();
+            }
+        });
     }
 
     @Override
@@ -102,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.choose_task_menu, menu);
     }
 
+    //three bottom menu buttons
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
@@ -122,14 +147,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateListView(){
-        Log.d(TAG, "populateListeView : Displaying data from DB in ListView");
+        Log.d(TAG, "populateListView : Displaying data from DB in ListView");
 
         // get the Data and append to a list
-        activeTasks = mDatabaseHelper.getAllActiveTasks();
+        activeTasks = databaseHelper.getAllActiveTasks();
         listData = new ArrayList<>();
 
         for (Task t : activeTasks){
-            // TODO make sure task object is accessable ( same index as in array list, task has to be created in databasehelper)
+            // TODO make sure task object is accessible ( same index as in array list, task has to be created in databasehelper)
             //get the value from col 3 which is the name and add to arraylist
             listData.add(t.getTitle());
         }
@@ -148,12 +173,20 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Context context = getApplicationContext();
                 Task selected_task = activeTasks.get(position);
-                Toast.makeText(context,"ID of task is " + Integer.toString(selected_task.getID()), Toast.LENGTH_SHORT).show();
+
+                // command complete hier, weil swipen nicht klappt
+                Complete completeCommand = new Complete(selected_task.getID(), databaseHelper);
+                invoker.setCommand(completeCommand);
+                invoker.clickDo();
+
+                Toast.makeText(context,"task with id " + Integer.toString(selected_task.getID()) + " was completed", Toast.LENGTH_SHORT).show();
                 //itemsAdapter.notifyDataSetChanged();
+
+                //verschwindet nicht aus der Liste (im ui)
+                populateListView();
+                undoButton.setEnabled(true);
                 return true;
             }
         });
     }
-
-
 }

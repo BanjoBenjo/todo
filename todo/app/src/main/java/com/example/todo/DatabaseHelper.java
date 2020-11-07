@@ -9,10 +9,11 @@ import android.util.Log;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String TAG = "DatebaseHelper";
+    private static final String TAG = "DatabaseHelper";
 
     private static final String DATABASE_NAME = "TASK_DB";
 
@@ -44,17 +45,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // TABLE OF COMMANDS
     private static final String DATABASE_CREATE_TABLE_COMMANDS = "CREATE TABLE " +
-            "TABLE_COMMANDS(ID INTEGER PRIMARY KEY AUTOINCREMENT, COMMAND TEXT, TASK_ID INTEGER)";
+            "TABLE_COMMANDS (ID INTEGER PRIMARY KEY AUTOINCREMENT, COMMAND TEXT, TASK_ID INTEGER)";
 
-    public DatabaseHelper(Context context){ super(context, DATABASE_NAME, null, 1);}
+    public DatabaseHelper(Context context){
+        super(context, DATABASE_NAME, null, 1);
+    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         db.execSQL(DATABASE_CREATE_TABLE_ACTIVE);
         db.execSQL(DATABASE_CREATE_TABLE_COMPLETED);
         db.execSQL(DATABASE_CREATE_TABLE_DELETED);
         db.execSQL(DATABASE_CREATE_TABLE_COMMANDS);
+        Log.wtf("MOIN","onCreate called");
     }
 
     @Override
@@ -106,7 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public Task getTask(int ID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM TABEL_ACTIVE WHERE ID = " + ID + ";";
+        String query = "SELECT * FROM TABLE_ACTIVE WHERE ID = " + ID + ";";
         Cursor data = db.rawQuery(query, null);
 
         // fill Task
@@ -139,7 +142,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Methods to move Data from one Table to another
      */
     public void completeTask(int task_id) {
-        //TODO add return statement if function was successfull
+        //TODO add return statement if function was successful
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -152,7 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void reopenTask(int task_id) {
-        //TODO add return statement if function was successfull
+        //TODO add return statement if function was successful
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -165,7 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void deleteTask(int task_id) {
-        //TODO add return statement if function was successfull
+        //TODO add return statement if function was successful
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -290,9 +293,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             case "COMPLETE":
                 contentValues.put("COMMAND", "COMPLETE");
                 contentValues.put("ID", myCommand.getTaskId());
+                break;
             case "DELETE":
                 contentValues.put("COMMAND", "DELETE");
                 contentValues.put("ID", myCommand.getTaskId());
+                break;
+            default:
+                Log.d("DatabaseHelper","default in createContentFromCommand");
+                break;
         }
         return contentValues;
     }
@@ -303,7 +311,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean addCommand(Command myCommand){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = createContentFromCommand(myCommand);
-
+        Log.d("MOIN","contentvalues: " + contentValues);
         long result = db.insert("TABLE_COMMANDS", null, contentValues);
 
         // if data is inserted incorrectly result will be -1
@@ -315,14 +323,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * gets Task with the given ID
+     * gets Command with the given ID
      */
     public Command getCommand(int ID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM TABEL_COMMANDS WHERE ID = " + ID + ";";
+        Log.wtf("MOIN", "ID is " + ID);
+        String query = "SELECT * FROM TABLE_COMMANDS WHERE ID = " + ID + ";";
+        Log.wtf("MOIN", "query: " + query);
         Cursor data = db.rawQuery(query, null);
+        //TODO SOMETHING IS WRONG WITH COMMANDS TABLE
 
-        // fill Task
+        //this works fine: [ID, COMMAND, TASK_ID]
+        Log.wtf("MOIN", Arrays.toString(data.getColumnNames()));
+
+        //data.getColumnIndex() returns -1 because none of the columns exist (I tested all columns)
         String command = data.getString(data.getColumnIndex("COMMAND"));
         int taskId = data.getInt(data.getColumnIndex("ID"));
 
