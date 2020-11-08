@@ -88,6 +88,7 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         return task_id;
     }
 
+    //todo do something with date and time provided by pickers
     public void showTimePickerDialog(View view) {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");

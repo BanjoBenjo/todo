@@ -8,12 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.util.Pair;
 
-import java.io.Console;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String TAG = "DatebaseHelper";
+    private static final String TAG = "DatabaseHelper";
 
     private static final String DATABASE_NAME = "TASK_DB";
 
@@ -45,9 +45,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // TABLE OF COMMANDS
     private static final String DATABASE_CREATE_TABLE_COMMANDS = "CREATE TABLE " +
-            "TABLE_COMMANDS(ID INTEGER PRIMARY KEY AUTOINCREMENT, COMMAND TEXT, TASK_ID INTEGER)";
+            "TABLE_COMMANDS (ID INTEGER PRIMARY KEY AUTOINCREMENT, COMMAND TEXT, TASK_ID INTEGER)";
 
-    public DatabaseHelper(Context context){ super(context, DATABASE_NAME, null, 1);}
+    public DatabaseHelper(Context context){
+        super(context, DATABASE_NAME, null, 1);
+    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -143,7 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Methods to move Data from one Table to another
      */
     public void completeTask(int task_id) {
-        //TODO add return statement if function was successfull
+        //TODO add return statement if function was successful
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -156,7 +158,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void reopenTask(int task_id) {
-        //TODO add return statement if function was successfull
+        //TODO add return statement if function was successful
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -169,7 +171,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void deleteTask(int task_id) {
-        //TODO add return statement if function was successfull
+        //TODO add return statement if function was successful
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -294,9 +296,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             case "COMPLETE":
                 contentValues.put("COMMAND", "COMPLETE");
                 contentValues.put("ID", myCommand.getTaskId());
+                break;
             case "DELETE":
                 contentValues.put("COMMAND", "DELETE");
                 contentValues.put("ID", myCommand.getTaskId());
+                break;
+            default:
+                Log.d("DatabaseHelper","default in createContentFromCommand");
+                break;
         }
         return contentValues;
     }
@@ -319,7 +326,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * gets Task with the given ID
+     * gets Command with the given ID
      */
     public Command getCommand(int ID) {
         SQLiteDatabase db = this.getWritableDatabase();
