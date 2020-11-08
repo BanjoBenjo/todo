@@ -33,8 +33,14 @@ public class MainActivity extends AppCompatActivity {
     Intent toNewScheduledTask;
     Intent toNewShoppingTask;
 
+    /*
+    This Activity holds two seperat lists of the tasks. One List holds the actual Task objects
+    The second List only holds the Titles of the objects for representation in the list view
+    Very important to keep both synchronized
+     */
     private ArrayList<Task> activeTasks;
     private List<String> listData;
+    ArrayAdapter<String> listAdapter;
 
     // Interface
     private ListView listView;
@@ -78,12 +84,10 @@ public class MainActivity extends AppCompatActivity {
 
         registerForContextMenu(addbutton);
 
+
+
         populateListView();
         setUpListViewListener();
-
-        //create list adapter and set the adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listData);
-        listView.setAdapter(adapter);
 
         //invoker for command pattern
         invoker = new Invoker(new DatabaseHelper(this));
@@ -148,15 +152,27 @@ public class MainActivity extends AppCompatActivity {
     private void populateListView(){
         Log.d(TAG, "populateListView : Displaying data from DB in ListView");
 
-        // get the Data and append to a list
+        // get Task list and empty Title list
         activeTasks = mDatabaseHelper.getAllActiveTasks();
         listData = new ArrayList<>();
 
+        //create list adapter and set the adapter
+        listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listData);
+        listView.setAdapter(listAdapter);
+
         for (Task t : activeTasks){
-            // TODO make sure task object is accessible ( same index as in array list, task has to be created in databasehelper)
-            //get the value from col 3 which is the name and add to arraylist
             listData.add(t.getTitle());
         }
+    }
+
+    public void updateTitleList() {
+        listData.clear();
+        activeTasks = mDatabaseHelper.getAllActiveTasks();
+
+        for (Task t : activeTasks){
+            listData.add(t.getTitle());
+        }
+        listAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -182,10 +198,11 @@ public class MainActivity extends AppCompatActivity {
                 //itemsAdapter.notifyDataSetChanged();
 
                 //verschwindet nicht aus der Liste (im ui)
-                populateListView();
                 undoButton.setEnabled(true);
+                updateTitleList();
             }
         });
+
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -196,8 +213,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent toEditBasicTask = new Intent(MainActivity.this, EditBasicTaskActivity.class);
                 toEditBasicTask.putExtra("taskID", selected_task.getID());
                 MainActivity.this.startActivity(toEditBasicTask);
-                //itemsAdapter.notifyDataSetChanged();
-
                 return true;
             }
         });
