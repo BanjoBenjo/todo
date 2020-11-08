@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class EditShoppingTaskActivity extends Activity {
+public class NewShoppingTaskActivity extends Activity {
     private ArrayList<ShoppingItem> shoppingItems;
     private ArrayAdapter<String> shoppingItemsAdapter;
     private ListView shoppingListView;
@@ -30,7 +30,7 @@ public class EditShoppingTaskActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_shopping_task);
+        setContentView(R.layout.shopping_task);
 
         shoppingListView = findViewById(R.id.shoppingListView);
         addShoppingItem = findViewById(R.id.addShoppingItem);

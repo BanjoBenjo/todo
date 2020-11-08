@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewDebug;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,16 +14,13 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class EditBasicTaskActivity extends Activity {
+public class NewBasicTaskActivity extends Activity {
 
     private static final String TAG = "NewBasicTaskActivity";
-    int taskID;
-    BasicTask thisTask;
 
-    DatabaseHelper thisDBHelper;
+    DatabaseHelper mDatabaseHelper;
     private EditText nameView;
     private Spinner notiSpinner;
     private Button submitButton;
@@ -38,14 +34,6 @@ public class EditBasicTaskActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.basic_task);
-
-        thisDBHelper = new DatabaseHelper(this);
-
-        Intent thisIntent = getIntent();
-        if (thisIntent.getExtras().containsKey("taskID")) {
-            taskID = thisIntent.getIntExtra("taskID", 0);
-            thisTask = (BasicTask) thisDBHelper.getTask(taskID);
-        }
 
         categories.add("privat");
         categories.add("school");
@@ -61,20 +49,16 @@ public class EditBasicTaskActivity extends Activity {
         catAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         notiSpinner.setAdapter(catAdapter);
 
-        // set all informations from task here
-        nameView.setText(thisTask.getTitle());
-        notiSpinner.setSelection(categories.indexOf(thisTask.getCategory()));
-        notes.setText(thisTask.getNotes());
+        mDatabaseHelper = new DatabaseHelper(this);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isEmpty(nameView)) {
-                    thisTask.setTitle(nameView.getText().toString());
-                    thisTask.setCategory(categories.get(notiSpinner.getSelectedItemPosition()));
-                    thisTask.setNotes(notes.getText().toString());
-                    toastMessage("Task updated");
-                    update(thisTask);
+                    BasicTask task = new BasicTask(getGlobalTaskId(), nameView.getText().toString(),
+                            categories.get(notiSpinner.getSelectedItemPosition()), notes.getText().toString());
+                    toastMessage("Task created");
+                    addTask(task);
                 }else {
                     toastMessage("You have to enter a name!");
                 }
@@ -82,13 +66,13 @@ public class EditBasicTaskActivity extends Activity {
         });
     }
 
-    public void update(BasicTask mTask) {
+    public void addTask(BasicTask mTask) {
         // Todo load task obejct in database / test with name only
-        boolean dataUpdated = thisDBHelper.updateTask(mTask);
+        boolean insertData = mDatabaseHelper.addTask(mTask);
 
-        if (dataUpdated) {
-            Intent to_mainactivity = new Intent(EditBasicTaskActivity.this, MainActivity.class);
-            EditBasicTaskActivity.this.startActivity(to_mainactivity);
+        if (insertData) {
+            Intent to_mainactivity = new Intent(NewBasicTaskActivity.this, MainActivity.class);
+            NewBasicTaskActivity.this.startActivity(to_mainactivity);
 
         } else {
             toastMessage("There went something wrong..");

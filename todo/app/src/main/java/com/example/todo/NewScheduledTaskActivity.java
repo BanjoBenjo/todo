@@ -1,6 +1,5 @@
 package com.example.todo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,13 +12,12 @@ import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class EditScheduledTaskActivity extends FragmentActivity {
+public class NewScheduledTaskActivity extends FragmentActivity {
 
     private EditText nameview;
     private Spinner notificationSpinner;
@@ -40,7 +38,7 @@ public class EditScheduledTaskActivity extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_scheduled_task);
+        setContentView(R.layout.scheduled_task);
 
         categories.add("privat");
         categories.add("school");
@@ -72,8 +70,8 @@ public class EditScheduledTaskActivity extends FragmentActivity {
                     categories.get(categorySpinner.getSelectedItemPosition()), notes.getText().toString());
 
             // Todo load task in database
-            Intent to_mainactivity = new Intent(EditScheduledTaskActivity.this, MainActivity.class);
-            EditScheduledTaskActivity.this.startActivity(to_mainactivity);
+            Intent to_mainactivity = new Intent(NewScheduledTaskActivity.this, MainActivity.class);
+            NewScheduledTaskActivity.this.startActivity(to_mainactivity);
         }
     }
 

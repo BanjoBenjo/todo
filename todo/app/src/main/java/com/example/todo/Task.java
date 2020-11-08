@@ -39,6 +39,7 @@ public class Task {
     }
 
     public String getCategory(){ return this.category; }
+    public void setCategory(String newCategory){ this.category = newCategory; }
 
     public int getID(){ return this.ID; }
 

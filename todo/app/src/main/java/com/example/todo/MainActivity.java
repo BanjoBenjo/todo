@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -14,21 +13,20 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
-import android.widget.DatePicker;
-import android.widget.TimePicker;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+
+    // Intents
+    Intent toNewBasicTask;
+    Intent toNewScheduledTask;
+    Intent toNewShoppingTask;
 
     private ArrayList<Task> activeTasks;
     private List<String> listData;
@@ -48,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initialize Intents
+        toNewBasicTask = new Intent(MainActivity.this, NewBasicTaskActivity.class);
+        toNewScheduledTask = new Intent(MainActivity.this, NewScheduledTaskActivity.class);
+        toNewShoppingTask = new Intent(MainActivity.this, NewShoppingTaskActivity.class);
+
 
         listView = findViewById(R.id.listView);
         mDatabaseHelper = new DatabaseHelper(this);
@@ -73,24 +77,21 @@ public class MainActivity extends AppCompatActivity {
         addbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent to_edit_basic_task = new Intent(MainActivity.this, EditBasicTaskActivity.class);
-                MainActivity.this.startActivity(to_edit_basic_task);
+                MainActivity.this.startActivity(toNewBasicTask);
             }
         });
 
         scheduled_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent to_edit_scheduled_task = new Intent(MainActivity.this, EditScheduledTaskActivity.class);
-                MainActivity.this.startActivity(to_edit_scheduled_task);
+                MainActivity.this.startActivity(toNewScheduledTask);
             }
         });
 
         shopping_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent to_edit_shopping_task = new Intent(MainActivity.this, EditShoppingTaskActivity.class);
-                MainActivity.this.startActivity(to_edit_shopping_task);
+                MainActivity.this.startActivity(toNewShoppingTask);
             }
         });
     }
@@ -106,16 +107,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.basic_task_option:
-                Intent to_edit_basic_task = new Intent(MainActivity.this, EditBasicTaskActivity.class);
-                MainActivity.this.startActivity(to_edit_basic_task);
+                MainActivity.this.startActivity(toNewBasicTask);
                 return true;
             case R.id.shopping_list_option:
-                Intent to_edit_shopping_task = new Intent(MainActivity.this, EditShoppingTaskActivity.class);
-                MainActivity.this.startActivity(to_edit_shopping_task);
+                MainActivity.this.startActivity(toNewShoppingTask);
                 return true;
             case R.id.scheduled_task_option:
-                Intent to_edit_scheduled_task = new Intent(MainActivity.this, EditScheduledTaskActivity.class);
-                MainActivity.this.startActivity(to_edit_scheduled_task);
+                MainActivity.this.startActivity(toNewScheduledTask);
             default:
                 return super.onContextItemSelected(item);
         }
@@ -148,7 +146,11 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Context context = getApplicationContext();
                 Task selected_task = activeTasks.get(position);
-                Toast.makeText(context,"ID of task is " + Integer.toString(selected_task.getID()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"ID of task is " + selected_task.getID(), Toast.LENGTH_SHORT).show();
+
+                Intent toEditBasicTask = new Intent(MainActivity.this, EditBasicTaskActivity.class);
+                toEditBasicTask.putExtra("taskID", selected_task.getID());
+                MainActivity.this.startActivity(toEditBasicTask);
                 //itemsAdapter.notifyDataSetChanged();
                 return true;
             }

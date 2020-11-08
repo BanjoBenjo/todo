@@ -25,13 +25,16 @@
             </intent-filter>
         </activity>
 
+        <activity android:label="@string/app_name" android:name=".NewBasicTaskActivity">
+        </activity>
+
+        <activity android:label="@string/app_name" android:name=".NewShoppingTaskActivity">
+        </activity>
+
+        <activity android:label="@string/app_name" android:name=".NewScheduledTaskActivity">
+        </activity>
+
         <activity android:label="@string/app_name" android:name=".EditBasicTaskActivity">
-        </activity>
-
-        <activity android:label="@string/app_name" android:name=".EditShoppingTaskActivity">
-        </activity>
-
-        <activity android:label="@string/app_name" android:name=".EditScheduledTaskActivity">
         </activity>
 
     </application>

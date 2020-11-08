@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.util.Pair;
 
+import java.io.Console;
 import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -31,7 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COL7 = "NOTES";
 
     private static final String DATABASE_CREATE_TABLE_ACTIVE = "CREATE TABLE " +
-            "TABLE_ACTIVE (ID INTEGER PRIMARY KEY, TYPE TEXT, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
+            "TABLE_ACTIVE (ID INTEGER PRIMARY KEY, TYPE TEXT NOT NULL, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
             "NOTIFICATION TEXT, NOTES TEXT)";
 
     private static final String DATABASE_CREATE_TABLE_COMPLETED = "CREATE TABLE " +
@@ -85,6 +86,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Updates a Task to the Active Table
+     */
+    public boolean updateTask(Task my_task){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = createContentFromTask(my_task);
+
+        long result = db.update(TABLE_ACTIVE, contentValues,"ID=" + my_task.getID(),null);
+
+        // if data is inserted incorrectly result will be -1
+        if (result == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * gets complete Active Table, builds Tasks and returns list
      */
     public ArrayList<Task> getAllActiveTasks(){
@@ -106,34 +124,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public Task getTask(int ID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM TABEL_ACTIVE WHERE ID = " + ID + ";";
+        Task myTask = null;
+        String query = "SELECT * FROM " + TABLE_ACTIVE + " WHERE ID = " + ID;
         Cursor data = db.rawQuery(query, null);
 
-        // fill Task
-        Task my_task = convertRowToTask(data);
-
-        return my_task;
-    }
-
-    /**
-     * Pushes changes of an existing task to the database
-     */
-    public void updateTask(Task my_task){
-        // TODO add return value true/false also not tested
-        SQLiteDatabase db = this.getWritableDatabase();
-        int task_id = my_task.getID();
-        ContentValues contentValues = createContentFromTask(my_task);
-
-        db.beginTransaction();
-        try {
-            db.delete(TABLE_ACTIVE, "ID =" + task_id, null);
-            db.insert(TABLE_ACTIVE, null, contentValues);
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
+        // TODO find better solution for this case, than this workaround (only one return)
+        while(data.moveToNext()){
+            myTask = convertRowToTask(data);
         }
 
+        return myTask;
+
+
     }
+
 
     /**
      * Methods to move Data from one Table to another
@@ -319,12 +323,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public Command getCommand(int ID) {
         SQLiteDatabase db = this.getWritableDatabase();
+        String command = "";
+        int taskId = 0;
+
         String query = "SELECT * FROM TABEL_COMMANDS WHERE ID = " + ID + ";";
         Cursor data = db.rawQuery(query, null);
 
-        // fill Task
-        String command = data.getString(data.getColumnIndex("COMMAND"));
-        int taskId = data.getInt(data.getColumnIndex("ID"));
+        while(data.moveToNext()) {
+            // fill Task
+            command = data.getString(data.getColumnIndex("COMMAND"));
+            taskId = data.getInt(data.getColumnIndex("ID"));
+        }
 
         Command myCommand;
 
