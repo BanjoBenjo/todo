@@ -134,10 +134,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while(data.moveToNext()){
             myTask = convertRowToTask(data);
         }
-
         return myTask;
-
-
     }
 
 
@@ -290,21 +287,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ContentValues createContentFromCommand(Command myCommand) {
 
         ContentValues contentValues = new ContentValues();
-        String commandType = myCommand.getType();
 
-        switch (commandType) {
-            case "COMPLETE":
-                contentValues.put("COMMAND", "COMPLETE");
-                contentValues.put("ID", myCommand.getTaskId());
-                break;
-            case "DELETE":
-                contentValues.put("COMMAND", "DELETE");
-                contentValues.put("ID", myCommand.getTaskId());
-                break;
-            default:
-                Log.d("DatabaseHelper","default in createContentFromCommand");
-                break;
-        }
+        //contentValues.put("ID", myCommand.getCommandId());
+        contentValues.put("COMMAND", myCommand.getType());
+        contentValues.put("TASK_ID", myCommand.getTaskId());
+
         return contentValues;
     }
 
@@ -330,17 +317,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public Command getCommand(int ID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String command = "";
-        int taskId = 0;
+        String command;
+        int taskId;
 
-        String query = "SELECT * FROM TABEL_COMMANDS WHERE ID = " + ID + ";";
+        String query = "SELECT * FROM TABLE_COMMANDS WHERE ID = " + ID;
         Cursor data = db.rawQuery(query, null);
+        Log.wtf("DEBUG databaseHelper", "getting command with id " + ID);
 
-        while(data.moveToNext()) {
-            // fill Task
-            command = data.getString(data.getColumnIndex("COMMAND"));
-            taskId = data.getInt(data.getColumnIndex("ID"));
-        }
+        // fill Task
+        data.moveToFirst();
+        command = data.getString(data.getColumnIndex("COMMAND"));
+        taskId = data.getInt(data.getColumnIndex("TASK_ID"));
 
         Command myCommand;
 
@@ -355,6 +342,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 myCommand = null;
                 break;
         }
+        Log.wtf("DEBUG databaseHelper", "command creation successful " + String.valueOf(myCommand.getType()));
         return myCommand;
     }
 

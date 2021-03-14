@@ -2,7 +2,6 @@ package com.example.todo;
 
 import android.util.Log;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class Invoker {
         Log.wtf("MOIN", "do with command " + theCommand);
         theCommand.execute();
         if (!databaseHelper.addCommand(theCommand)) {
-            Log.d("Invoker","command not correctly insterted into table");
+            Log.d("Invoker","command not correctly inserted into table");
         }
         counter++;
         Log.wtf("MOIN", "counter is now " + counter);
@@ -36,8 +35,9 @@ public class Invoker {
 
     public void clickUndo() {
         Log.wtf("MOIN", "undo with counter " + counter);
-        counter--;
         theCommand = databaseHelper.getCommand(counter);
+        Log.wtf("DEBUG invoker", String.valueOf(theCommand));
+        counter--;
         theCommand.undo();
     }
 

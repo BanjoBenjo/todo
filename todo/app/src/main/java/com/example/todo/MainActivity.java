@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper mDatabaseHelper;
 
-    //for flings, can be tuned
+    //for flings, can be tuned, not used atm
     private float flingMin = 100;
     private float velocityMin = 100;
 
@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
         toNewBasicTask = new Intent(MainActivity.this, NewBasicTaskActivity.class);
         toNewScheduledTask = new Intent(MainActivity.this, NewScheduledTaskActivity.class);
         toNewShoppingTask = new Intent(MainActivity.this, NewShoppingTaskActivity.class);
-
 
         listView = findViewById(R.id.listView);
         mDatabaseHelper = new DatabaseHelper(this);
@@ -83,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
         redoButton.setEnabled(false);
 
         registerForContextMenu(addbutton);
-
-
 
         populateListView();
         setUpListViewListener();
@@ -183,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
      * Long click listener to Edit a task
      */
     private void setUpListViewListener() {
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

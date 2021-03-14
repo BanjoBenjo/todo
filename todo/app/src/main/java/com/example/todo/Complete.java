@@ -1,6 +1,7 @@
 package com.example.todo;
 
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ public class Complete implements Command {
     private int taskId;
     private DatabaseHelper databaseHelper;
 
-    public Complete(int newTaskId, DatabaseHelper newDateBaseHelper) {
+    public Complete( int newTaskId, DatabaseHelper newDateBaseHelper) {
         taskId = newTaskId;
         databaseHelper = newDateBaseHelper;
     }
@@ -30,6 +31,7 @@ public class Complete implements Command {
 
     @Override
     public int getTaskId() {
+        Log.wtf("DEBUG complete", "returning " + String.valueOf(taskId));
         return taskId;
     }
 }
