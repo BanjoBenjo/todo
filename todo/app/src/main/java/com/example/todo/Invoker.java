@@ -11,7 +11,7 @@ public class Invoker {
     private DatabaseHelper databaseHelper;
 
     public Invoker(DatabaseHelper newDataBaseHelper) {
-        counter = 0;
+        counter = 1;
         databaseHelper = newDataBaseHelper;
     }
 
@@ -26,22 +26,24 @@ public class Invoker {
     public void clickDo() {
         Log.wtf("MOIN", "do with command " + theCommand);
         theCommand.execute();
-        if (!databaseHelper.addCommand(theCommand)) {
-            Log.d("Invoker","command not correctly inserted into table");
+        if (!databaseHelper.addCommand(theCommand, counter)) {
+            Log.d("DEBUG Invoker","command not correctly inserted into table");
         }
         counter++;
         Log.wtf("MOIN", "counter is now " + counter);
     }
 
     public void clickUndo() {
-        Log.wtf("MOIN", "undo with counter " + counter);
-        theCommand = databaseHelper.getCommand(counter);
-        Log.wtf("DEBUG invoker", String.valueOf(theCommand));
+        Log.d("DEBUG Invoker", "undo with counter " + counter);
         counter--;
+        theCommand = databaseHelper.getCommand(counter);
         theCommand.undo();
     }
 
     public void clickRedo() {
+        Log.d("DEBUG Invoker", "redo with counter " + counter);
+        theCommand = databaseHelper.getCommand(counter);
+        Log.wtf("DEBUG", "got command " + String.valueOf(theCommand));
         theCommand.execute();
         counter++;
     }

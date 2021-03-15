@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     Intent toNewShoppingTask;
 
     /*
-    This Activity holds two seperat lists of the tasks. One List holds the actual Task objects
+    This Activity holds two seperate lists of the tasks. One List holds the actual Task objects
     The second List only holds the Titles of the objects for representation in the list view
     Very important to keep both synchronized
      */
@@ -113,13 +113,18 @@ public class MainActivity extends AppCompatActivity {
         undoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 invoker.clickUndo();
+                updateTitleList();
+                redoButton.setEnabled(true);
             }
         });
         redoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 invoker.clickRedo();
+                updateTitleList();
             }
         });
+
+        mDatabaseHelper.dropCommands();
     }
 
     @Override
@@ -163,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateTitleList() {
+        // ist das die ListView der Tasks?
         listData.clear();
         activeTasks = mDatabaseHelper.getAllActiveTasks();
 

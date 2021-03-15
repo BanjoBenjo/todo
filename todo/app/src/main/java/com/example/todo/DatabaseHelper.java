@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-
     private static final String TAG = "DatabaseHelper";
 
     private static final String DATABASE_NAME = "TASK_DB";
@@ -22,14 +21,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_COMPLETED = "TABLE_COMPLETED";
     private static final String TABLE_DELETED = "TABLE_DELETED";
     private static final String TABLE_COMMANDS = "TABLE_COMMANDS";
-
-    private static final String COL1 = "ID";
-    private static final String COL2 = "TYPE";
-    private static final String COL3 = "TITLE";
-    private static final String COL4 = "CATEGORY";
-    private static final String COL5 = "DEADLINE";
-    private static final String COL6 = "NOTIFICATION";
-    private static final String COL7 = "NOTES";
 
     private static final String DATABASE_CREATE_TABLE_ACTIVE = "CREATE TABLE " +
             "TABLE_ACTIVE (ID INTEGER PRIMARY KEY, TYPE TEXT NOT NULL, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
@@ -53,7 +44,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        // only gets called after device data has been wiped or after fresh install
+        Log.d("DEBUG DatabaseHelper", "onCreate()");
         db.execSQL(DATABASE_CREATE_TABLE_ACTIVE);
         db.execSQL(DATABASE_CREATE_TABLE_COMPLETED);
         db.execSQL(DATABASE_CREATE_TABLE_DELETED);
@@ -62,6 +54,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // gets called on upgrade, not update !!!
+        Log.d("DEBUG DatabaseHelper", "onUpgrade()");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTIVE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMPLETED);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELETED);
@@ -202,6 +196,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         switch(task_type)
         {
             case "BASIC":
+                //TODO casten ist unnötig oder?
                 BasicTask b_task = (BasicTask)my_task;
                 contentValues.put("ID", b_task.getID());
                 contentValues.put("TYPE", "BASIC");
@@ -284,23 +279,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return my_task;
     }
 
-    public ContentValues createContentFromCommand(Command myCommand) {
-
+    public ContentValues createContentFromCommand(Command myCommand, int commandCounter) {
         ContentValues contentValues = new ContentValues();
-
-        //contentValues.put("ID", myCommand.getCommandId());
+        contentValues.put("ID", commandCounter);
         contentValues.put("COMMAND", myCommand.getType());
         contentValues.put("TASK_ID", myCommand.getTaskId());
-
         return contentValues;
     }
 
     /**
      * Adds a Command
      */
-    public boolean addCommand(Command myCommand){
+    public boolean addCommand(Command myCommand, int commandCounter){
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = createContentFromCommand(myCommand);
+        ContentValues contentValues = createContentFromCommand(myCommand, commandCounter);
 
         long result = db.insert("TABLE_COMMANDS", null, contentValues);
 
@@ -328,6 +320,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         data.moveToFirst();
         command = data.getString(data.getColumnIndex("COMMAND"));
         taskId = data.getInt(data.getColumnIndex("TASK_ID"));
+        // not tested
+        data.close();
 
         Command myCommand;
 
@@ -346,4 +340,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return myCommand;
     }
 
+    public void dropCommands () {
+        // workaround to clear TABLE_COMMANDS on app startup
+        Log.d("DEBUG DatabaseHelper", "dropCommands()");
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMANDS);
+        db.execSQL(DATABASE_CREATE_TABLE_COMMANDS);
+    }
 }
