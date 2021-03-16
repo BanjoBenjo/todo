@@ -44,15 +44,15 @@ public class MainActivity extends AppCompatActivity {
 
     // Interface
     private ListView listView;
-    private Button addbutton;
-    private Button shopping_button;
-    private Button scheduled_button;
-    private Button location_button;
+    private Button addButton;
+    private Button shoppingButton;
+    private Button scheduledButton;
+    private Button locationButton;
     private Button undoButton;
     private Button redoButton;
     private Invoker invoker;
 
-    DatabaseHelper mDatabaseHelper;
+    DatabaseHelper myDatabaseHelper;
 
     //for flings, can be tuned, not used atm
     private float flingMin = 100;
@@ -69,19 +69,19 @@ public class MainActivity extends AppCompatActivity {
         toNewShoppingTask = new Intent(MainActivity.this, NewShoppingTaskActivity.class);
 
         listView = findViewById(R.id.listView);
-        mDatabaseHelper = new DatabaseHelper(this);
+        myDatabaseHelper = new DatabaseHelper(this);
 
-        addbutton = findViewById(R.id.add_button);
-        scheduled_button = findViewById(R.id.scheduled_button);
-        shopping_button = findViewById(R.id.shopping_button);
-        location_button = findViewById(R.id.location_button);
+        addButton = findViewById(R.id.add_button);
+        scheduledButton = findViewById(R.id.scheduled_button);
+        shoppingButton = findViewById(R.id.shopping_button);
+        locationButton = findViewById(R.id.location_button);
 
         undoButton = findViewById(R.id.undo_button);
         undoButton.setEnabled(false);
         redoButton = findViewById(R.id.redo_button);
         redoButton.setEnabled(false);
 
-        registerForContextMenu(addbutton);
+        registerForContextMenu(addButton);
 
         populateListView();
         setUpListViewListener();
@@ -90,21 +90,21 @@ public class MainActivity extends AppCompatActivity {
         invoker = new Invoker(new DatabaseHelper(this));
 
         //button listeners
-        addbutton.setOnClickListener(new View.OnClickListener() {
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MainActivity.this.startActivity(toNewBasicTask);
             }
         });
 
-        scheduled_button.setOnClickListener(new View.OnClickListener() {
+        scheduledButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity.this.startActivity(toNewScheduledTask);
             }
         });
 
-        shopping_button.setOnClickListener(new View.OnClickListener() {
+        shoppingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity.this.startActivity(toNewShoppingTask);
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mDatabaseHelper.dropCommands();
+        myDatabaseHelper.dropCommands();
     }
 
     @Override
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "populateListView : Displaying data from DB in ListView");
 
         // get Task list and empty Title list
-        activeTasks = mDatabaseHelper.getAllActiveTasks();
+        activeTasks = myDatabaseHelper.getAllActiveTasks();
         listData = new ArrayList<>();
 
         //create list adapter and set the adapter
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
     public void updateTitleList() {
         // ist das die ListView der Tasks?
         listData.clear();
-        activeTasks = mDatabaseHelper.getAllActiveTasks();
+        activeTasks = myDatabaseHelper.getAllActiveTasks();
 
         for (Task t : activeTasks){
             listData.add(t.getTitle());
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Set up List view Listeners
      *
-     * TODO [HARD] click to show informations (add button for editing here as well)
+     * TODO [HARD] click to show information (add button for editing here as well)
      *
      * Long click listener to Edit a task
      */
@@ -194,14 +194,13 @@ public class MainActivity extends AppCompatActivity {
                 Task selected_task = activeTasks.get(position);
 
                 // command complete hier, weil swipen nicht klappt
-                Complete completeCommand = new Complete(selected_task.getID(), mDatabaseHelper);
+                Complete completeCommand = new Complete(selected_task.getID(), myDatabaseHelper);
                 invoker.setCommand(completeCommand);
                 invoker.clickDo();
 
                 Toast.makeText(context,"task with id " + Integer.toString(selected_task.getID()) + " was completed", Toast.LENGTH_SHORT).show();
                 //itemsAdapter.notifyDataSetChanged();
 
-                //verschwindet nicht aus der Liste (im ui)
                 undoButton.setEnabled(true);
                 updateTitleList();
             }

@@ -31,7 +31,7 @@ public class Complete implements Command {
 
     @Override
     public int getTaskId() {
-        Log.wtf("DEBUG complete", "returning " + String.valueOf(taskId));
+        Log.d("DEBUG Complete", "TaskId  " + String.valueOf(taskId));
         return taskId;
     }
 }

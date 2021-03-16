@@ -24,8 +24,8 @@ public class Invoker {
     }
 
     public void clickDo() {
-        Log.wtf("MOIN", "do with command " + theCommand);
         theCommand.execute();
+        Log.wtf("DEBUG Invoker", "Do with counter " + counter);
         if (!databaseHelper.addCommand(theCommand, counter)) {
             Log.d("DEBUG Invoker","command not correctly inserted into table");
         }
@@ -34,17 +34,23 @@ public class Invoker {
     }
 
     public void clickUndo() {
-        Log.d("DEBUG Invoker", "undo with counter " + counter);
+        Log.wtf("DEBUG Invoker", "Undo with counter " + counter);
         counter--;
         theCommand = databaseHelper.getCommand(counter);
         theCommand.undo();
     }
 
     public void clickRedo() {
-        Log.d("DEBUG Invoker", "redo with counter " + counter);
+        Log.wtf("DEBUG Invoker", "Redo with counter " + counter);
         theCommand = databaseHelper.getCommand(counter);
-        Log.wtf("DEBUG", "got command " + String.valueOf(theCommand));
         theCommand.execute();
         counter++;
     }
+    /*
+    TODO
+    Counter does not work, when do() follows undo()
+    does work, when undo() redo() do()
+    solution:   two seperate counters?
+                get last command from table?
+     */
 }

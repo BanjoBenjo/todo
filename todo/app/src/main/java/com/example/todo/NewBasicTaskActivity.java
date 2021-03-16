@@ -20,7 +20,7 @@ public class NewBasicTaskActivity extends Activity {
 
     private static final String TAG = "NewBasicTaskActivity";
 
-    DatabaseHelper mDatabaseHelper;
+    DatabaseHelper myDatabaseHelper;
     private EditText nameView;
     private Spinner notiSpinner;
     private Button submitButton;
@@ -49,7 +49,7 @@ public class NewBasicTaskActivity extends Activity {
         catAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         notiSpinner.setAdapter(catAdapter);
 
-        mDatabaseHelper = new DatabaseHelper(this);
+        myDatabaseHelper = new DatabaseHelper(this);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +68,7 @@ public class NewBasicTaskActivity extends Activity {
 
     public void addTask(BasicTask mTask) {
         // Todo load task obejct in database / test with name only
-        boolean insertData = mDatabaseHelper.addTask(mTask);
+        boolean insertData = myDatabaseHelper.addTask(mTask);
 
         if (insertData) {
             Intent to_mainactivity = new Intent(NewBasicTaskActivity.this, MainActivity.class);

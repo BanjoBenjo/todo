@@ -320,8 +320,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         data.moveToFirst();
         command = data.getString(data.getColumnIndex("COMMAND"));
         taskId = data.getInt(data.getColumnIndex("TASK_ID"));
-        // not tested
         data.close();
+        // delete entry from table (breaks redo button)
+        // db.execSQL("DELETE FROM TABLE_COMMANDS WHERE ID = " + ID);
 
         Command myCommand;
 
