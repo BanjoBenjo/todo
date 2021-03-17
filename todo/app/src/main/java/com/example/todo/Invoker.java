@@ -1,56 +1,48 @@
 package com.example.todo;
 
 import android.util.Log;
-import android.widget.Toast;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Invoker {
     private Command theCommand;
-    private int counter;
-    private DatabaseHelper databaseHelper;
-
-    public Invoker(DatabaseHelper newDataBaseHelper) {
-        counter = 1;
-        databaseHelper = newDataBaseHelper;
-    }
+    private int counter = 0;
+    private ArrayList<Command> commandList = new ArrayList<>();
 
     public void setCommand(Command newCommand) {
         theCommand = newCommand;
     }
 
-    public int getCounter() {
-        return counter;
-    }
-
     public void clickDo() {
-        theCommand.execute();
-        Log.wtf("DEBUG Invoker", "Do with counter " + counter);
-        if (!databaseHelper.addCommand(theCommand, counter)) {
-            Log.d("DEBUG Invoker","command not correctly inserted into table");
+        // if command executes after undo
+        if (counter < commandList.size()) {
+            commandList.subList(counter, commandList.size() - counter).clear();
         }
+        commandList.add(theCommand);
+        theCommand.execute();
         counter++;
-        Log.wtf("MOIN", "counter is now " + counter);
     }
 
     public void clickUndo() {
-        Log.wtf("DEBUG Invoker", "Undo with counter " + counter);
-        counter--;
-        theCommand = databaseHelper.getCommand(counter);
-        theCommand.undo();
+        // should never be the case, button not be clickable in this case
+        if (commandList.size() == 0) {
+            return;
+        }
+        // should always be the case for same reason
+        if (counter > 0) {
+            commandList.get(counter - 1).undo();
+            counter--;
+        }
     }
 
     public void clickRedo() {
-        Log.wtf("DEBUG Invoker", "Redo with counter " + counter);
-        theCommand = databaseHelper.getCommand(counter);
-        theCommand.execute();
-        counter++;
+        // button should be deactivated in this case
+        if (commandList.size() == 0) {
+            return;
+        }
+        if (counter < commandList.size()) {
+            counter++;
+            commandList.get(counter - 1).execute();
+        }
     }
-    /*
-    TODO
-    Counter does not work, when do() follows undo()
-    does work, when undo() redo() do()
-    solution:   two seperate counters?
-                get last command from table?
-     */
+
 }

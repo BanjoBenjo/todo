@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         setUpListViewListener();
 
         //invoker for command pattern
-        invoker = new Invoker(new DatabaseHelper(this));
+        invoker = new Invoker();
 
         //button listeners
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -123,8 +123,6 @@ public class MainActivity extends AppCompatActivity {
                 updateTitleList();
             }
         });
-
-        myDatabaseHelper.dropCommands();
     }
 
     @Override

@@ -20,7 +20,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_ACTIVE = "TABLE_ACTIVE";
     private static final String TABLE_COMPLETED = "TABLE_COMPLETED";
     private static final String TABLE_DELETED = "TABLE_DELETED";
-    private static final String TABLE_COMMANDS = "TABLE_COMMANDS";
 
     private static final String DATABASE_CREATE_TABLE_ACTIVE = "CREATE TABLE " +
             "TABLE_ACTIVE (ID INTEGER PRIMARY KEY, TYPE TEXT NOT NULL, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
@@ -34,10 +33,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "TABLE_DELETED (ID INTEGER PRIMARY KEY, TYPE TEXT, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
                     "NOTIFICATION TEXT, NOTES TEXT)";
 
-    // TABLE OF COMMANDS
-    private static final String DATABASE_CREATE_TABLE_COMMANDS = "CREATE TABLE " +
-            "TABLE_COMMANDS (ID INTEGER PRIMARY KEY AUTOINCREMENT, COMMAND TEXT, TASK_ID INTEGER)";
-
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, 1);
     }
@@ -49,7 +44,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(DATABASE_CREATE_TABLE_ACTIVE);
         db.execSQL(DATABASE_CREATE_TABLE_COMPLETED);
         db.execSQL(DATABASE_CREATE_TABLE_DELETED);
-        db.execSQL(DATABASE_CREATE_TABLE_COMMANDS);
     }
 
     @Override
@@ -59,7 +53,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTIVE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMPLETED);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELETED);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMANDS);
 
         onCreate(db);
     }
@@ -277,75 +270,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 my_task = null;
         }
         return my_task;
-    }
-
-    public ContentValues createContentFromCommand(Command myCommand, int commandCounter) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("ID", commandCounter);
-        contentValues.put("COMMAND", myCommand.getType());
-        contentValues.put("TASK_ID", myCommand.getTaskId());
-        return contentValues;
-    }
-
-    /**
-     * Adds a Command
-     */
-    public boolean addCommand(Command myCommand, int commandCounter){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = createContentFromCommand(myCommand, commandCounter);
-
-        long result = db.insert("TABLE_COMMANDS", null, contentValues);
-
-        // if data is inserted incorrectly result will be -1
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * gets Command with the given ID
-     */
-    public Command getCommand(int ID) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String command;
-        int taskId;
-
-        String query = "SELECT * FROM TABLE_COMMANDS WHERE ID = " + ID;
-        Cursor data = db.rawQuery(query, null);
-        Log.wtf("DEBUG databaseHelper", "getting command with id " + ID);
-
-        // fill Task
-        data.moveToFirst();
-        command = data.getString(data.getColumnIndex("COMMAND"));
-        taskId = data.getInt(data.getColumnIndex("TASK_ID"));
-        data.close();
-        // delete entry from table (breaks redo button)
-        // db.execSQL("DELETE FROM TABLE_COMMANDS WHERE ID = " + ID);
-
-        Command myCommand;
-
-        switch (command){
-            case "COMPLETE":
-                myCommand = new Complete(taskId, this);
-                break;
-            case "DELETE":
-                myCommand = new Delete(taskId, this);
-                break;
-            default:
-                myCommand = null;
-                break;
-        }
-        Log.wtf("DEBUG databaseHelper", "command creation successful " + String.valueOf(myCommand.getType()));
-        return myCommand;
-    }
-
-    public void dropCommands () {
-        // workaround to clear TABLE_COMMANDS on app startup
-        Log.d("DEBUG DatabaseHelper", "dropCommands()");
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMMANDS);
-        db.execSQL(DATABASE_CREATE_TABLE_COMMANDS);
     }
 }
