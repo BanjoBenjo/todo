@@ -1,6 +1,5 @@
 package com.example.todo;
 
-import android.util.Log;
 import java.util.ArrayList;
 
 public class Invoker {
@@ -45,4 +44,19 @@ public class Invoker {
         }
     }
 
+    public boolean getUndoState() {
+        if (counter == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean getRedoState() {
+        if (counter == commandList.size()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

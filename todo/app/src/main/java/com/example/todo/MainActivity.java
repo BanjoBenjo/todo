@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 invoker.clickUndo();
                 updateTitleList();
-                redoButton.setEnabled(true);
             }
         });
         redoButton.setOnClickListener(new View.OnClickListener() {
@@ -165,6 +164,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void updateButtons() {
+        undoButton.setEnabled(invoker.getUndoState());
+        redoButton.setEnabled(invoker.getRedoState());
+    }
+
     public void updateTitleList() {
         // ist das die ListView der Tasks?
         listData.clear();
@@ -199,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(context,"task with id " + Integer.toString(selected_task.getID()) + " was completed", Toast.LENGTH_SHORT).show();
                 //itemsAdapter.notifyDataSetChanged();
 
-                undoButton.setEnabled(true);
                 updateTitleList();
             }
         });
