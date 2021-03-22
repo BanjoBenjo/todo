@@ -17,4 +17,7 @@
     <color name="MediumTurquoise">#64DFDF</color>
     <color name="Turquoise">#72EFDD</color>
     <color name="Aquamarine">#80FFDB</color>
+    //button colors
+    <color name="ButtonEnabled">#96e084</color>
+    <color name="ButtonDisabled">#e08484</color>
 </resources>

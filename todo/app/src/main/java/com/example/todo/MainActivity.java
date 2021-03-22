@@ -178,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
             listData.add(t.getTitle());
         }
         listAdapter.notifyDataSetChanged();
+        updateButtons();
     }
 
     /**
