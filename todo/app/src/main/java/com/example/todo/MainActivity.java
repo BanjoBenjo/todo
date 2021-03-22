@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                 Context context = getApplicationContext();
                 Task selected_task = activeTasks.get(position);
                 Toast.makeText(context,"ID of task is " + selected_task.getID(), Toast.LENGTH_SHORT).show();
-
+                // todo check different task types
                 Intent toEditBasicTask = new Intent(MainActivity.this, EditBasicTaskActivity.class);
                 toEditBasicTask.putExtra("taskID", selected_task.getID());
                 MainActivity.this.startActivity(toEditBasicTask);

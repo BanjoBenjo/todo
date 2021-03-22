@@ -1,9 +1,5 @@
 package com.example.todo;
 
-import java.awt.font.TextAttribute;
-import java.text.AttributedCharacterIterator;
-import java.text.AttributedString;
-
 public class ShoppingItem {
     private boolean checked;
     private String name;
@@ -20,7 +16,6 @@ public class ShoppingItem {
     public String toString() {
         return name;
     }
-
 
     public void toggleCheck() {
         checked = !checked;

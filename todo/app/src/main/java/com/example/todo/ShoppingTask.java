@@ -1,5 +1,7 @@
 package com.example.todo;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class ShoppingTask extends Task{
@@ -7,11 +9,24 @@ public class ShoppingTask extends Task{
 
     public ShoppingTask(int ID, String title, String category) {
         super(ID, title, category);
+        shoppingItems = new ArrayList<>();
     }
 
     public ArrayList<ShoppingItem> getShoppingItems(){
-        return this.shoppingItems;
+        return shoppingItems;
     }
-    public String getType(){ return "SHOPPING"; }
+
+    public void addItem(ShoppingItem newItem) {
+        shoppingItems.add(newItem);
+        Log.wtf("DEBUG", "added item: " + newItem.toString());
+    }
+
+    public ArrayList<ShoppingItem> getItems() {
+        return shoppingItems;
+    }
+
+    public String getType(){
+        return "SHOPPING";
+    }
 
 }

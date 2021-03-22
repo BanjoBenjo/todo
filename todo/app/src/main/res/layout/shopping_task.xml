@@ -14,8 +14,9 @@
         android:layout_marginBottom="@dimen/component_padding"
         android:ems="10"
         android:foregroundTint="@color/DavysGrey"
-        android:hint="Enter Name"
+        android:hint="New Item"
         android:inputType="textPersonName"
+        android:textColor="@color/DavysGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/addShoppingItem"
         app:layout_constraintStart_toStartOf="parent" />
@@ -48,21 +49,67 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="648dp"
+        android:id="@+id/linearLayout2"
+        android:layout_width="411dp"
+        android:layout_height="0dp"
         android:layout_marginStart="@dimen/component_padding"
-        android:layout_marginTop="@dimen/top_padding"
+        android:layout_marginTop="@dimen/component_padding"
         android:layout_marginEnd="@dimen/component_padding"
         android:layout_marginBottom="@dimen/component_padding"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/nameOfShoppingItem"
+        app:layout_constraintBottom_toTopOf="@+id/divider2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/divider">
 
         <ListView
             android:id="@+id/shoppingListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="411dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/component_padding"
+        android:layout_marginTop="@dimen/component_padding"
+        android:layout_marginEnd="@dimen/component_padding"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/submit_shopping_list" />
+
+    <Button
+        android:id="@+id/submit_shopping_list"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/standard_height"
+        android:layout_marginStart="@dimen/component_padding"
+        android:layout_marginTop="@dimen/component_padding"
+        android:layout_marginEnd="@dimen/component_padding"
+        android:layout_marginBottom="@dimen/component_padding"
+        android:backgroundTint="@color/LightGray"
+        android:text="submit"
+        android:textColor="@color/DavysGrey"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/shopping_list_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.035" />
+
+    <EditText
+        android:id="@+id/shopping_list_name"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/standard_height"
+        android:layout_marginStart="@dimen/component_padding"
+        android:layout_marginTop="@dimen/component_padding"
+        android:layout_marginEnd="@dimen/component_padding"
+        android:gravity="left|center_vertical"
+        android:hint="New Shopping List"
+        android:textAlignment="textStart"
+        android:textAppearance="@android:style/TextAppearance.Material"
+        android:textColor="@color/DavysGrey"
+        app:layout_constraintEnd_toStartOf="@+id/submit_shopping_list"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
