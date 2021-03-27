@@ -20,7 +20,7 @@ import java.util.List;
 public class NewShoppingTaskActivity extends Activity {
     private static final String TAG = "NewShoppingTaskActivity";
 
-    private ArrayList<ShoppingItem> shoppingItems;
+    private ArrayList<ShoppingItem> shoppingItemsList;
     private ArrayAdapter<String> shoppingItemsAdapter;
     private ListView shoppingListView;
     private Button addShoppingItem;
@@ -39,8 +39,6 @@ public class NewShoppingTaskActivity extends Activity {
         addShoppingItem = findViewById(R.id.addShoppingItem);
         submitShoppingList = findViewById(R.id.submit_shopping_list);
 
-        newShoppingTask  = new ShoppingTask(getGlobalTaskId(), "dummytext", "privat");
-
         addShoppingItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,14 +48,16 @@ public class NewShoppingTaskActivity extends Activity {
         submitShoppingList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isEmpty(inputListName) && shoppingItems.size() > 0) {
-                    newShoppingTask.setTitle(String.valueOf(inputListName.getText()));
-                    addTask(newShoppingTask);
-                }
+            if(!isEmpty(inputListName) && shoppingItemsList.size() > 0) {
+                newShoppingTask.setTitle(String.valueOf(inputListName.getText()));
+                addTask(newShoppingTask);
+            }
             }
         });
 
-        shoppingItems = new ArrayList<>();
+        newShoppingTask  = new ShoppingTask(getGlobalTaskId(), "dummytext", "privat");
+
+        shoppingItemsList = new ArrayList<>();
         shoppingItemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice);
         shoppingListView.setAdapter(shoppingItemsAdapter);
         setUpListViewListener();
@@ -72,7 +72,7 @@ public class NewShoppingTaskActivity extends Activity {
         shoppingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ShoppingItem itemToCheck = shoppingItems.get(position);
+                ShoppingItem itemToCheck = shoppingItemsList.get(position);
                 itemToCheck.toggleCheck();
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 checkedTextView.setChecked(itemToCheck.isChecked());
@@ -82,14 +82,17 @@ public class NewShoppingTaskActivity extends Activity {
     }
 
     private void addItemToList(View view) {
-        String userName = inputItemName.getText().toString();
-        shoppingItems.clear();
+        Log.wtf("BEFORE", String.valueOf(newShoppingTask.getLength()));
+        Log.wtf("BEFORE", String.valueOf(newShoppingTask.hashCode()));
+        String itemName = inputItemName.getText().toString();
+        shoppingItemsAdapter.clear();
 
-        if(!(isEmpty(inputItemName))) {
-            ShoppingItem newItem = new ShoppingItem(userName);
+        if(!isEmpty(inputItemName)) {
+            ShoppingItem newItem = new ShoppingItem(itemName);
             newShoppingTask.addItem(newItem);
-            shoppingItems = newShoppingTask.getShoppingItems();
-            for (ShoppingItem i: shoppingItems) {
+            shoppingItemsList = newShoppingTask.getItems();
+            Log.wtf("MAIN", "shoppingItems: " + shoppingItemsList.toString());
+            for (ShoppingItem i: shoppingItemsList) {
                 shoppingItemsAdapter.add(i.toString());
             }
             inputItemName.setText("");

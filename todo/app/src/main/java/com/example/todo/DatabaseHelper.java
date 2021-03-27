@@ -15,6 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
 
     private static final String DATABASE_NAME = "TASK_DB";
+    private ArrayList<ShoppingItem> shoppingItems;
 
     //  Table + COLS
     private static final String TABLE_ACTIVE = "TABLE_ACTIVE";
@@ -220,7 +221,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put("CATEGORY", "");
                 contentValues.put("DEADLINE", "");
                 contentValues.put("NOTIFICATION", "");
-                contentValues.put("NOTES", "");
+                shoppingItems = shop_task.getItems();
+                Log.wtf("DEBUG", "DatabaseHelper Länge von ShoppintItems: "+ shoppingItems.size());
+                StringBuilder notes = new StringBuilder();
+                for (ShoppingItem i:shoppingItems) {
+                    Log.wtf("DEBUG", "DatabaseHelper hab hier das item " + i.toString());
+                    notes.append("*" + i.toString());
+                }
+                contentValues.put("NOTES", notes.toString());
                 break;
 
             //TODO ADD DEFAULT EXCEPTION
