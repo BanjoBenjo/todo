@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,6 +38,7 @@ public class NewShoppingTaskActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shopping_task);
         shoppingListView = findViewById(R.id.shoppingListView);
+        shoppingListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         addShoppingItem = findViewById(R.id.addShoppingItem);
         submitShoppingList = findViewById(R.id.submit_shopping_list);
         inputItemName = findViewById(R.id.nameOfShoppingItem);
@@ -51,12 +53,15 @@ public class NewShoppingTaskActivity extends Activity {
         if (thisIntent.getExtras() != null) {
             if (thisIntent.getExtras().containsKey("taskID")) {
                 taskID = thisIntent.getIntExtra("taskID", 0);
-                Log.wtf("yello 0", "task id is " + taskID);
                 shoppingTask = (ShoppingTask) myDatabaseHelper.getTask(taskID);
                 inputListName.setText(shoppingTask.getTitle());
                 shoppingItemsList = shoppingTask.getItems();
+
+                int counter = 0;
                 for (ShoppingItem i: shoppingItemsList) {
                     shoppingItemsAdapter.add(i.toString());
+                    shoppingListView.setItemChecked(counter, i.isChecked());
+                    counter++;
                 }
             }
         } else {

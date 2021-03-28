@@ -219,9 +219,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put("NOTIFICATION", "");
                 shoppingItems = shop_task.getItems();
                 StringBuilder notes = new StringBuilder();
-                //save items with * separating them
+                //save items with * separating them and y/n as first character indicating checked value
+                String check;
                 for (ShoppingItem i:shoppingItems) {
-                    notes.append(i.toString() + "*");
+                    if(i.isChecked()) {
+                        notes.append("y" + i.toString() + "*");
+                    }else{
+                        notes.append("n" + i.toString() + "*");
+                    }
                 }
                 contentValues.put("NOTES", notes.toString());
                 break;
@@ -271,8 +276,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 //split notes into item names, create items and add them to shopping task
                 String[] itemNames = notes.split("\\*");
                 for (String itemName:itemNames) {
-                    if (!(itemName == "")) {
-                        ((ShoppingTask) my_task).addItem(new ShoppingItem(itemName));
+                    if (!(itemName.equals(""))) {
+                        ShoppingItem newItem = new ShoppingItem(itemName.substring(1));
+                        if(itemName.startsWith("y")){
+                            newItem.toggleCheck();
+                        }
+                        ((ShoppingTask) my_task).addItem(newItem);
                     }
                 }
                 break;
