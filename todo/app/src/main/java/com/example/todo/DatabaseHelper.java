@@ -41,7 +41,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // only gets called after device data has been wiped or after fresh install
-        Log.d("DEBUG DatabaseHelper", "onCreate()");
         db.execSQL(DATABASE_CREATE_TABLE_ACTIVE);
         db.execSQL(DATABASE_CREATE_TABLE_COMPLETED);
         db.execSQL(DATABASE_CREATE_TABLE_DELETED);
@@ -50,7 +49,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // gets called on upgrade, not update !!!
-        Log.d("DEBUG DatabaseHelper", "onUpgrade()");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACTIVE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COMPLETED);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELETED);
@@ -65,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = createContentFromTask(my_task);
 
-        long result = db.insert("TABLE_ACTIVE", null, contentValues);
+        long result = db.replace("TABLE_ACTIVE", null, contentValues);
 
         // if data is inserted incorrectly result will be -1
         if (result == -1) {
@@ -190,7 +188,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         switch(task_type)
         {
             case "BASIC":
-                //TODO casten ist unnötig oder?
                 BasicTask b_task = (BasicTask)my_task;
                 contentValues.put("ID", b_task.getID());
                 contentValues.put("TYPE", "BASIC");
@@ -213,7 +210,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 break;
 
             case "SHOPPING":
-                // TODO save shopping list maybe in notes field??
                 ShoppingTask shop_task = (ShoppingTask)my_task;
                 contentValues.put("ID", shop_task.getID());
                 contentValues.put("TYPE", "SHOPPING");
@@ -222,11 +218,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put("DEADLINE", "");
                 contentValues.put("NOTIFICATION", "");
                 shoppingItems = shop_task.getItems();
-                Log.wtf("DEBUG", "DatabaseHelper Länge von ShoppintItems: "+ shoppingItems.size());
                 StringBuilder notes = new StringBuilder();
+                //save items with * separating them
                 for (ShoppingItem i:shoppingItems) {
-                    Log.wtf("DEBUG", "DatabaseHelper hab hier das item " + i.toString());
-                    notes.append("*" + i.toString());
+                    notes.append(i.toString() + "*");
                 }
                 contentValues.put("NOTES", notes.toString());
                 break;
@@ -271,8 +266,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ID = data.getInt(data.getColumnIndex("ID"));
                 title = data.getString(data.getColumnIndex("TITLE"));
                 category = data.getString(data.getColumnIndex("CATEGORY"));
-                // TODO save shopping list
                 my_task = new ShoppingTask(ID, title, category);
+                notes = data.getString(data.getColumnIndex("NOTES"));
+                //split notes into item names, create items and add them to shopping task
+                String[] itemNames = notes.split("\\*");
+                for (String itemName:itemNames) {
+                    if (!(itemName == "")) {
+                        ((ShoppingTask) my_task).addItem(new ShoppingItem(itemName));
+                    }
+                }
                 break;
             default:
                 my_task = null;

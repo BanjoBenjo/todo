@@ -20,7 +20,7 @@ import java.util.List;
 
 public class EditBasicTaskActivity extends Activity {
 
-    private static final String TAG = "NewBasicTaskActivity";
+    private static final String TAG = "EditBasicTaskActivity";
     int taskID;
     BasicTask thisTask;
 

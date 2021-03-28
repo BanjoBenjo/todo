@@ -27,7 +27,8 @@ public class NewShoppingTaskActivity extends Activity {
     private Button submitShoppingList;
     private EditText inputItemName;
     private EditText inputListName;
-    private ShoppingTask newShoppingTask;
+    private ShoppingTask shoppingTask;
+    private int taskID;
 
     private DatabaseHelper myDatabaseHelper;
 
@@ -38,6 +39,30 @@ public class NewShoppingTaskActivity extends Activity {
         shoppingListView = findViewById(R.id.shoppingListView);
         addShoppingItem = findViewById(R.id.addShoppingItem);
         submitShoppingList = findViewById(R.id.submit_shopping_list);
+        inputItemName = findViewById(R.id.nameOfShoppingItem);
+        inputListName = findViewById(R.id.shopping_list_name);
+        shoppingItemsList = new ArrayList<>();
+        shoppingItemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice);
+        shoppingListView.setAdapter(shoppingItemsAdapter);
+
+        myDatabaseHelper = new DatabaseHelper(this);
+
+        Intent thisIntent = getIntent();
+        if (thisIntent.getExtras() != null) {
+            if (thisIntent.getExtras().containsKey("taskID")) {
+                taskID = thisIntent.getIntExtra("taskID", 0);
+                Log.wtf("yello 0", "task id is " + taskID);
+                shoppingTask = (ShoppingTask) myDatabaseHelper.getTask(taskID);
+                inputListName.setText(shoppingTask.getTitle());
+                shoppingItemsList = shoppingTask.getItems();
+                for (ShoppingItem i: shoppingItemsList) {
+                    shoppingItemsAdapter.add(i.toString());
+                }
+            }
+        } else {
+            shoppingTask  = new ShoppingTask(getGlobalTaskId(), "dummytext", "privat");
+
+        }
 
         addShoppingItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,27 +70,18 @@ public class NewShoppingTaskActivity extends Activity {
                 addItemToList(v);
             }
         });
+
         submitShoppingList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             if(!isEmpty(inputListName) && shoppingItemsList.size() > 0) {
-                newShoppingTask.setTitle(String.valueOf(inputListName.getText()));
-                addTask(newShoppingTask);
+                shoppingTask.setTitle(String.valueOf(inputListName.getText()));
+                addTask(shoppingTask);
             }
             }
         });
 
-        newShoppingTask  = new ShoppingTask(getGlobalTaskId(), "dummytext", "privat");
-
-        shoppingItemsList = new ArrayList<>();
-        shoppingItemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice);
-        shoppingListView.setAdapter(shoppingItemsAdapter);
         setUpListViewListener();
-
-        inputItemName = findViewById(R.id.nameOfShoppingItem);
-        inputListName = findViewById(R.id.shopping_list_name);
-
-        myDatabaseHelper = new DatabaseHelper(this);
     }
 
     private void setUpListViewListener() {
@@ -82,16 +98,13 @@ public class NewShoppingTaskActivity extends Activity {
     }
 
     private void addItemToList(View view) {
-        Log.wtf("BEFORE", String.valueOf(newShoppingTask.getLength()));
-        Log.wtf("BEFORE", String.valueOf(newShoppingTask.hashCode()));
         String itemName = inputItemName.getText().toString();
         shoppingItemsAdapter.clear();
 
         if(!isEmpty(inputItemName)) {
             ShoppingItem newItem = new ShoppingItem(itemName);
-            newShoppingTask.addItem(newItem);
-            shoppingItemsList = newShoppingTask.getItems();
-            Log.wtf("MAIN", "shoppingItems: " + shoppingItemsList.toString());
+            shoppingTask.addItem(newItem);
+            shoppingItemsList = shoppingTask.getItems();
             for (ShoppingItem i: shoppingItemsList) {
                 shoppingItemsAdapter.add(i.toString());
             }
@@ -127,7 +140,7 @@ public class NewShoppingTaskActivity extends Activity {
             NewShoppingTaskActivity.this.startActivity(to_mainactivity);
 
         } else {
-            Log.e("DEBUG", "Error while creating task from Shopping List.");
+            Log.e("NewShoppingTaskActivity", "Error while creating task from Shopping List.");
         }
     }
 

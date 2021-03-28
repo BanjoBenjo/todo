@@ -1,5 +1,6 @@
 package com.example.todo;
 
+import java.util.Date;
 
 public class ScheduledTask extends Task {
     private String notes;
@@ -38,10 +39,20 @@ public class ScheduledTask extends Task {
     public void setNotes(String notes) {
         this.notes = notes;
     }
-    public String getNotes(){ return this.notes; }
-    public String getDeadline(){ return this.deadline; }
-    public String getType(){ return "SCHEDULED"; }
-    public Notification getNotification(){ return this.notificationType ;}
 
+    public String getNotes(){
+        return this.notes;
+    }
 
+    public String getDeadline(){
+        return this.deadline;
+    }
+
+    public String getType(){
+        return "SCHEDULED";
+    }
+
+    public Notification getNotification(){
+        return this.notificationType;
+    }
 }

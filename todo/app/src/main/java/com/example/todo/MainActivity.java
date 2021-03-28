@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 invoker.setCommand(completeCommand);
                 invoker.clickDo();
 
-                Toast.makeText(context,"task with id " + Integer.toString(selected_task.getID()) + " was completed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"task with id " + selected_task.getID() + " was completed", Toast.LENGTH_SHORT).show();
                 //itemsAdapter.notifyDataSetChanged();
 
                 updateTitleList();
@@ -212,13 +212,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Context context = getApplicationContext();
-                Task selected_task = activeTasks.get(position);
-                Toast.makeText(context,"ID of task is " + selected_task.getID(), Toast.LENGTH_SHORT).show();
-                // todo check different task types
-                Intent toEditBasicTask = new Intent(MainActivity.this, EditBasicTaskActivity.class);
-                toEditBasicTask.putExtra("taskID", selected_task.getID());
-                MainActivity.this.startActivity(toEditBasicTask);
-                return true;
+                Task selectedTask = activeTasks.get(position);
+                switch(selectedTask.getType()) {
+                    case "BASIC":
+                        Intent toEditBasicTask = new Intent(MainActivity.this, EditBasicTaskActivity.class);
+                        toEditBasicTask.putExtra("taskID", selectedTask.getID());
+                        MainActivity.this.startActivity(toEditBasicTask);
+                        return true;
+                    case "SHOPPING":
+                        Intent toEditShoppingTask = new Intent(MainActivity.this, NewShoppingTaskActivity.class);
+                        toEditShoppingTask.putExtra("taskID", selectedTask.getID());
+                        MainActivity.this.startActivity(toEditShoppingTask);
+                        return true;
+                    case "SCHEDULED":
+                        Intent toEditScheduledTask = new Intent(MainActivity.this, NewScheduledTaskActivity.class);
+                        toEditScheduledTask.putExtra("taskID", selectedTask.getID());
+                        MainActivity.this.startActivity(toEditScheduledTask);
+                        return true;
+                    default:
+                        Log.e("MainActivity", "task to edit has unknown type");
+                        return false;
+                }
             }
         });
     }

@@ -1,10 +1,7 @@
 package com.example.todo;
 
-
 import android.content.SharedPreferences;
-
 import java.io.Serializable;
-
 import static android.content.Context.MODE_PRIVATE;
 
 public class Task {
@@ -21,9 +18,13 @@ public class Task {
         this.category = category;
     }
 
-    public void setTitle(String newTitle){ this.title = newTitle; }
-    public String getTitle(){ return title; }
+    public void setTitle(String newTitle){
+        this.title = newTitle;
+    }
 
+    public String getTitle(){
+        return title;
+    }
 
     public void taskInfo(){
         System.out.format("Taskinfo: title: %s%n, category: %s%n.",title);
@@ -38,12 +39,21 @@ public class Task {
         this.notificationType = notificationType;
     }
 
-    public String getCategory(){ return this.category; }
-    public void setCategory(String newCategory){ this.category = newCategory; }
+    public String getCategory(){
+        return this.category;
+    }
 
-    public int getID(){ return this.ID; }
+    public void setCategory(String newCategory){
+        this.category = newCategory;
+    }
 
-    public String getType(){ return "TASK"; }
+    public int getID(){
+        return this.ID;
+    }
+
+    public String getType(){
+        return "TASK";
+    }
 
     @Override
     public String toString() {
