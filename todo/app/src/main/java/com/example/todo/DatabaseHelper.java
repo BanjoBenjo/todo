@@ -230,7 +230,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
                 contentValues.put("NOTES", notes.toString());
                 break;
-
             //TODO ADD DEFAULT EXCEPTION
         }
         return contentValues;
@@ -267,6 +266,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 deadline = data.getString(data.getColumnIndex("DEADLINE"));
                 my_task = new ScheduledTask(ID, title, category, notes, deadline, notificationType);
                 break;
+
             case "SHOPPING":
                 ID = data.getInt(data.getColumnIndex("ID"));
                 title = data.getString(data.getColumnIndex("TITLE"));

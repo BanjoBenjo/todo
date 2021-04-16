@@ -19,6 +19,8 @@ import java.util.List;
 public class NewBasicTaskActivity extends Activity {
 
     private static final String TAG = "NewBasicTaskActivity";
+    int taskID;
+    BasicTask thisTask;
 
     DatabaseHelper myDatabaseHelper;
     private EditText nameView;
@@ -51,14 +53,29 @@ public class NewBasicTaskActivity extends Activity {
 
         myDatabaseHelper = new DatabaseHelper(this);
 
+        final Intent thisIntent = getIntent();
+        if (thisIntent.getExtras() != null) {
+            if (thisIntent.getExtras().containsKey("taskID")) {
+                taskID = thisIntent.getIntExtra("taskID", 0);
+                thisTask = (BasicTask) myDatabaseHelper.getTask(taskID);
+                nameView.setText(thisTask.getTitle());
+                notiSpinner.setSelection(categories.indexOf(thisTask.getCategory()));
+                notes.setText(thisTask.getNotes());
+            }
+        }else {
+            thisTask = new BasicTask(getGlobalTaskId(), nameView.getText().toString(),
+            categories.get(notiSpinner.getSelectedItemPosition()), notes.getText().toString());
+        }
+
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isEmpty(nameView)) {
-                    BasicTask task = new BasicTask(getGlobalTaskId(), nameView.getText().toString(),
-                            categories.get(notiSpinner.getSelectedItemPosition()), notes.getText().toString());
+                    thisTask.setTitle(nameView.getText().toString());
+                    thisTask.setCategory(categories.get(notiSpinner.getSelectedItemPosition()));
+                    thisTask.setNotes(notes.getText().toString());
                     toastMessage("Task created");
-                    addTask(task);
+                    addTask(thisTask);
                 }else {
                     toastMessage("You have to enter a name!");
                 }

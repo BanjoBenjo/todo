@@ -31,9 +31,9 @@ public class NewScheduledTaskActivity extends FragmentActivity {
     private List<String> categories = new ArrayList<>();
     private List<String> notifications = new ArrayList<>(
             Arrays.asList("None",
-                    "PopUp",
-                    "Multiple",
-                    "E-Mail") );
+                        "PopUp",
+                        "Multiple",
+                        "E-Mail") );
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,8 +57,6 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         notificationArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, notifications);
         notificationArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         notificationSpinner.setAdapter(notificationArrayAdapter);
-
-
     }
 
     private void addTask(){
