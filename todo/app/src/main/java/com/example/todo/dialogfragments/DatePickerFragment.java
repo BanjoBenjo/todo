@@ -1,4 +1,4 @@
-package com.example.todo;
+package com.example.todo.dialogfragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -11,6 +11,10 @@ import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
+
+    int selectedYear;
+    int selectedMonth;
+    int selectedDay;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -25,6 +29,20 @@ public class DatePickerFragment extends DialogFragment
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        // Do something with the date chosen by the user
+        selectedDay = day;
+        selectedMonth = month;
+        selectedYear = year;
+    }
+
+    public int getSelectedDay(){
+        return selectedDay;
+    }
+
+    public int getSelectedMonth(){
+        return selectedMonth;
+    }
+
+    public int getSelectedYear(){
+        return selectedYear;
     }
 }

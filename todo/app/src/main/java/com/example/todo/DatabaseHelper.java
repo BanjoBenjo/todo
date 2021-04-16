@@ -203,8 +203,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put("ID", sched_task.getID());
                 contentValues.put("TYPE", "SCHEDULED");
                 contentValues.put("TITLE", sched_task.getTitle());
-                contentValues.put("CATEGORY", sched_task.getCategory().toString());
-                contentValues.put("DEADLINE", sched_task.getDeadline());
+                contentValues.put("CATEGORY", sched_task.getCategory());
+                contentValues.put("DEADLINE", sched_task.getDeadline().toString());
                 contentValues.put("NOTIFICATION", sched_task.getNotification().toString());
                 contentValues.put("NOTES", sched_task.getNotes());
                 break;

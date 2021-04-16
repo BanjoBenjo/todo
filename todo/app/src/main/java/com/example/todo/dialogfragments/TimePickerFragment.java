@@ -1,4 +1,4 @@
-package com.example.todo;
+package com.example.todo.dialogfragments;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -26,6 +26,6 @@ public class TimePickerFragment extends DialogFragment
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        // Do something with the time chosen by the user
+
     }
 }

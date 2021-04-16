@@ -1,11 +1,13 @@
-package com.example.todo;
+package com.example.todo.notifications;
 
-public class PopUpNotification implements Notification{
+import java.util.Date;
+
+public class PopUpNotification implements Notification {
 
     public String title;
-    public String deadline;
+    public Date deadline;
 
-    public PopUpNotification(String title, String deadline){
+    public PopUpNotification(String title, Date deadline){
         this.title = title;
         this.deadline = deadline;
     }

@@ -1,6 +1,6 @@
-package com.example.todo;
+package com.example.todo.notifications;
 
-public class NoNotification implements Notification{
+public class NoNotification implements Notification {
 
     private String title;
 

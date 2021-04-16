@@ -1,29 +1,43 @@
 package com.example.todo;
 
+import com.example.todo.notifications.EmailNotification;
+import com.example.todo.notifications.MultipleNotifications;
+import com.example.todo.notifications.NoNotification;
+import com.example.todo.notifications.Notification;
+import com.example.todo.notifications.PopUpNotification;
+
 import java.util.Date;
 
 public class ScheduledTask extends Task {
     private String notes;
     private String category;
-    private String deadline;
+    private String title;
+    private Date deadline;
     private Notification notificationType;
 
-    public ScheduledTask(int ID, String title, String category, String notes, String deadline){
+    ScheduledTask(int ID, String title, String category, String notes, String deadline, String notification){
         super(ID, title, category);
 
-        this.category = category;
-        this.notes = notes;
-        this.deadline = deadline;
-        this.notificationType = new PopUpNotification(title, deadline);
     }
 
-    public ScheduledTask(int ID, String title, String category, String notes, String deadline, String notificationType){
+    ScheduledTask(int ID, String title, String category){
         super(ID, title, category);
 
+        this.title = title;
         this.category = category;
-        this.notes = notes;
-        this.deadline = deadline;
+    }
 
+
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public void setDeadline(Date deadline) { this.deadline = deadline; }
+
+    public void setCategory(String category){ this.category = category; }
+
+    public void setNotificationType(String notificationType){
         switch (notificationType){
             case "PopUp":
                 this.notificationType = new PopUpNotification(title, deadline);
@@ -36,15 +50,11 @@ public class ScheduledTask extends Task {
         }
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
     public String getNotes(){
         return this.notes;
     }
 
-    public String getDeadline(){
+    public Date getDeadline(){
         return this.deadline;
     }
 

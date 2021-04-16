@@ -24,7 +24,7 @@ public class NewBasicTaskActivity extends Activity {
 
     DatabaseHelper myDatabaseHelper;
     private EditText nameView;
-    private Spinner notiSpinner;
+    private Spinner categorySpinner;
     private Button submitButton;
     private EditText notes;
 
@@ -43,13 +43,13 @@ public class NewBasicTaskActivity extends Activity {
         categories.add("sport");
 
         nameView = findViewById(R.id.editName);
-        notiSpinner = findViewById(R.id.spinner);
+        categorySpinner = findViewById(R.id.spinner);
         submitButton = findViewById(R.id.submitButton);
         notes = findViewById(R.id.editNote);
 
         catAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         catAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        notiSpinner.setAdapter(catAdapter);
+        categorySpinner.setAdapter(catAdapter);
 
         myDatabaseHelper = new DatabaseHelper(this);
 
@@ -59,12 +59,12 @@ public class NewBasicTaskActivity extends Activity {
                 taskID = thisIntent.getIntExtra("taskID", 0);
                 thisTask = (BasicTask) myDatabaseHelper.getTask(taskID);
                 nameView.setText(thisTask.getTitle());
-                notiSpinner.setSelection(categories.indexOf(thisTask.getCategory()));
+                categorySpinner.setSelection(categories.indexOf(thisTask.getCategory()));
                 notes.setText(thisTask.getNotes());
             }
         }else {
             thisTask = new BasicTask(getGlobalTaskId(), nameView.getText().toString(),
-            categories.get(notiSpinner.getSelectedItemPosition()), notes.getText().toString());
+                categories.get(categorySpinner.getSelectedItemPosition()), notes.getText().toString());
         }
 
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +72,7 @@ public class NewBasicTaskActivity extends Activity {
             public void onClick(View v) {
                 if (!isEmpty(nameView)) {
                     thisTask.setTitle(nameView.getText().toString());
-                    thisTask.setCategory(categories.get(notiSpinner.getSelectedItemPosition()));
+                    thisTask.setCategory(categories.get(categorySpinner.getSelectedItemPosition()));
                     thisTask.setNotes(notes.getText().toString());
                     toastMessage("Task created");
                     addTask(thisTask);

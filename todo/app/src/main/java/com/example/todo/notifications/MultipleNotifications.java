@@ -1,11 +1,15 @@
-package com.example.todo;
+package com.example.todo.notifications;
 
-public class MultipleNotifications implements Notification{
+import com.example.todo.notifications.Notification;
+
+import java.util.Date;
+
+public class MultipleNotifications implements Notification {
 
     public String title;
-    public String deadline;
+    public Date deadline;
 
-    public MultipleNotifications(String title, String deadline){
+    public MultipleNotifications(String title, Date deadline){
         this.title = title;
         this.deadline = deadline;
     }
