@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                 Task selectedTask = activeTasks.get(position);
                 switch(selectedTask.getType()) {
                     case "BASIC":
-                        Intent toEditBasicTask = new Intent(MainActivity.this, EditBasicTaskActivity.class);
+                        Intent toEditBasicTask = new Intent(MainActivity.this, NewBasicTaskActivity.class);
                         toEditBasicTask.putExtra("taskID", selectedTask.getID());
                         MainActivity.this.startActivity(toEditBasicTask);
                         return true;

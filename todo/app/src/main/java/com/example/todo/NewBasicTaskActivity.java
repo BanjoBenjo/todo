@@ -19,10 +19,12 @@ import java.util.List;
 public class NewBasicTaskActivity extends Activity {
 
     private static final String TAG = "NewBasicTaskActivity";
+    int taskID;
+    BasicTask thisTask;
 
     DatabaseHelper myDatabaseHelper;
     private EditText nameView;
-    private Spinner notiSpinner;
+    private Spinner categorySpinner;
     private Button submitButton;
     private EditText notes;
 
@@ -41,24 +43,39 @@ public class NewBasicTaskActivity extends Activity {
         categories.add("sport");
 
         nameView = findViewById(R.id.editName);
-        notiSpinner = findViewById(R.id.spinner);
+        categorySpinner = findViewById(R.id.spinner);
         submitButton = findViewById(R.id.submitButton);
         notes = findViewById(R.id.editNote);
 
         catAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         catAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        notiSpinner.setAdapter(catAdapter);
+        categorySpinner.setAdapter(catAdapter);
 
         myDatabaseHelper = new DatabaseHelper(this);
+
+        final Intent thisIntent = getIntent();
+        if (thisIntent.getExtras() != null) {
+            if (thisIntent.getExtras().containsKey("taskID")) {
+                taskID = thisIntent.getIntExtra("taskID", 0);
+                thisTask = (BasicTask) myDatabaseHelper.getTask(taskID);
+                nameView.setText(thisTask.getTitle());
+                categorySpinner.setSelection(categories.indexOf(thisTask.getCategory()));
+                notes.setText(thisTask.getNotes());
+            }
+        }else {
+            thisTask = new BasicTask(getGlobalTaskId(), nameView.getText().toString(),
+                categories.get(categorySpinner.getSelectedItemPosition()), notes.getText().toString());
+        }
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isEmpty(nameView)) {
-                    BasicTask task = new BasicTask(getGlobalTaskId(), nameView.getText().toString(),
-                            categories.get(notiSpinner.getSelectedItemPosition()), notes.getText().toString());
+                    thisTask.setTitle(nameView.getText().toString());
+                    thisTask.setCategory(categories.get(categorySpinner.getSelectedItemPosition()));
+                    thisTask.setNotes(notes.getText().toString());
                     toastMessage("Task created");
-                    addTask(task);
+                    addTask(thisTask);
                 }else {
                     toastMessage("You have to enter a name!");
                 }

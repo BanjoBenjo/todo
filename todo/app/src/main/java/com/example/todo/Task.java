@@ -1,8 +1,6 @@
 package com.example.todo;
 
-import android.content.SharedPreferences;
-import java.io.Serializable;
-import static android.content.Context.MODE_PRIVATE;
+import com.example.todo.notifications.Notification;
 
 public class Task {
 

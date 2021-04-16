@@ -1,11 +1,13 @@
-package com.example.todo;
+package com.example.todo.notifications;
 
-public class EmailNotification implements Notification{
+import java.util.Date;
+
+public class EmailNotification implements Notification {
     public String title;
-    public String deadline;
+    public Date deadline;
     //TODO get emailadress from settings
 
-    public EmailNotification(String title, String deadline){
+    public EmailNotification(String title, Date deadline){
         this.title = title;
         this.deadline = deadline;
     }
