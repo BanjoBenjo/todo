@@ -1,23 +1,25 @@
 package com.example.todo.notifications;
 
+import android.icu.util.LocaleData;
+
 import com.example.todo.notifications.Notification;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class MultipleNotifications implements Notification {
 
-    public String title;
-    public Date deadline;
+    public LocalDateTime deadline;
 
-    public MultipleNotifications(String title, Date deadline){
-        this.title = title;
+    public MultipleNotifications(LocalDateTime deadline){
         this.deadline = deadline;
     }
 
-    public String toString(){ return "MultipleNotifications"; }
+    public String toString(){ return "Multiple"; }
 
     public void do_notify(){
-        System.out.format("It's %s, %s! PopUp Notification \n", deadline, title);
+        System.out.format("It's %s, %s! PopUp Notification \n", deadline);
     }
 
 }

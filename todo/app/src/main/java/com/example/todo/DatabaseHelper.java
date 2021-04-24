@@ -5,11 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.util.Pair;
 
+import com.example.todo.tasks.BasicTask;
+import com.example.todo.tasks.ScheduledTask;
+import com.example.todo.tasks.ShoppingTask;
+import com.example.todo.tasks.Task;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
@@ -203,7 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put("ID", sched_task.getID());
                 contentValues.put("TYPE", "SCHEDULED");
                 contentValues.put("TITLE", sched_task.getTitle());
-                contentValues.put("CATEGORY", sched_task.getCategory());
+                contentValues.put("CATEGORY", sched_task.getCategory().toString());
                 contentValues.put("DEADLINE", sched_task.getDeadline().toString());
                 contentValues.put("NOTIFICATION", sched_task.getNotification().toString());
                 contentValues.put("NOTES", sched_task.getNotes());
@@ -245,7 +249,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String category;
         String notes;
         String notificationType;
-        String deadline;
+        LocalDateTime deadline;
         Task my_task;
 
         switch (task_type) {
@@ -263,7 +267,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 category = data.getString(data.getColumnIndex("CATEGORY"));
                 notes = data.getString(data.getColumnIndex("NOTES"));
                 notificationType = data.getString(data.getColumnIndex("NOTIFICATION"));
-                deadline = data.getString(data.getColumnIndex("DEADLINE"));
+                String date = data.getString(data.getColumnIndex("DEADLINE"));
+
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+                deadline = LocalDateTime.parse(date, formatter);
+
                 my_task = new ScheduledTask(ID, title, category, notes, deadline, notificationType);
                 break;
 

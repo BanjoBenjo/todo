@@ -2,14 +2,11 @@ package com.example.todo.notifications;
 
 public class NoNotification implements Notification {
 
-    private String title;
+    public NoNotification(){}
 
-    public NoNotification(String title){
-        this.title = title;
-    }
-    public String toString(){ return  "NoNotification"; }
+    public String toString(){ return  "None"; }
 
     public void do_notify(){
-        System.out.format("No Notification for %s! \n", title);
+        System.out.format("No Notification for %s! \n");
     }
 }

@@ -1,7 +1,4 @@
-package com.example.todo;
-
-
-import com.example.todo.notifications.NoNotification;
+package com.example.todo.tasks;
 
 public class BasicTask extends Task {
 
@@ -10,7 +7,6 @@ public class BasicTask extends Task {
         super(ID, title, category);
 
         this.notes = notes;
-        notificationType = new NoNotification(title);
     }
 
     public void setNotes(String notes) {

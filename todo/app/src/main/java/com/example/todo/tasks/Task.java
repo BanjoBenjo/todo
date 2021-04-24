@@ -1,4 +1,4 @@
-package com.example.todo;
+package com.example.todo.tasks;
 
 import com.example.todo.notifications.Notification;
 
@@ -28,14 +28,7 @@ public class Task {
         System.out.format("Taskinfo: title: %s%n, category: %s%n.",title);
     }
 
-    public void remind(){
-        notificationType.do_notify();
-    }
 
-    public void setNotificationType(Notification notificationType) {
-        System.out.format("NotificationType of %s changed \n", title);
-        this.notificationType = notificationType;
-    }
 
     public String getCategory(){
         return this.category;

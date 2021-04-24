@@ -2,8 +2,6 @@ package com.example.todo;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.icu.util.Calendar;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -13,15 +11,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.todo.dialogfragments.DatePickerFragment;
 import com.example.todo.dialogfragments.TimePickerFragment;
+import com.example.todo.tasks.ScheduledTask;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class NewScheduledTaskActivity extends FragmentActivity {
@@ -42,11 +40,7 @@ public class NewScheduledTaskActivity extends FragmentActivity {
     private ArrayAdapter<String> notificationArrayAdapter;
 
     private List<String> categories = new ArrayList<>();
-    private List<String> notifications = new ArrayList<>(
-            Arrays.asList("None",
-                        "PopUp",
-                        "Multiple",
-                        "E-Mail") );
+    private List<String> notifications = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +51,11 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         categories.add("school");
         categories.add("work");
         categories.add("sport");
+
+        notifications.add("None");
+        notifications.add("PopUp");
+        notifications.add("Multiple");
+        notifications.add("Mail");
 
         nameView = findViewById(R.id.editName);
         notificationSpinner = findViewById(R.id.spinner_notifications);
@@ -84,20 +83,25 @@ public class NewScheduledTaskActivity extends FragmentActivity {
                 thisTask = (ScheduledTask) myDatabaseHelper.getTask(taskID);
                 nameView.setText(thisTask.getTitle());
                 categorySpinner.setSelection(categories.indexOf(thisTask.getCategory()));
+                notificationSpinner.setSelection(notifications.indexOf(thisTask.getNotification().toString()));
                 notes.setText(thisTask.getNotes());
+                setDate(thisTask.getDeadline());
             }
         }else {
             thisTask = new ScheduledTask(getGlobalTaskId(), nameView.getText().toString(),
-                categories.get(categorySpinner.getSelectedItemPosition()));
+                    categories.get(categorySpinner.getSelectedItemPosition()),
+                    notes.getText().toString(),
+                    notifications.get(notificationSpinner.getSelectedItemPosition())
+                    );
         }
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isEmpty(nameView)) {
+                if (!isEmpty(nameView) && datePicker.selected) {
                     thisTask.setTitle(nameView.getText().toString());
                     thisTask.setCategory(categories.get(categorySpinner.getSelectedItemPosition()));
-                    thisTask.setNotificationType( notifications.get(notificationSpinner.getSelectedItemPosition()));
+                    thisTask.setNotificationType(notifications.get(notificationSpinner.getSelectedItemPosition()));
                     thisTask.setDeadline(getDate());
                     thisTask.setNotes(notes.getText().toString());
                     toastMessage("Task created");
@@ -135,16 +139,36 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         return task_id;
     }
 
-    private Date getDate(){
+    private LocalDateTime getDate(){
         int day = datePicker.getSelectedDay();
         int month = datePicker.getSelectedMonth();
         int year = datePicker.getSelectedYear();
 
-        Calendar myCalendar = Calendar.getInstance();
+        int hour = 0;
+        int min = 0;
 
-        myCalendar.set(year, month, day);
+        try {
+             hour = timePicker.getSelectedHour();
+             min = timePicker.getSelectedMin();
+        }catch(Exception e){
+        }
+        LocalDateTime date = LocalDateTime.of(year, month, day, hour, min);
 
-        return myCalendar.getTime();
+        return date;
+    }
+
+    private void setDate(LocalDateTime date){
+        datePicker.setSelectedDay(date.getDayOfMonth());
+        datePicker.setSelectedMonth(date.getMonthValue());
+        datePicker.setSelectedYear(date.getYear());
+
+        try {
+            timePicker.setSelectedHour(date.getHour());
+            timePicker.setSelectedMin(date.getMinute());
+        }catch(Exception e){
+        }
+
+        datePicker.setSelected();
     }
 
     //todo do something with date and time provided by pickers

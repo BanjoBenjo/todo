@@ -1,10 +1,10 @@
-package com.example.todo;
+package com.example.todo.tasks;
 
-import android.util.Log;
+import com.example.todo.ShoppingItem;
 
 import java.util.ArrayList;
 
-public class ShoppingTask extends Task{
+public class ShoppingTask extends Task {
     private ArrayList<ShoppingItem> shoppingItems;
 
     public ShoppingTask(int ID, String title, String category) {

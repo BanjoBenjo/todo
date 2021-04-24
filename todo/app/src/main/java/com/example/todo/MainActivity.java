@@ -2,24 +2,21 @@ package com.example.todo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GestureDetectorCompat;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.gesture.GestureOverlayView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.GestureDetector;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.todo.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -194,6 +191,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Context context = getApplicationContext();
+                Task selectedTask = activeTasks.get(position);
+                switch(selectedTask.getType()) {
+                    case "BASIC":
+                        Intent toEditBasicTask = new Intent(MainActivity.this, NewBasicTaskActivity.class);
+                        toEditBasicTask.putExtra("taskID", selectedTask.getID());
+                        MainActivity.this.startActivity(toEditBasicTask);
+                        break;
+                    case "SHOPPING":
+                        Intent toEditShoppingTask = new Intent(MainActivity.this, NewShoppingTaskActivity.class);
+                        toEditShoppingTask.putExtra("taskID", selectedTask.getID());
+                        MainActivity.this.startActivity(toEditShoppingTask);
+                        break;
+                    case "SCHEDULED":
+                        Intent toEditScheduledTask = new Intent(MainActivity.this, NewScheduledTaskActivity.class);
+                        toEditScheduledTask.putExtra("taskID", selectedTask.getID());
+                        MainActivity.this.startActivity(toEditScheduledTask);
+                        break;
+                    default:
+                        Log.e("MainActivity", "task to edit has unknown type");
+                }
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Context context = getApplicationContext();
                 Task selected_task = activeTasks.get(position);
 
                 // command complete hier, weil swipen nicht klappt
@@ -205,35 +229,9 @@ public class MainActivity extends AppCompatActivity {
                 //itemsAdapter.notifyDataSetChanged();
 
                 updateTitleList();
+                return true;
             }
         });
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Context context = getApplicationContext();
-                Task selectedTask = activeTasks.get(position);
-                switch(selectedTask.getType()) {
-                    case "BASIC":
-                        Intent toEditBasicTask = new Intent(MainActivity.this, NewBasicTaskActivity.class);
-                        toEditBasicTask.putExtra("taskID", selectedTask.getID());
-                        MainActivity.this.startActivity(toEditBasicTask);
-                        return true;
-                    case "SHOPPING":
-                        Intent toEditShoppingTask = new Intent(MainActivity.this, NewShoppingTaskActivity.class);
-                        toEditShoppingTask.putExtra("taskID", selectedTask.getID());
-                        MainActivity.this.startActivity(toEditShoppingTask);
-                        return true;
-                    case "SCHEDULED":
-                        Intent toEditScheduledTask = new Intent(MainActivity.this, NewScheduledTaskActivity.class);
-                        toEditScheduledTask.putExtra("taskID", selectedTask.getID());
-                        MainActivity.this.startActivity(toEditScheduledTask);
-                        return true;
-                    default:
-                        Log.e("MainActivity", "task to edit has unknown type");
-                        return false;
-                }
-            }
-        });
     }
 }

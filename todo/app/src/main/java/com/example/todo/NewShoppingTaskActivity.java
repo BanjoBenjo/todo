@@ -15,8 +15,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+
+import com.example.todo.tasks.ShoppingTask;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class NewShoppingTaskActivity extends Activity {
     private static final String TAG = "NewShoppingTaskActivity";
