@@ -22,4 +22,6 @@ public class ShoppingItem {
     public void toggleCheck() {
         checked = !checked;
     }
+
+    public void setChecked(Boolean check) { checked = check; }
 }

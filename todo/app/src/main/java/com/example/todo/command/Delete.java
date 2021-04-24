@@ -1,6 +1,7 @@
-package com.example.todo;
+package com.example.todo.command;
 
-import java.util.List;
+import com.example.todo.DatabaseHelper;
+import com.example.todo.command.Command;
 
 public class Delete implements Command {
     private int taskId;

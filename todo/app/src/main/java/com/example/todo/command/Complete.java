@@ -1,9 +1,9 @@
-package com.example.todo;
+package com.example.todo.command;
 
-import android.provider.ContactsContract;
 import android.util.Log;
 
-import java.util.List;
+import com.example.todo.DatabaseHelper;
+import com.example.todo.command.Command;
 
 public class Complete implements Command {
     private int taskId;

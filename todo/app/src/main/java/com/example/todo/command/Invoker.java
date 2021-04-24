@@ -1,4 +1,6 @@
-package com.example.todo;
+package com.example.todo.command;
+
+import com.example.todo.command.Command;
 
 import java.util.ArrayList;
 

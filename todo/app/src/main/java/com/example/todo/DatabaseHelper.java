@@ -11,9 +11,17 @@ import com.example.todo.tasks.ScheduledTask;
 import com.example.todo.tasks.ShoppingTask;
 import com.example.todo.tasks.Task;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
@@ -224,15 +232,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 shoppingItems = shop_task.getItems();
                 StringBuilder notes = new StringBuilder();
                 //save items with * separating them and y/n as first character indicating checked value
-                String check;
+
+                HashMap<String, Boolean> hash_map = new HashMap<String, Boolean>();
+
                 for (ShoppingItem i:shoppingItems) {
-                    if(i.isChecked()) {
-                        notes.append("y" + i.toString() + "*");
-                    }else{
-                        notes.append("n" + i.toString() + "*");
-                    }
+                    hash_map.put(i.toString(), i.isChecked());
                 }
-                contentValues.put("NOTES", notes.toString());
+
+                try {
+                contentValues.put("NOTES", serialize(hash_map));
+                } catch (IOException e ){
+                }
+
                 break;
             //TODO ADD DEFAULT EXCEPTION
         }
@@ -282,20 +293,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 my_task = new ShoppingTask(ID, title, category);
                 notes = data.getString(data.getColumnIndex("NOTES"));
                 //split notes into item names, create items and add them to shopping task
-                String[] itemNames = notes.split("\\*");
-                for (String itemName:itemNames) {
-                    if (!(itemName.equals(""))) {
-                        ShoppingItem newItem = new ShoppingItem(itemName.substring(1));
-                        if(itemName.startsWith("y")){
-                            newItem.toggleCheck();
-                        }
-                        ((ShoppingTask) my_task).addItem(newItem);
+
+                try {
+                    HashMap<String, Boolean> hash_map = (HashMap<String, Boolean>) deserialize(notes);
+                    for ( String key : hash_map.keySet() ) {
+                        ShoppingItem newItem = new ShoppingItem(key);
+                        newItem.setChecked(hash_map.get(key));
+                        ((ShoppingTask)my_task).addItem(newItem);
                     }
-                }
+                } catch (IOException e ){
+                } catch (ClassNotFoundException ce){}
+
                 break;
             default:
                 my_task = null;
         }
         return my_task;
+    }
+
+    private static String serialize(Serializable o) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(o);
+        oos.close();
+        return Base64.getEncoder().encodeToString(baos.toByteArray());
+    }
+
+    private static Object deserialize(String s) throws IOException,
+            ClassNotFoundException {
+        byte[] data = Base64.getDecoder().decode(s);
+        ObjectInputStream ois = new ObjectInputStream(
+                new ByteArrayInputStream(data));
+        Object o = ois.readObject();
+        ois.close();
+        return o;
     }
 }
