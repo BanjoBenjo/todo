@@ -3,8 +3,11 @@ package com.example.todo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -192,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Context context = getApplicationContext();
                 Task selectedTask = activeTasks.get(position);
                 switch(selectedTask.getType()) {
                     case "BASIC":
@@ -223,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 Task selected_task = activeTasks.get(position);
 
                 // command complete hier, weil swipen nicht klappt
-                Complete completeCommand = new Complete(selected_task.getID(), myDatabaseHelper);
+                Complete completeCommand = new Complete(selected_task.getID(), myDatabaseHelper, context );
                 invoker.setCommand(completeCommand);
                 invoker.clickDo();
 
@@ -236,4 +238,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
 }

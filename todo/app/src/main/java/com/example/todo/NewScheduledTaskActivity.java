@@ -1,7 +1,13 @@
 package com.example.todo;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,12 +21,15 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.todo.dialogfragments.DatePickerFragment;
 import com.example.todo.dialogfragments.TimePickerFragment;
+import com.example.todo.notifications.Notification;
 import com.example.todo.tasks.ScheduledTask;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 
 public class NewScheduledTaskActivity extends FragmentActivity {
 
@@ -76,6 +85,8 @@ public class NewScheduledTaskActivity extends FragmentActivity {
 
         myDatabaseHelper = new DatabaseHelper(this);
 
+        createNotificationChannel();
+
         final Intent thisIntent = getIntent();
         if (thisIntent.getExtras() != null) {
             if (thisIntent.getExtras().containsKey("taskID")) {
@@ -88,7 +99,8 @@ public class NewScheduledTaskActivity extends FragmentActivity {
                 setDate(thisTask.getDeadline());
             }
         }else {
-            thisTask = new ScheduledTask(getGlobalTaskId(), nameView.getText().toString(),
+            taskID = getGlobalTaskId();
+            thisTask = new ScheduledTask(taskID, nameView.getText().toString(),
                     categories.get(categorySpinner.getSelectedItemPosition()),
                     notes.getText().toString(),
                     notifications.get(notificationSpinner.getSelectedItemPosition())
@@ -99,15 +111,25 @@ public class NewScheduledTaskActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 if (!isEmpty(nameView) && datePicker.selected) {
-                    thisTask.setTitle(nameView.getText().toString());
+                    String titleStr = nameView.getText().toString();
+                    String notesStr = notes.getText().toString();
+                    LocalDateTime selectedDate = getSelectedDate();
+
+                    thisTask.setTitle(titleStr);
                     thisTask.setCategory(categories.get(categorySpinner.getSelectedItemPosition()));
+                    thisTask.setDeadline(selectedDate);
                     thisTask.setNotificationType(notifications.get(notificationSpinner.getSelectedItemPosition()));
-                    thisTask.setDeadline(getDate());
-                    thisTask.setNotes(notes.getText().toString());
+                    thisTask.setNotes(notesStr);
                     toastMessage("Task created");
                     addTask(thisTask);
+
+                    thisTask.remind(getApplicationContext());
                 }else {
-                    toastMessage("You have to enter a name!");
+                    if (isEmpty(nameView)) {
+                        toastMessage("Please select a Name");
+                    }else {
+                        toastMessage("Please select a Date");
+                    }
                 }
             }
         });
@@ -139,10 +161,13 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         return task_id;
     }
 
-    private LocalDateTime getDate(){
+    private LocalDateTime getSelectedDate(){
         int day = datePicker.getSelectedDay();
         int month = datePicker.getSelectedMonth();
         int year = datePicker.getSelectedYear();
+
+        toastMessage("Month" + month);
+
 
         int hour = 0;
         int min = 0;
@@ -152,14 +177,14 @@ public class NewScheduledTaskActivity extends FragmentActivity {
              min = timePicker.getSelectedMin();
         }catch(Exception e){
         }
-        LocalDateTime date = LocalDateTime.of(year, month, day, hour, min);
+        LocalDateTime date = LocalDateTime.of(year, month + 1, day, hour, min);
 
         return date;
     }
 
     private void setDate(LocalDateTime date){
         datePicker.setSelectedDay(date.getDayOfMonth());
-        datePicker.setSelectedMonth(date.getMonthValue());
+        datePicker.setSelectedMonth(date.getMonthValue()-1);
         datePicker.setSelectedYear(date.getYear());
 
         try {
@@ -186,5 +211,19 @@ public class NewScheduledTaskActivity extends FragmentActivity {
 
     private boolean isEmpty(EditText etText) {
         return etText.getText().toString().trim().length() == 0;
+    }
+
+    private void createNotificationChannel() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "ReminderChannel";
+            String description= "Channel for Reminder";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("notifyAlarm", name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 }
