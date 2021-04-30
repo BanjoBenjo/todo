@@ -22,7 +22,6 @@ public class Complete implements Command {
 
     @Override
     public void execute() {
-
         // cancel Notifications on Scheduled Tasks when completed
         Task task = databaseHelper.getTask(taskId);
         try{
@@ -32,14 +31,12 @@ public class Complete implements Command {
         }catch(Exception e){
             Toast.makeText(context, "not ", Toast.LENGTH_SHORT).show();
         }
-
         databaseHelper.completeTask(taskId);
     }
 
     @Override
     public void undo() {
         databaseHelper.reopenTask(taskId);
-
         // activate Notifications on Scheduled Tasks when reopened
         Task task = databaseHelper.getTask(taskId);
         try{

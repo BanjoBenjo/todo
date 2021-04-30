@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     Intent toNewShoppingTask;
 
     /*
-    This Activity holds two seperate lists of the tasks. One List holds the actual Task objects
+    This Activity holds two separate lists of the tasks. One List holds the actual Task objects
     The second List only holds the Titles of the objects for representation in the list view
     Very important to keep both synchronized
      */
@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private Button locationButton;
     private Button undoButton;
     private Button redoButton;
-    private Invoker invoker;
+    //invoker for command pattern
+    private Invoker invoker = new Invoker();
 
     DatabaseHelper myDatabaseHelper;
 
@@ -66,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Initialize Intents
-        toNewBasicTask = new Intent(MainActivity.this, NewBasicTaskActivity.class);
-        toNewScheduledTask = new Intent(MainActivity.this, NewScheduledTaskActivity.class);
-        toNewShoppingTask = new Intent(MainActivity.this, NewShoppingTaskActivity.class);
+        toNewBasicTask = new Intent(this, NewBasicTaskActivity.class);
+        toNewScheduledTask = new Intent(this, NewScheduledTaskActivity.class);
+        toNewShoppingTask = new Intent(this, NewShoppingTaskActivity.class);
 
         listView = findViewById(R.id.listView);
         myDatabaseHelper = new DatabaseHelper(this);
@@ -87,9 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         populateListView();
         setUpListViewListener();
-
-        //invoker for command pattern
-        invoker = new Invoker();
+        updateButtons();
 
         //button listeners
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -239,5 +238,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

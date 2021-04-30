@@ -5,7 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
+import android.util.Log;
 
+import com.example.todo.command.Command;
 import com.example.todo.tasks.BasicTask;
 import com.example.todo.tasks.ScheduledTask;
 import com.example.todo.tasks.ShoppingTask;
@@ -45,6 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_CREATE_TABLE_DELETED = "CREATE TABLE " +
             "TABLE_DELETED (ID INTEGER PRIMARY KEY, TYPE TEXT, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
                     "NOTIFICATION TEXT, NOTES TEXT)";
+
 
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, 1);
@@ -230,20 +234,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put("DEADLINE", "");
                 contentValues.put("NOTIFICATION", "");
                 shoppingItems = shop_task.getItems();
-                StringBuilder notes = new StringBuilder();
-                //save items with * separating them and y/n as first character indicating checked value
-
-                HashMap<String, Boolean> hash_map = new HashMap<String, Boolean>();
-
+                HashMap<String, Boolean> hash_map = new HashMap<>();
                 for (ShoppingItem i:shoppingItems) {
                     hash_map.put(i.toString(), i.isChecked());
                 }
-
                 try {
-                contentValues.put("NOTES", serialize(hash_map));
+                    contentValues.put("NOTES", serialize(hash_map));
                 } catch (IOException e ){
+                    Log.e("databaseHelper", "Exception while storing notes of shopping task");
                 }
-
                 break;
             //TODO ADD DEFAULT EXCEPTION
         }

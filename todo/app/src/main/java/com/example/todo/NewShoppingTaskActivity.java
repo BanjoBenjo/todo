@@ -20,6 +20,8 @@ import com.example.todo.tasks.ShoppingTask;
 
 import java.util.ArrayList;
 
+import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
+
 public class NewShoppingTaskActivity extends Activity {
     private static final String TAG = "NewShoppingTaskActivity";
 
@@ -143,7 +145,9 @@ public class NewShoppingTaskActivity extends Activity {
         boolean insertData = myDatabaseHelper.addTask(mTask);
 
         if (insertData) {
-            Intent to_mainactivity = new Intent(NewShoppingTaskActivity.this, MainActivity.class);
+            Intent to_mainactivity = new Intent(this, MainActivity.class);
+            // prevents MainActivity's onCreate call
+            to_mainactivity.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
             NewShoppingTaskActivity.this.startActivity(to_mainactivity);
 
         } else {

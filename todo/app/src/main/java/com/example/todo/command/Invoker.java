@@ -1,5 +1,7 @@
 package com.example.todo.command;
 
+import android.util.Log;
+
 import com.example.todo.command.Command;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class Invoker {
         commandList.add(theCommand);
         theCommand.execute();
         counter++;
+        Log.wtf("Invoker commandList", commandList.toString());
     }
 
     public void clickUndo() {
@@ -33,6 +36,7 @@ public class Invoker {
             commandList.get(counter - 1).undo();
             counter--;
         }
+        Log.wtf("Invoker commandList", commandList.toString());
     }
 
     public void clickRedo() {
@@ -47,6 +51,7 @@ public class Invoker {
     }
 
     public boolean getUndoState() {
+        Log.wtf("Invoker commandList", commandList.toString());
         if (counter == 0) {
             return false;
         } else {
@@ -55,6 +60,7 @@ public class Invoker {
     }
 
     public boolean getRedoState() {
+        Log.wtf("Invoker commandList", commandList.toString());
         if (counter == commandList.size()) {
             return false;
         } else {

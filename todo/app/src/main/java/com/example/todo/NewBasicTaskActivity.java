@@ -18,6 +18,8 @@ import com.example.todo.tasks.BasicTask;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
+
 public class NewBasicTaskActivity extends Activity {
 
     private static final String TAG = "NewBasicTaskActivity";
@@ -91,6 +93,7 @@ public class NewBasicTaskActivity extends Activity {
 
         if (insertData) {
             Intent to_mainactivity = new Intent(NewBasicTaskActivity.this, MainActivity.class);
+            to_mainactivity.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
             NewBasicTaskActivity.this.startActivity(to_mainactivity);
 
         } else {

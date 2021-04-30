@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
+
 
 public class NewScheduledTaskActivity extends FragmentActivity {
 
@@ -141,6 +143,7 @@ public class NewScheduledTaskActivity extends FragmentActivity {
 
         if (insertData) {
             Intent to_mainactivity = new Intent(NewScheduledTaskActivity.this, MainActivity.class);
+            to_mainactivity.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
             NewScheduledTaskActivity.this.startActivity(to_mainactivity);
 
         } else {
