@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private float flingMin = 100;
     private float velocityMin = 100;
 
+    // only gets called once on startup, see onResume()
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -238,8 +239,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // when coming back from other NewTaskActivities, this gets called
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onResume() {
+        super.onResume();
+        updateTitleList();
     }
 }
