@@ -57,10 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper myDatabaseHelper;
 
-    //for flings, can be tuned, not used atm
-    private float flingMin = 100;
-    private float velocityMin = 100;
-
     // only gets called once on startup, see onResume()
     @Override
     protected void onCreate(Bundle savedInstanceState) {
