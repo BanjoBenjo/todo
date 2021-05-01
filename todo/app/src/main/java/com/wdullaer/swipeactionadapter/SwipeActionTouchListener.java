@@ -434,7 +434,6 @@ public class SwipeActionTouchListener implements View.OnTouchListener {
                     if(mDirection.isLeft() && deltaX > 0 || mDirection.isRight() && deltaX < 0) mFar = false;
                     if(!mFar && Math.abs(deltaX) > mViewWidth*mFarSwipeFraction) mFar = true;
                     if(!mFar) mDirection = (deltaX > 0 ? SwipeDirection.DIRECTION_NORMAL_RIGHT : SwipeDirection.DIRECTION_NORMAL_LEFT);
-                    else mDirection = (deltaX > 0 ? SwipeDirection.DIRECTION_FAR_RIGHT : SwipeDirection.DIRECTION_FAR_LEFT);
                     if(mCallbacks.hasActions(mDownPosition, mDirection)) {
                         mDownViewGroup.showBackground(mDirection, mDimBackgrounds && (Math.abs(deltaX) < mViewWidth*mNormalSwipeFraction));
                         mDownView.setTranslationX(deltaX - mSwipingSlop);

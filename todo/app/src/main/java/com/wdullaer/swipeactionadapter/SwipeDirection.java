@@ -29,16 +29,12 @@ import java.util.List;
 public enum SwipeDirection {
     // Constants
     DIRECTION_NORMAL_LEFT,
-    DIRECTION_FAR_LEFT,
     DIRECTION_NORMAL_RIGHT,
-    DIRECTION_FAR_RIGHT,
     DIRECTION_NEUTRAL;
 
     @NonNull
     public static List<SwipeDirection> getAllDirections(){
         return Arrays.asList(
-                DIRECTION_FAR_LEFT,
-                DIRECTION_FAR_RIGHT,
                 DIRECTION_NEUTRAL,
                 DIRECTION_NORMAL_LEFT,
                 DIRECTION_NORMAL_RIGHT
@@ -46,10 +42,10 @@ public enum SwipeDirection {
     }
 
     public boolean isLeft() {
-        return this.equals(DIRECTION_NORMAL_LEFT) || this.equals(DIRECTION_FAR_LEFT);
+        return this.equals(DIRECTION_NORMAL_LEFT);
     }
 
     public boolean isRight() {
-        return this.equals(DIRECTION_NORMAL_RIGHT) || this.equals(DIRECTION_FAR_RIGHT);
+        return this.equals(DIRECTION_NORMAL_RIGHT);
     }
 }

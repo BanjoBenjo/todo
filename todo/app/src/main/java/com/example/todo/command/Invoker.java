@@ -20,7 +20,7 @@ public class Invoker {
         // if command executes after undo
         if (counter < size) {
             // this should not cause errors now
-            commandList.subList(counter, size - 1).clear();
+            commandList.subList(counter, size).clear();
         }
         commandList.add(theCommand);
         theCommand.execute();
@@ -50,9 +50,6 @@ public class Invoker {
     }
 
     public boolean getUndoState() {
-        Log.wtf("commandList", commandList.toString());
-        Log.wtf("commandList", String.valueOf(commandList.size()));
-        Log.wtf("counter", String.valueOf(counter));
         if (counter == 0) {
             return false;
         } else {
@@ -61,9 +58,6 @@ public class Invoker {
     }
 
     public boolean getRedoState() {
-        Log.wtf("commandList", commandList.toString());
-        Log.wtf("commandList", String.valueOf(commandList.size()));
-        Log.wtf("counter", String.valueOf(counter));
         if (counter == commandList.size()) {
             return false;
         } else {

@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.todo.command.Complete;
+import com.example.todo.command.Delete;
 import com.example.todo.command.Invoker;
 import com.example.todo.tasks.Task;
 import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
@@ -37,6 +38,7 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
     protected SwipeActionAdapter mAdapter;
     private List<String> content = new ArrayList<>();
     private ArrayAdapter<String> stringAdapter;
+    private ArrayList<Task> activeTasks;
     //invoker for command pattern
     private Invoker invoker = new Invoker();
     private Button undoButton;
@@ -47,7 +49,6 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
     Intent toNewShoppingTask;
 
     DatabaseHelper myDatabaseHelper = new DatabaseHelper(this);
-    ;
 
     // only gets called once on startup, see onResume()
     @Override
@@ -70,8 +71,6 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
         redoButton.setEnabled(false);
 
         registerForContextMenu(addButton);
-
-        updateButtons();
 
         //button listeners
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -105,15 +104,15 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
             }
         });
 
-        List<Task> tasksFromLastUsage = myDatabaseHelper.getAllActiveTasks();
-        for (Task task : tasksFromLastUsage){
+        activeTasks = myDatabaseHelper.getAllActiveTasks();
+        for (Task task : activeTasks){
             content.add(task.getTitle());
         }
         stringAdapter = new ArrayAdapter<>(
                 this,
                 R.layout.row_bg,
                 R.id.text,
-                new ArrayList<>(content)
+                content
         );
 
         mAdapter = new SwipeActionAdapter(stringAdapter);
@@ -122,9 +121,7 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
                 .setListView(getListView());
         setListAdapter(mAdapter);
 
-        mAdapter.addBackground(SwipeDirection.DIRECTION_FAR_LEFT,R.layout.row_bg_left_far)
-                .addBackground(SwipeDirection.DIRECTION_NORMAL_LEFT, R.layout.row_bg_left)
-                .addBackground(SwipeDirection.DIRECTION_FAR_RIGHT, R.layout.row_bg_right_far)
+        mAdapter.addBackground(SwipeDirection.DIRECTION_NORMAL_LEFT, R.layout.row_bg_left)
                 .addBackground(SwipeDirection.DIRECTION_NORMAL_RIGHT,R.layout.row_bg_right);
     }
     @Override
@@ -155,7 +152,7 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
     }
     public void updateContent() {
         content.clear();
-        ArrayList<Task> activeTasks = myDatabaseHelper.getAllActiveTasks();
+        activeTasks = myDatabaseHelper.getAllActiveTasks();
 
         for (Task t : activeTasks){
             content.add(t.getTitle());
@@ -188,30 +185,49 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
         for(int i=0;i<positionList.length;i++) {
             SwipeDirection direction = directionList[i];
             int position = positionList[i];
-            String dir = "";
+
+            Context context = getApplicationContext();
+            Task selected_task = activeTasks.get(position);
 
             switch (direction) {
-                case DIRECTION_FAR_LEFT:
-                    dir = "Far left";
-                    break;
                 case DIRECTION_NORMAL_LEFT:
-                    dir = "Left";
-                    break;
-                case DIRECTION_FAR_RIGHT:
-                    dir = "Far right";
+                    // complete task
+                    Complete completeCommand = new Complete(selected_task.getID(), myDatabaseHelper, context);
+                    invoker.setCommand(completeCommand);
+                    invoker.clickDo();
+                    update();
                     break;
                 case DIRECTION_NORMAL_RIGHT:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Test Dialog").setMessage("You swiped right").create().show();
-                    dir = "Right";
+                    // delete task
+                    Delete deleteCommand = new Delete(selected_task.getID(), myDatabaseHelper, context);
+                    invoker.setCommand(deleteCommand);
+                    invoker.clickDo();
+                    update();
                     break;
             }
-            Toast.makeText(
-                    this,
-                    dir + " swipe Action triggered on " + mAdapter.getItem(position),
-                    Toast.LENGTH_SHORT
-            ).show();
-            mAdapter.notifyDataSetChanged();
+        }
+    }
+    @Override
+    protected void onListItemClick(ListView listView, View view, int position, long id){
+        Task selectedTask = activeTasks.get(position);
+        switch(selectedTask.getType()) {
+            case "BASIC":
+                Intent toEditBasicTask = new Intent(MainActivity.this, NewBasicTaskActivity.class);
+                toEditBasicTask.putExtra("taskID", selectedTask.getID());
+                MainActivity.this.startActivity(toEditBasicTask);
+                break;
+            case "SHOPPING":
+                Intent toEditShoppingTask = new Intent(MainActivity.this, NewShoppingTaskActivity.class);
+                toEditShoppingTask.putExtra("taskID", selectedTask.getID());
+                MainActivity.this.startActivity(toEditShoppingTask);
+                break;
+            case "SCHEDULED":
+                Intent toEditScheduledTask = new Intent(MainActivity.this, NewScheduledTaskActivity.class);
+                toEditScheduledTask.putExtra("taskID", selectedTask.getID());
+                MainActivity.this.startActivity(toEditScheduledTask);
+                break;
+            default:
+                Log.e("MainActivity", "task to edit has unknown type");
         }
     }
 }

@@ -14,10 +14,10 @@ public class Complete implements Command {
     private DatabaseHelper databaseHelper;
     Context context;
 
-    public Complete( int newTaskId, DatabaseHelper newDateBaseHelper, Context context) {
+    public Complete( int newTaskId, DatabaseHelper newDateBaseHelper, Context newContext) {
         taskId = newTaskId;
         databaseHelper = newDateBaseHelper;
-        this.context = context;
+        context = newContext;
     }
 
     @Override
@@ -26,10 +26,8 @@ public class Complete implements Command {
         Task task = databaseHelper.getTask(taskId);
         try{
             ((ScheduledTask)task).cancel(context);
-            Toast.makeText(context, "canceled", Toast.LENGTH_SHORT).show();
-
         }catch(Exception e){
-            Toast.makeText(context, "not ", Toast.LENGTH_SHORT).show();
+            Log.e("Complete", "got exception in execute()");
         }
         databaseHelper.completeTask(taskId);
     }
@@ -41,7 +39,9 @@ public class Complete implements Command {
         Task task = databaseHelper.getTask(taskId);
         try{
             ((ScheduledTask)task).remind(context);
-        }catch(Exception e){}
+        }catch(Exception e){
+            Log.e("Complete", "got exception in undo()");
+        }
     }
 
     @Override
