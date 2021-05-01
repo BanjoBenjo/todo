@@ -28,8 +28,6 @@ public class Task {
         System.out.format("Taskinfo: title: %s%n, category: %s%n.",title);
     }
 
-
-
     public String getCategory(){
         return this.category;
     }

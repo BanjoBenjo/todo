@@ -139,7 +139,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return myTask;
     }
 
-
     /**
      * Methods to move Data from one Table to another
      */
@@ -276,13 +275,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 title = data.getString(data.getColumnIndex("TITLE"));
                 category = data.getString(data.getColumnIndex("CATEGORY"));
                 notes = data.getString(data.getColumnIndex("NOTES"));
-                notificationType = data.getString(data.getColumnIndex("NOTIFICATION"));
                 String date = data.getString(data.getColumnIndex("DEADLINE"));
 
                 DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
                 deadline = LocalDateTime.parse(date, formatter);
+                notificationType = data.getString(data.getColumnIndex("NOTIFICATION"));
 
                 my_task = new ScheduledTask(ID, title, category, notes, deadline, notificationType);
+
                 break;
 
             case "SHOPPING":

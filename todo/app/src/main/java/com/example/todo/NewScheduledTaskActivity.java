@@ -64,9 +64,9 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         categories.add("sport");
 
         notifications.add("None");
-        notifications.add("PopUp");
+        notifications.add("Push");
         notifications.add("Multiple");
-        notifications.add("Mail");
+        notifications.add("Alarm");
 
         nameView = findViewById(R.id.editName);
         notificationSpinner = findViewById(R.id.spinner_notifications);
@@ -120,12 +120,12 @@ public class NewScheduledTaskActivity extends FragmentActivity {
                     thisTask.setTitle(titleStr);
                     thisTask.setCategory(categories.get(categorySpinner.getSelectedItemPosition()));
                     thisTask.setDeadline(selectedDate);
-                    thisTask.setNotificationType(notifications.get(notificationSpinner.getSelectedItemPosition()));
                     thisTask.setNotes(notesStr);
+                    thisTask.setNotificationType(notifications.get(notificationSpinner.getSelectedItemPosition()));
                     toastMessage("Task created");
+                    thisTask.remind(getApplicationContext());
                     addTask(thisTask);
 
-                    thisTask.remind(getApplicationContext());
                 }else {
                     if (isEmpty(nameView)) {
                         toastMessage("Please select a Name");
@@ -135,17 +135,15 @@ public class NewScheduledTaskActivity extends FragmentActivity {
                 }
             }
         });
-
     }
 
     private void addTask(ScheduledTask mTask){
         boolean insertData = myDatabaseHelper.addTask(mTask);
 
         if (insertData) {
-            Intent to_mainactivity = new Intent(NewScheduledTaskActivity.this, MainActivity.class);
+            Intent to_mainactivity = new Intent(this, MainActivity.class);
             to_mainactivity.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
             NewScheduledTaskActivity.this.startActivity(to_mainactivity);
-
         } else {
             toastMessage("There went something wrong..");
         }
@@ -169,9 +167,6 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         int month = datePicker.getSelectedMonth();
         int year = datePicker.getSelectedYear();
 
-        toastMessage("Month" + month);
-
-
         int hour = 0;
         int min = 0;
 
@@ -180,9 +175,8 @@ public class NewScheduledTaskActivity extends FragmentActivity {
              min = timePicker.getSelectedMin();
         }catch(Exception e){
         }
-        LocalDateTime date = LocalDateTime.of(year, month + 1, day, hour, min);
 
-        return date;
+        return LocalDateTime.of(year, month + 1, day, hour, min);
     }
 
     private void setDate(LocalDateTime date){
@@ -195,7 +189,6 @@ public class NewScheduledTaskActivity extends FragmentActivity {
             timePicker.setSelectedMin(date.getMinute());
         }catch(Exception e){
         }
-
         datePicker.setSelected();
     }
 
@@ -217,7 +210,6 @@ public class NewScheduledTaskActivity extends FragmentActivity {
     }
 
     private void createNotificationChannel() {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             CharSequence name = "ReminderChannel";
             String description= "Channel for Reminder";

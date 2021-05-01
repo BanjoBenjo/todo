@@ -3,6 +3,8 @@
     package="com.example.todo">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:allowBackup="true"
@@ -34,6 +36,7 @@
         </activity>
         
         <receiver android:name=".ReminderBroadcast"/>
+
 
     </application>
 
