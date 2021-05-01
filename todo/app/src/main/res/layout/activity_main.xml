@@ -45,25 +45,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="409dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/add_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/undo_button">
-
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:cacheColorHint="@color/Cultured" />
-    </LinearLayout>
-
     <Button
         android:id="@+id/scheduled_button"
         android:layout_width="@dimen/standard_height"
@@ -90,5 +71,23 @@
         android:text="LOC"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/shopping_button" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/component_padding"
+        android:layout_marginTop="@dimen/component_padding"
+        android:layout_marginEnd="@dimen/component_padding"
+        android:layout_marginBottom="@dimen/component_padding"
+        app:layout_constraintBottom_toTopOf="@+id/location_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/undo_button">
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

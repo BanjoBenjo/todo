@@ -3,6 +3,8 @@ package com.example.todo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -22,40 +24,30 @@ import android.widget.Toast;
 import com.example.todo.command.Complete;
 import com.example.todo.command.Invoker;
 import com.example.todo.tasks.Task;
+import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
+import com.wdullaer.swipeactionadapter.SwipeDirection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends ListActivity implements SwipeActionAdapter.SwipeActionListener {
     private static final String TAG = "MainActivity";
-
+    // list stuff
+    protected SwipeActionAdapter mAdapter;
+    private List<String> content = new ArrayList<>();
+    private ArrayAdapter<String> stringAdapter;
+    //invoker for command pattern
+    private Invoker invoker = new Invoker();
+    private Button undoButton;
+    private Button redoButton;
     // Intents
     Intent toNewBasicTask;
     Intent toNewScheduledTask;
     Intent toNewShoppingTask;
 
-    /*
-    This Activity holds two separate lists of the tasks. One List holds the actual Task objects
-    The second List only holds the Titles of the objects for representation in the list view
-    Very important to keep both synchronized
-     */
-    private ArrayList<Task> activeTasks;
-    private List<String> listData;
-    ArrayAdapter<String> listAdapter;
-
-    // Interface
-    private ListView listView;
-    private Button addButton;
-    private Button shoppingButton;
-    private Button scheduledButton;
-    private Button locationButton;
-    private Button undoButton;
-    private Button redoButton;
-    //invoker for command pattern
-    private Invoker invoker = new Invoker();
-
-    DatabaseHelper myDatabaseHelper;
+    DatabaseHelper myDatabaseHelper = new DatabaseHelper(this);
+    ;
 
     // only gets called once on startup, see onResume()
     @Override
@@ -68,13 +60,9 @@ public class MainActivity extends AppCompatActivity {
         toNewScheduledTask = new Intent(this, NewScheduledTaskActivity.class);
         toNewShoppingTask = new Intent(this, NewShoppingTaskActivity.class);
 
-        listView = findViewById(R.id.listView);
-        myDatabaseHelper = new DatabaseHelper(this);
-
-        addButton = findViewById(R.id.add_button);
-        scheduledButton = findViewById(R.id.scheduled_button);
-        shoppingButton = findViewById(R.id.shopping_button);
-        locationButton = findViewById(R.id.location_button);
+        Button addButton = findViewById(R.id.add_button);
+        Button scheduledButton = findViewById(R.id.scheduled_button);
+        Button shoppingButton = findViewById(R.id.shopping_button);
 
         undoButton = findViewById(R.id.undo_button);
         undoButton.setEnabled(false);
@@ -83,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
         registerForContextMenu(addButton);
 
-        populateListView();
-        setUpListViewListener();
         updateButtons();
 
         //button listeners
@@ -94,14 +80,12 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(toNewBasicTask);
             }
         });
-
         scheduledButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity.this.startActivity(toNewScheduledTask);
             }
         });
-
         shoppingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,27 +95,47 @@ public class MainActivity extends AppCompatActivity {
         undoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 invoker.clickUndo();
-                updateTitleList();
+                update();
             }
         });
         redoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 invoker.clickRedo();
-                updateTitleList();
+                update();
             }
         });
-    }
 
+        List<Task> tasksFromLastUsage = myDatabaseHelper.getAllActiveTasks();
+        for (Task task : tasksFromLastUsage){
+            content.add(task.getTitle());
+        }
+        stringAdapter = new ArrayAdapter<>(
+                this,
+                R.layout.row_bg,
+                R.id.text,
+                new ArrayList<>(content)
+        );
+
+        mAdapter = new SwipeActionAdapter(stringAdapter);
+        mAdapter.setSwipeActionListener(this)
+                .setDimBackgrounds(true)
+                .setListView(getListView());
+        setListAdapter(mAdapter);
+
+        mAdapter.addBackground(SwipeDirection.DIRECTION_FAR_LEFT,R.layout.row_bg_left_far)
+                .addBackground(SwipeDirection.DIRECTION_NORMAL_LEFT, R.layout.row_bg_left)
+                .addBackground(SwipeDirection.DIRECTION_FAR_RIGHT, R.layout.row_bg_right_far)
+                .addBackground(SwipeDirection.DIRECTION_NORMAL_RIGHT,R.layout.row_bg_right);
+    }
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         getMenuInflater().inflate(R.menu.choose_task_menu, menu);
     }
-
-    //three bottom menu buttons
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
+        //three bottom menu buttons
         switch(item.getItemId()){
             case R.id.basic_task_option:
                 MainActivity.this.startActivity(toNewBasicTask);
@@ -145,100 +149,69 @@ public class MainActivity extends AppCompatActivity {
                 return super.onContextItemSelected(item);
         }
     }
-
-    private void populateListView(){
-        Log.d(TAG, "populateListView : Displaying data from DB in ListView");
-
-        // get Task list and empty Title list
-        activeTasks = myDatabaseHelper.getAllActiveTasks();
-        listData = new ArrayList<>();
-
-        //create list adapter and set the adapter
-        listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listData);
-        listView.setAdapter(listAdapter);
-
-        for (Task t : activeTasks){
-            listData.add(t.getTitle());
-        }
-    }
-
     public void updateButtons() {
         undoButton.setEnabled(invoker.getUndoState());
         redoButton.setEnabled(invoker.getRedoState());
     }
-
-    public void updateTitleList() {
-        // ist das die ListView der Tasks?
-        listData.clear();
-        activeTasks = myDatabaseHelper.getAllActiveTasks();
+    public void updateContent() {
+        content.clear();
+        ArrayList<Task> activeTasks = myDatabaseHelper.getAllActiveTasks();
 
         for (Task t : activeTasks){
-            listData.add(t.getTitle());
+            content.add(t.getTitle());
         }
-        listAdapter.notifyDataSetChanged();
+        stringAdapter.notifyDataSetChanged();
+    }
+    public void update(){
+        // call every time you want to refresh the list
+        updateContent();
         updateButtons();
     }
-
-    /**
-     * Set up List view Listeners
-     *
-     * TODO [HARD] click to show information (add button for editing here as well)
-     *
-     * Long click listener to Edit a task
-     */
-    private void setUpListViewListener() {
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Task selectedTask = activeTasks.get(position);
-                switch(selectedTask.getType()) {
-                    case "BASIC":
-                        Intent toEditBasicTask = new Intent(MainActivity.this, NewBasicTaskActivity.class);
-                        toEditBasicTask.putExtra("taskID", selectedTask.getID());
-                        MainActivity.this.startActivity(toEditBasicTask);
-                        break;
-                    case "SHOPPING":
-                        Intent toEditShoppingTask = new Intent(MainActivity.this, NewShoppingTaskActivity.class);
-                        toEditShoppingTask.putExtra("taskID", selectedTask.getID());
-                        MainActivity.this.startActivity(toEditShoppingTask);
-                        break;
-                    case "SCHEDULED":
-                        Intent toEditScheduledTask = new Intent(MainActivity.this, NewScheduledTaskActivity.class);
-                        toEditScheduledTask.putExtra("taskID", selectedTask.getID());
-                        MainActivity.this.startActivity(toEditScheduledTask);
-                        break;
-                    default:
-                        Log.e("MainActivity", "task to edit has unknown type");
-                }
-            }
-        });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Context context = getApplicationContext();
-                Task selected_task = activeTasks.get(position);
-
-                // command complete hier, weil swipen nicht klappt
-                Complete completeCommand = new Complete(selected_task.getID(), myDatabaseHelper, context );
-                invoker.setCommand(completeCommand);
-                invoker.clickDo();
-
-                Toast.makeText(context,"task with id " + selected_task.getID() + " was completed", Toast.LENGTH_SHORT).show();
-                //itemsAdapter.notifyDataSetChanged();
-
-                updateTitleList();
-                return true;
-            }
-        });
-
-    }
-
-    // when coming back from other NewTaskActivities, this gets called
     @Override
     protected void onResume() {
+        // when coming back from other NewTaskActivities, this gets called
         super.onResume();
-        updateTitleList();
+        update();
+    }
+    @Override
+    public boolean hasActions(int position, SwipeDirection direction){
+        if(direction.isLeft()) return true;
+        if(direction.isRight()) return true;
+        return false;
+    }
+    @Override
+    public boolean shouldDismiss(int position, SwipeDirection direction){
+        return direction == SwipeDirection.DIRECTION_NORMAL_LEFT;
+    }
+    @Override
+    public void onSwipe(int[] positionList, SwipeDirection[] directionList){
+        for(int i=0;i<positionList.length;i++) {
+            SwipeDirection direction = directionList[i];
+            int position = positionList[i];
+            String dir = "";
+
+            switch (direction) {
+                case DIRECTION_FAR_LEFT:
+                    dir = "Far left";
+                    break;
+                case DIRECTION_NORMAL_LEFT:
+                    dir = "Left";
+                    break;
+                case DIRECTION_FAR_RIGHT:
+                    dir = "Far right";
+                    break;
+                case DIRECTION_NORMAL_RIGHT:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Test Dialog").setMessage("You swiped right").create().show();
+                    dir = "Right";
+                    break;
+            }
+            Toast.makeText(
+                    this,
+                    dir + " swipe Action triggered on " + mAdapter.getItem(position),
+                    Toast.LENGTH_SHORT
+            ).show();
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }
