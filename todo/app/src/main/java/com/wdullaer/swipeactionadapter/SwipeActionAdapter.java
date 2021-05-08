@@ -90,7 +90,9 @@ public class SwipeActionAdapter extends DecoratorAdapter implements
      */
     @Override
     public boolean onPreAction(ListView listView, int position, SwipeDirection direction){
-        return mSwipeActionListener != null && mSwipeActionListener.shouldDismiss(position, direction);
+        // this is the original design, however we want the listView item to dismiss on every direction not just one
+        // return mSwipeActionListener != null && mSwipeActionListener.shouldDismiss(position, direction);
+        return mSwipeActionListener != null && true;
     }
 
     /**
