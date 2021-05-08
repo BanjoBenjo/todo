@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -29,7 +30,7 @@ public class NewBasicTaskActivity extends Activity {
     DatabaseHelper myDatabaseHelper;
     private EditText nameView;
     private Spinner categorySpinner;
-    private Button submitButton;
+    private ImageButton submitButton;
     private EditText notes;
 
     private ArrayAdapter<String> catAdapter;

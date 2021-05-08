@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
@@ -33,7 +34,7 @@ public class NewShoppingTaskActivity extends Activity {
     private ArrayAdapter<String> shoppingItemsAdapter;
     private ListView shoppingListView;
     private Button addShoppingItem;
-    private Button submitShoppingList;
+    private ImageButton submitShoppingList;
     private EditText inputItemName;
     private EditText inputListName;
     private ShoppingTask shoppingTask;
