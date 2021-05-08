@@ -50,7 +50,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="411dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/component_padding"
         android:layout_marginTop="@dimen/component_padding"
