@@ -15,6 +15,9 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import static android.app.Notification.DEFAULT_VIBRATE;
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 public class ReminderBroadcast extends BroadcastReceiver {
 
     @Override
@@ -30,11 +33,9 @@ public class ReminderBroadcast extends BroadcastReceiver {
                 startAlarm(context, intent);
                 break;
         }
-
     }
 
     private void startPushNotification(Context context, Intent intent){
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager. TYPE_NOTIFICATION );
         String CHANNEL_ID="1";
 
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -60,22 +61,24 @@ public class ReminderBroadcast extends BroadcastReceiver {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        notificationManager.notify(200, builder.build());
+        notificationManager.notify(1, builder.build());
     }
 
     private void startAlarm(Context context, Intent intent){
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager. TYPE_NOTIFICATION );
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM );
         String CHANNEL_ID="2";
 
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        //For API 26+ you need to put some additional code like below:
         NotificationChannel mChannel;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mChannel = new NotificationChannel(CHANNEL_ID, "Alarm", NotificationManager.IMPORTANCE_HIGH);
             mChannel.setLightColor(Color.GRAY);
+            mChannel.enableVibration(true);
+            mChannel.setVibrationPattern(new long[] { 1000, 1000, 1000, 1000, 1000 });
             mChannel.enableLights(true);
             mChannel.setDescription("Alarm");
+
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION)
@@ -91,12 +94,13 @@ public class ReminderBroadcast extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle(intent.getStringExtra("title"))
                 .setContentText(intent.getStringExtra("notes"))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setSound(alarmSound)
-                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
+                .setDefaults( DEFAULT_VIBRATE )
+                .setSound(alarmSound);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        notificationManager.notify(200, builder.build());
+        notificationManager.notify(2, builder.build());
     }
 }

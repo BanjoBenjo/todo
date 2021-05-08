@@ -49,12 +49,12 @@ public class AlarmNotification implements Notification {
     }
 
     private PendingIntent getAlarmIntent(Context context, int taskID, String titleStr, String notesStr){
-        Intent pushIntent = new Intent(context, ReminderBroadcast.class);
-        pushIntent.putExtra("title", titleStr);
-        pushIntent.putExtra("notes", notesStr);
-        pushIntent.putExtra("type", this.toString());
+        Intent alarmIntent = new Intent(context, ReminderBroadcast.class);
+        alarmIntent.putExtra("title", titleStr);
+        alarmIntent.putExtra("notes", notesStr);
+        alarmIntent.putExtra("type", this.toString());
 
-        return PendingIntent.getBroadcast(context, taskID, pushIntent, 0);
+        return PendingIntent.getBroadcast(context, taskID, alarmIntent, 0);
     }
 
     private long getDeadlineMillis(LocalDateTime deadline){
