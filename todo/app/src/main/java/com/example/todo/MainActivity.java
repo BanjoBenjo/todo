@@ -12,12 +12,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.todo.command.Complete;
 import com.example.todo.command.Delete;
 import com.example.todo.command.Invoker;
 import com.example.todo.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
 import com.wdullaer.swipeactionadapter.SwipeDirection;
 
@@ -33,8 +35,8 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
     private ArrayList<Task> activeTasks;
     //invoker for command pattern
     private Invoker invoker = new Invoker();
-    private Button undoButton;
-    private Button redoButton;
+    private ImageButton undoButton;
+    private ImageButton redoButton;
     // Intents
     Intent toNewBasicTask;
     Intent toNewScheduledTask;
@@ -53,19 +55,18 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
         toNewScheduledTask = new Intent(this, NewScheduledTaskActivity.class);
         toNewShoppingTask = new Intent(this, NewShoppingTaskActivity.class);
 
-        Button addButton = findViewById(R.id.add_button);
-        Button scheduledButton = findViewById(R.id.scheduled_button);
-        Button shoppingButton = findViewById(R.id.shopping_button);
+        ImageButton scheduledButton = findViewById(R.id.scheduled_button);
+        ImageButton shoppingButton = findViewById(R.id.shopping_button);
+        ImageButton basicButton = findViewById(R.id.basic_button);
 
         undoButton = findViewById(R.id.undo_button);
         undoButton.setEnabled(false);
         redoButton = findViewById(R.id.redo_button);
         redoButton.setEnabled(false);
 
-        registerForContextMenu(addButton);
 
         //button listeners
-        addButton.setOnClickListener(new View.OnClickListener() {
+        basicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MainActivity.this.startActivity(toNewBasicTask);
@@ -115,12 +116,6 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
 
         mAdapter.addBackground(SwipeDirection.DIRECTION_NORMAL_LEFT, R.layout.row_bg_left)
                 .addBackground(SwipeDirection.DIRECTION_NORMAL_RIGHT,R.layout.row_bg_right);
-    }
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-
-        getMenuInflater().inflate(R.menu.choose_task_menu, menu);
     }
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {

@@ -41,35 +41,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
+        <ImageButton
             android:id="@+id/redo_button"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/standard_height"
             android:layout_height="@dimen/standard_height"
             android:layout_marginTop="@dimen/component_padding"
             android:layout_marginEnd="@dimen/component_padding"
             android:layout_marginBottom="@dimen/component_padding"
-            android:background="@drawable/button_state_color"
+            android:background="@android:color/transparent"
             android:elevation="@dimen/elevation"
-            android:text="Redo"
-            android:textColor="@color/DavysGrey"
+            android:src="@drawable/baseline_redo_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/baseline_redo_black_24dp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/undo_button"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/standard_height"
             android:layout_height="@dimen/standard_height"
             android:layout_marginTop="@dimen/component_padding"
             android:layout_marginEnd="@dimen/component_padding"
             android:layout_marginBottom="@dimen/component_padding"
-            android:background="@drawable/button_state_color"
+            android:background="@android:color/transparent"
             android:elevation="@dimen/elevation"
-            android:text="Undo"
-            android:textColor="@color/DavysGrey"
+            android:rotation="0"
+            android:src="@drawable/baseline_undo_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/redo_button"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/baseline_undo_black_24dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -85,43 +86,45 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/add_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/component_padding"
-            android:layout_marginEnd="@dimen/component_padding"
-            android:layout_marginBottom="@dimen/component_padding"
-            android:backgroundTint="@color/LightGray"
-            android:elevation="@dimen/elevation"
-            android:text="Add"
-            android:textColor="@color/DavysGrey"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
+        <ImageButton
             android:id="@+id/scheduled_button"
             android:layout_width="@dimen/standard_height"
             android:layout_height="@dimen/standard_height"
-            android:layout_marginStart="@dimen/component_padding"
             android:layout_marginTop="@dimen/component_padding"
+            android:layout_marginEnd="@dimen/component_padding"
+            android:background="@android:color/transparent"
             android:elevation="@dimen/elevation"
-            android:text="APPOINT"
+            android:src="@drawable/baseline_event_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/shopping_button"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/baseline_event_black_24dp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/shopping_button"
             android:layout_width="@dimen/standard_height"
             android:layout_height="@dimen/standard_height"
-            android:layout_marginStart="@dimen/component_padding"
             android:layout_marginTop="@dimen/component_padding"
+            android:layout_marginEnd="@dimen/component_padding"
+            android:background="@android:color/transparent"
             android:elevation="@dimen/elevation"
-            android:text="SHOP"
+            android:src="@drawable/baseline_shopping_cart_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/scheduled_button"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/baseline_shopping_cart_black_24dp" />
+
+        <ImageButton
+            android:id="@+id/basic_button"
+            android:layout_width="@dimen/standard_height"
+            android:layout_height="@dimen/standard_height"
+            android:layout_marginTop="@dimen/component_padding"
+            android:layout_marginEnd="@dimen/component_padding"
+            android:layout_marginBottom="@dimen/component_padding"
+            android:background="@android:color/transparent"
+            android:src="@drawable/baseline_add_task_black_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/shopping_button"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
