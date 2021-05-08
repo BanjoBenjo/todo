@@ -24,4 +24,11 @@ public class ShoppingItem {
     }
 
     public void setChecked(Boolean check) { checked = check; }
+
+    public void setName(String newName) {
+        name = newName;
+    }
+    public String getName(){
+        return name;
+    }
 }

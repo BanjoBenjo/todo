@@ -1,9 +1,13 @@
 package com.example.todo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
@@ -102,6 +106,45 @@ public class NewShoppingTaskActivity extends Activity {
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 checkedTextView.setChecked(itemToCheck.isChecked());
                 shoppingItemsAdapter.notifyDataSetChanged();
+            }
+        });
+        shoppingListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                ShoppingItem itemToEdit = shoppingItemsList.get(position);
+                final EditText editText = new EditText(NewShoppingTaskActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(NewShoppingTaskActivity.this);
+                builder.setTitle("Edit Item");
+                editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+                String oldName = itemToEdit.getName();
+                editText.setText(oldName);
+                builder.setView(editText);
+                // Set up the buttons
+                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        shoppingItemsAdapter.clear();
+                        if(!isEmpty(editText)) {
+                            itemToEdit.setName(editText.getText().toString());
+
+                        } else {
+                            itemToEdit.setName(oldName);
+                        }
+                        shoppingItemsList = shoppingTask.getItems();
+                        for (ShoppingItem i: shoppingItemsList) {
+                            shoppingItemsAdapter.add(i.toString());
+                        }
+                        shoppingItemsAdapter.notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+                return true;
             }
         });
     }
