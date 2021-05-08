@@ -168,6 +168,7 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
         if(direction.isRight()) return true;
         return false;
     }
+
     @Override
     public boolean shouldDismiss(int position, SwipeDirection direction){
         return direction == SwipeDirection.DIRECTION_NORMAL_LEFT;
@@ -221,5 +222,11 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
             default:
                 Log.e("MainActivity", "task to edit has unknown type");
         }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        this.finishAffinity();
     }
 }

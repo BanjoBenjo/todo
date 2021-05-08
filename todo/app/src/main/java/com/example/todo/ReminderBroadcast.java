@@ -33,7 +33,6 @@ public class ReminderBroadcast extends BroadcastReceiver {
                 startAlarm(context, intent);
                 break;
         }
-
     }
 
     private void startPushNotification(Context context, Intent intent){
@@ -62,7 +61,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        notificationManager.notify(200, builder.build());
+        notificationManager.notify(1, builder.build());
     }
 
     private void startAlarm(Context context, Intent intent){
@@ -86,8 +85,6 @@ public class ReminderBroadcast extends BroadcastReceiver {
                     .build();
             mChannel.setSound(alarmSound, audioAttributes);
 
-
-
             if (mNotificationManager != null) {
                 mNotificationManager.createNotificationChannel( mChannel );
             }
@@ -104,6 +101,6 @@ public class ReminderBroadcast extends BroadcastReceiver {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        notificationManager.notify(200, builder.build());
+        notificationManager.notify(2, builder.build());
     }
 }
