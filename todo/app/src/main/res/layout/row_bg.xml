@@ -17,15 +17,20 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="?android:listPreferredItemHeight"
-    android:background="@android:color/transparent">
+    android:background="#FFFFFF"
+    android:elevation="@dimen/elevation"
+    android:orientation="horizontal"
+    android:layout_marginHorizontal="@dimen/horizontal_margin"
+    android:layout_marginVertical="@dimen/vertical_margin">
+
     <TextView
         android:id="@+id/text"
-        android:layout_margin="8dp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_margin="8dp"
         android:gravity="center_vertical"
-        android:textAppearance="?android:textAppearanceListItem"
-        android:text="Dummy"/>
+        android:text="Dummy"
+        android:textAppearance="?android:textAppearanceListItem" />
 </LinearLayout>
