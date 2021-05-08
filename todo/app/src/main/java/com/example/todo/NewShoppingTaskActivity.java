@@ -156,13 +156,13 @@ public class NewShoppingTaskActivity extends Activity {
         if(!isEmpty(inputItemName)) {
             ShoppingItem newItem = new ShoppingItem(itemName);
             shoppingTask.addItem(newItem);
-            shoppingItemsList = shoppingTask.getItems();
-            for (ShoppingItem i: shoppingItemsList) {
-                shoppingItemsAdapter.add(i.toString());
-            }
             inputItemName.setText("");
         } else {
-            Toast.makeText(getApplicationContext(), "Please enter name", Toast.LENGTH_LONG).show();
+            Toast.makeText(NewShoppingTaskActivity.this, "Enter name first!", Toast.LENGTH_LONG);
+        }
+        shoppingItemsList = shoppingTask.getItems();
+        for (ShoppingItem i: shoppingItemsList) {
+            shoppingItemsAdapter.add(i.toString());
         }
         shoppingItemsAdapter.notifyDataSetChanged();
     }
