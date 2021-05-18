@@ -3,8 +3,8 @@ package com.example.todo.tasks;
 public class BasicTask extends Task {
 
     private String notes;
-    public BasicTask(int ID, String title, String category, String notes){
-        super(ID, title, category);
+    public BasicTask(int ID, String title, String notes){
+        super(ID, title);
 
         this.notes = notes;
     }

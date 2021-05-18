@@ -38,15 +38,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_DELETED = "TABLE_DELETED";
 
     private static final String DATABASE_CREATE_TABLE_ACTIVE = "CREATE TABLE " +
-            "TABLE_ACTIVE (ID INTEGER PRIMARY KEY, TYPE TEXT NOT NULL, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
+            "TABLE_ACTIVE (ID INTEGER PRIMARY KEY, TYPE TEXT NOT NULL, TITLE TEXT, DEADLINE TEXT," +
             "NOTIFICATION TEXT, NOTES TEXT)";
 
     private static final String DATABASE_CREATE_TABLE_COMPLETED = "CREATE TABLE " +
-            "TABLE_COMPLETED (ID INTEGER PRIMARY KEY, TYPE TEXT, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
+            "TABLE_COMPLETED (ID INTEGER PRIMARY KEY, TYPE TEXT, TITLE TEXT, DEADLINE TEXT," +
                     "NOTIFICATION TEXT, NOTES TEXT)";
 
     private static final String DATABASE_CREATE_TABLE_DELETED = "CREATE TABLE " +
-            "TABLE_DELETED (ID INTEGER PRIMARY KEY, TYPE TEXT, TITLE TEXT, CATEGORY TEXT, DEADLINE TEXT," +
+            "TABLE_DELETED (ID INTEGER PRIMARY KEY, TYPE TEXT, TITLE TEXT, DEADLINE TEXT," +
                     "NOTIFICATION TEXT, NOTES TEXT)";
 
 
@@ -207,7 +207,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put("ID", b_task.getID());
                 contentValues.put("TYPE", "BASIC");
                 contentValues.put("TITLE", b_task.getTitle());
-                contentValues.put("CATEGORY", b_task.getCategory().toString());
                 contentValues.put("DEADLINE", "");
                 contentValues.put("NOTIFICATION", "");
                 contentValues.put("NOTES", b_task.getNotes());
@@ -218,7 +217,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put("ID", sched_task.getID());
                 contentValues.put("TYPE", "SCHEDULED");
                 contentValues.put("TITLE", sched_task.getTitle());
-                contentValues.put("CATEGORY", sched_task.getCategory().toString());
                 contentValues.put("DEADLINE", sched_task.getDeadline().toString());
                 contentValues.put("NOTIFICATION", sched_task.getNotification().toString());
                 contentValues.put("NOTES", sched_task.getNotes());
@@ -229,7 +227,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put("ID", shop_task.getID());
                 contentValues.put("TYPE", "SHOPPING");
                 contentValues.put("TITLE", shop_task.getTitle());
-                contentValues.put("CATEGORY", "");
                 contentValues.put("DEADLINE", "");
                 contentValues.put("NOTIFICATION", "");
                 shoppingItems = shop_task.getItems();
@@ -255,7 +252,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String task_type = data.getString(data.getColumnIndex("TYPE"));
         int ID;
         String title;
-        String category;
         String notes;
         String notificationType;
         LocalDateTime deadline;
@@ -265,15 +261,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             case "BASIC":
                 ID = data.getInt(data.getColumnIndex("ID"));
                 title = data.getString(data.getColumnIndex("TITLE"));
-                category = data.getString(data.getColumnIndex("CATEGORY"));
                 notes = data.getString(data.getColumnIndex("NOTES"));
-                my_task = new BasicTask(ID, title, category, notes);
+                my_task = new BasicTask(ID, title, notes);
                 break;
 
             case "SCHEDULED":
                 ID = data.getInt(data.getColumnIndex("ID"));
                 title = data.getString(data.getColumnIndex("TITLE"));
-                category = data.getString(data.getColumnIndex("CATEGORY"));
                 notes = data.getString(data.getColumnIndex("NOTES"));
                 String date = data.getString(data.getColumnIndex("DEADLINE"));
 
@@ -281,15 +275,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 deadline = LocalDateTime.parse(date, formatter);
                 notificationType = data.getString(data.getColumnIndex("NOTIFICATION"));
 
-                my_task = new ScheduledTask(ID, title, category, notes, deadline, notificationType);
+                my_task = new ScheduledTask(ID, title, notes, deadline, notificationType);
 
                 break;
 
             case "SHOPPING":
                 ID = data.getInt(data.getColumnIndex("ID"));
                 title = data.getString(data.getColumnIndex("TITLE"));
-                category = data.getString(data.getColumnIndex("CATEGORY"));
-                my_task = new ShoppingTask(ID, title, category);
+                my_task = new ShoppingTask(ID, title);
                 notes = data.getString(data.getColumnIndex("NOTES"));
                 //split notes into item names, create items and add them to shopping task
 

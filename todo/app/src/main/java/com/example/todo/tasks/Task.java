@@ -5,15 +5,13 @@ import com.example.todo.notifications.Notification;
 public class Task {
 
     private String title;
-    private String category;
     private int ID;
 
     public Notification notificationType;
 
-    public Task(int ID, String title, String category){
+    public Task(int ID, String title){
         this.ID = ID;
         this.title = title;
-        this.category = category;
     }
 
     public void setTitle(String newTitle){
@@ -26,14 +24,6 @@ public class Task {
 
     public void taskInfo(){
         System.out.format("Taskinfo: title: %s%n, category: %s%n.",title);
-    }
-
-    public String getCategory(){
-        return this.category;
-    }
-
-    public void setCategory(String newCategory){
-        this.category = newCategory;
     }
 
     public int getID(){

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.todo.notifications.AlarmNotification;
-import com.example.todo.notifications.MultipleNotifications;
 import com.example.todo.notifications.NoNotification;
 import com.example.todo.notifications.Notification;
 import com.example.todo.notifications.PushNotification;
@@ -17,8 +16,8 @@ public class ScheduledTask extends Task {
     private LocalDateTime deadline;
     private Notification notificationType;
 
-    public ScheduledTask(int ID, String title, String category, String notes, LocalDateTime deadline, String notificationType){
-        super(ID, title, category);
+    public ScheduledTask(int ID, String title, String notes, LocalDateTime deadline, String notificationType){
+        super(ID, title);
 
         this.deadline = deadline;
         this.notes = notes;
@@ -26,8 +25,8 @@ public class ScheduledTask extends Task {
         setNotificationType(notificationType);
     }
 
-    public ScheduledTask(int ID, String title, String category, String notes, String notification){
-        super(ID, title, category);
+    public ScheduledTask(int ID, String title, String notes, String notification){
+        super(ID, title);
 
         this.notes=notes;
         setNotificationType(notification);
@@ -54,11 +53,7 @@ public class ScheduledTask extends Task {
                 this.notificationType = new PushNotification(deadline, super.getID() , super.getTitle(), notes);
                 break;
             case "Alarm":
-                Log.wtf("ScheduledTask", "Alarm created ID: " + super.getID());
                 this.notificationType = new AlarmNotification(deadline, super.getID() , super.getTitle(), notes);
-                break;
-            case "Multiple":
-                this.notificationType = new MultipleNotifications(deadline, super.getID() , super.getTitle(), notes);
                 break;
             case "None":
                 this.notificationType = new NoNotification();

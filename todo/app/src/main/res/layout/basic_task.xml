@@ -11,33 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="@dimen/component_padding"
-        android:layout_marginTop="@dimen/component_padding"
         android:layout_marginEnd="@dimen/component_padding"
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spinner" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/component_padding"
-        android:layout_marginTop="@dimen/component_padding"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editName" />
-
-    <ImageButton
-        android:id="@+id/submitButton"
-        android:layout_width="@dimen/standard_height"
-        android:layout_height="@dimen/standard_height"
-        android:layout_marginTop="@dimen/component_padding"
-        android:layout_marginEnd="@dimen/component_padding"
-        android:background="@android:color/transparent"
-        android:src="@drawable/baseline_library_add_black_24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/baseline_library_add_black_24dp" />
 
     <EditText
         android:id="@+id/editNote"
@@ -49,7 +27,6 @@
         android:background="@null"
         android:ems="10"
         android:gravity="start|top"
-        android:hint=" Note"
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,11 +39,22 @@
         android:layout_height="@dimen/standard_height"
         android:layout_marginStart="@dimen/component_padding"
         android:layout_marginTop="@dimen/component_padding"
-        android:layout_marginEnd="@dimen/component_padding"
         android:ems="10"
-        android:hint="Name"
+        android:hint="New Task"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/submitButton"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/component_padding"
+        android:layout_marginTop="@dimen/component_padding"
+        android:layout_marginEnd="@dimen/component_padding"
+        android:text="SAVE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editName"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

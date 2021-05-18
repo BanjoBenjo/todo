@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -19,7 +20,6 @@ import com.example.todo.command.Complete;
 import com.example.todo.command.Delete;
 import com.example.todo.command.Invoker;
 import com.example.todo.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
 import com.wdullaer.swipeactionadapter.SwipeDirection;
 
@@ -223,5 +223,14 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
     public void onBackPressed()
     {
         this.finishAffinity();
+    }
+
+    public void setEmailAddress(String email){
+        SharedPreferences mPreferences = getSharedPreferences("CurrentUser",
+                MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString("Email", email);
+        editor.commit();
     }
 }

@@ -41,16 +41,16 @@ public class NewScheduledTaskActivity extends FragmentActivity {
 
     private EditText nameView;
     private Spinner notificationSpinner;
-    private Spinner categorySpinner;
     private Button submitButton;
     private EditText notes;
     private TimePickerFragment timePicker;
     private DatePickerFragment datePicker;
 
-    private ArrayAdapter<String> categoryArrayAdapter;
+    private Button dateButton;
+    private Button timeButton;
+
     private ArrayAdapter<String> notificationArrayAdapter;
 
-    private List<String> categories = new ArrayList<>();
     private List<String> notifications = new ArrayList<>();
 
     @Override
@@ -58,27 +58,18 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scheduled_task);
 
-        categories.add("privat");
-        categories.add("school");
-        categories.add("work");
-        categories.add("sport");
-
         notifications.add("None");
         notifications.add("Push");
-        notifications.add("Multiple");
         notifications.add("Alarm");
 
         nameView = findViewById(R.id.editName);
         notificationSpinner = findViewById(R.id.spinner_notifications);
-        categorySpinner = findViewById(R.id.spinner_category);
         submitButton = findViewById(R.id.submitButton);
         notes = findViewById(R.id.editTextTextMultiLine);
+        dateButton = findViewById(R.id.date_button);
+        timeButton = findViewById(R.id.time_button);
         timePicker = new TimePickerFragment();
         datePicker = new DatePickerFragment();
-
-        categoryArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
-        categoryArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(categoryArrayAdapter);
 
         notificationArrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, notifications);
@@ -95,7 +86,6 @@ public class NewScheduledTaskActivity extends FragmentActivity {
                 taskID = thisIntent.getIntExtra("taskID", 0);
                 thisTask = (ScheduledTask) myDatabaseHelper.getTask(taskID);
                 nameView.setText(thisTask.getTitle());
-                categorySpinner.setSelection(categories.indexOf(thisTask.getCategory()));
                 notificationSpinner.setSelection(notifications.indexOf(thisTask.getNotification().toString()));
                 notes.setText(thisTask.getNotes());
                 setDate(thisTask.getDeadline());
@@ -103,7 +93,6 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         }else {
             taskID = getGlobalTaskId();
             thisTask = new ScheduledTask(taskID, nameView.getText().toString(),
-                    categories.get(categorySpinner.getSelectedItemPosition()),
                     notes.getText().toString(),
                     notifications.get(notificationSpinner.getSelectedItemPosition())
                     );
@@ -118,7 +107,6 @@ public class NewScheduledTaskActivity extends FragmentActivity {
                     LocalDateTime selectedDate = getSelectedDate();
 
                     thisTask.setTitle(titleStr);
-                    thisTask.setCategory(categories.get(categorySpinner.getSelectedItemPosition()));
                     thisTask.setDeadline(selectedDate);
                     thisTask.setNotes(notesStr);
                     thisTask.setNotificationType(notifications.get(notificationSpinner.getSelectedItemPosition()));
@@ -135,6 +123,16 @@ public class NewScheduledTaskActivity extends FragmentActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (datePicker.getSelectedDay() != 0){
+            LocalDateTime selectedDate = getSelectedDate();
+            setDateString(selectedDate);
+        }
+
     }
 
     private void addTask(ScheduledTask mTask){
@@ -163,12 +161,13 @@ public class NewScheduledTaskActivity extends FragmentActivity {
     }
 
     private LocalDateTime getSelectedDate(){
-        int day = datePicker.getSelectedDay();
-        int month = datePicker.getSelectedMonth();
-        int year = datePicker.getSelectedYear();
 
         int hour = 0;
         int min = 0;
+
+        int day = datePicker.getSelectedDay();
+        int month = datePicker.getSelectedMonth();
+        int year = datePicker.getSelectedYear();
 
         try {
              hour = timePicker.getSelectedHour();
@@ -187,9 +186,19 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         try {
             timePicker.setSelectedHour(date.getHour());
             timePicker.setSelectedMin(date.getMinute());
+
         }catch(Exception e){
         }
         datePicker.setSelected();
+    }
+
+    private void setDateString(LocalDateTime date){
+        String dateString = "" + date.getDayOfMonth() + "." + (date.getMonthValue()-1) + "."
+                + date.getYear();
+        dateButton.setText(dateString);
+
+        String timeString = "" + date.getHour() + ":" + date.getMinute();
+        timeButton.setText(timeString);
     }
 
     //todo do something with date and time provided by pickers

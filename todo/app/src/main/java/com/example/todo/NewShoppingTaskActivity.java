@@ -34,7 +34,7 @@ public class NewShoppingTaskActivity extends Activity {
     private ArrayAdapter<String> shoppingItemsAdapter;
     private ListView shoppingListView;
     private Button addShoppingItem;
-    private ImageButton submitShoppingList;
+    private Button submitShoppingList;
     private EditText inputItemName;
     private EditText inputListName;
     private ShoppingTask shoppingTask;
@@ -49,7 +49,7 @@ public class NewShoppingTaskActivity extends Activity {
         shoppingListView = findViewById(R.id.shoppingListView);
         shoppingListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         addShoppingItem = findViewById(R.id.addShoppingItem);
-        submitShoppingList = findViewById(R.id.submit_shopping_list);
+        submitShoppingList = findViewById(R.id.submitButton);
         inputItemName = findViewById(R.id.nameOfShoppingItem);
         inputListName = findViewById(R.id.shopping_list_name);
         shoppingItemsList = new ArrayList<>();
@@ -74,8 +74,7 @@ public class NewShoppingTaskActivity extends Activity {
                 }
             }
         } else {
-            shoppingTask  = new ShoppingTask(getGlobalTaskId(), "dummytext", "privat");
-
+            shoppingTask  = new ShoppingTask(getGlobalTaskId(), "dummytext");
         }
 
         addShoppingItem.setOnClickListener(new View.OnClickListener() {
