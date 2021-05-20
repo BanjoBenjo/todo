@@ -27,4 +27,6 @@ public class ShoppingTask extends Task {
     public String getType() {
         return "SHOPPING";
     }
+
+    public String getNotes() { return "Notes"; }
 }

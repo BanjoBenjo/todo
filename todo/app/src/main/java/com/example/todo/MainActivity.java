@@ -1,60 +1,63 @@
 package com.example.todo;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListView;
 
 import com.example.todo.command.Complete;
 import com.example.todo.command.Delete;
 import com.example.todo.command.Invoker;
 import com.example.todo.tasks.Task;
-import com.wdullaer.swipeactionadapter.SwipeActionAdapter;
-import com.wdullaer.swipeactionadapter.SwipeDirection;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MainActivity extends ListActivity implements SwipeActionAdapter.SwipeActionListener {
-    private static final String TAG = "MainActivity";
-    // list stuff
-    protected SwipeActionAdapter mAdapter;
-    private List<String> content = new ArrayList<>();
-    private ArrayAdapter<String> stringAdapter;
-    private ArrayList<Task> activeTasks;
-    //invoker for command pattern
-    private Invoker invoker = new Invoker();
-    private ImageButton undoButton;
-    private ImageButton redoButton;
-    // Intents
-    Intent toNewBasicTask;
-    Intent toNewScheduledTask;
-    Intent toNewShoppingTask;
+
+public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper myDatabaseHelper = new DatabaseHelper(this);
 
-    // only gets called once on startup, see onResume()
+    private ArrayList<Task> taskList;
+    TaskAdapter taskAdapter;
+    RecyclerView recyclerView;
+
+    Invoker invoker = new Invoker();
+    ImageButton undoButton;
+    ImageButton redoButton;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize Intents
-        toNewBasicTask = new Intent(this, NewBasicTaskActivity.class);
-        toNewScheduledTask = new Intent(this, NewScheduledTaskActivity.class);
-        toNewShoppingTask = new Intent(this, NewShoppingTaskActivity.class);
+        // Initialize RecyclerView with Adapter
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        taskList = myDatabaseHelper.getAllActiveTasks();
+
+        taskAdapter = new TaskAdapter(taskList, MainActivity.this);
+        recyclerView.setAdapter(taskAdapter);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+
+        // Initialize Intents
+        Intent toNewBasicTask = new Intent(this, NewBasicTaskActivity.class);
+        Intent toNewScheduledTask = new Intent(this, NewScheduledTaskActivity.class);
+        Intent toNewShoppingTask = new Intent(this, NewShoppingTaskActivity.class);
+
+        // Initialize Buttons
         ImageButton scheduledButton = findViewById(R.id.scheduled_button);
         ImageButton shoppingButton = findViewById(R.id.shopping_button);
         ImageButton basicButton = findViewById(R.id.basic_button);
@@ -65,7 +68,7 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
         redoButton.setEnabled(false);
 
 
-        //button listeners
+        // Task button Listener
         basicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,6 +87,8 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
                 MainActivity.this.startActivity(toNewShoppingTask);
             }
         });
+
+        // Command Pattern Button Listener
         undoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 invoker.clickUndo();
@@ -96,141 +101,72 @@ public class MainActivity extends ListActivity implements SwipeActionAdapter.Swi
                 update();
             }
         });
+    }
 
-        activeTasks = myDatabaseHelper.getAllActiveTasks();
-        for (Task task : activeTasks){
-            content.add(task.getTitle());
-        }
-        stringAdapter = new ArrayAdapter<>(
-                this,
-                R.layout.row_bg,
-                R.id.text,
-                content
-        );
-
-        mAdapter = new SwipeActionAdapter(stringAdapter);
-        mAdapter.setSwipeActionListener(this)
-                .setDimBackgrounds(true)
-                .setListView(getListView());
-        setListAdapter(mAdapter);
-
-        mAdapter.addBackground(SwipeDirection.DIRECTION_NORMAL_LEFT, R.layout.row_bg_left)
-                .addBackground(SwipeDirection.DIRECTION_NORMAL_RIGHT,R.layout.row_bg_right);
-    }
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        //three bottom menu buttons
-        switch(item.getItemId()){
-            case R.id.basic_task_option:
-                MainActivity.this.startActivity(toNewBasicTask);
-                return true;
-            case R.id.shopping_list_option:
-                MainActivity.this.startActivity(toNewShoppingTask);
-                return true;
-            case R.id.scheduled_task_option:
-                MainActivity.this.startActivity(toNewScheduledTask);
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
-    public void updateButtons() {
-        undoButton.setEnabled(invoker.getUndoState());
-        redoButton.setEnabled(invoker.getRedoState());
-    }
-    public void updateContent() {
-        content.clear();
-        activeTasks = myDatabaseHelper.getAllActiveTasks();
-
-        for (Task t : activeTasks){
-            content.add(t.getTitle());
-        }
-        stringAdapter.notifyDataSetChanged();
-    }
-    public void update(){
-        // call every time you want to refresh the list
-        updateContent();
-        updateButtons();
-    }
     @Override
     protected void onResume() {
         // when coming back from other NewTaskActivities, this gets called
+        // TODO test why this is needed
         super.onResume();
         update();
     }
-    @Override
-    public boolean hasActions(int position, SwipeDirection direction){
-        if(direction.isLeft()) return true;
-        if(direction.isRight()) return true;
-        return false;
-    }
 
-    @Override
-    public boolean shouldDismiss(int position, SwipeDirection direction){
-        return direction == SwipeDirection.DIRECTION_NORMAL_LEFT;
-    }
-    @Override
-    public void onSwipe(int[] positionList, SwipeDirection[] directionList){
-        for(int i=0;i<positionList.length;i++) {
-            SwipeDirection direction = directionList[i];
-            int position = positionList[i];
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback
+            (0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
 
-            Context context = getApplicationContext();
-            Task selected_task = activeTasks.get(position);
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            final int position = viewHolder.getAdapterPosition();
+
+            final Task taskData = taskList.get(position);
 
             switch (direction) {
-                case DIRECTION_NORMAL_LEFT:
+                case ItemTouchHelper.LEFT:
                     // complete task
-                    Complete completeCommand = new Complete(selected_task.getID(), myDatabaseHelper, context);
+                    Complete completeCommand = new Complete(taskData.getID(), myDatabaseHelper, MainActivity.this);
                     invoker.setCommand(completeCommand);
                     invoker.clickDo();
                     update();
                     break;
-                case DIRECTION_NORMAL_RIGHT:
+
+                case ItemTouchHelper.RIGHT:
                     // delete task
-                    Delete deleteCommand = new Delete(selected_task.getID(), myDatabaseHelper, context);
+                    Delete deleteCommand = new Delete(taskData.getID(), myDatabaseHelper, MainActivity.this);
                     invoker.setCommand(deleteCommand);
                     invoker.clickDo();
                     update();
                     break;
             }
         }
+    };
+
+
+    public void updateButtons() {
+        undoButton.setEnabled(invoker.getUndoState());
+        redoButton.setEnabled(invoker.getRedoState());
     }
-    @Override
-    protected void onListItemClick(ListView listView, View view, int position, long id){
-        Task selectedTask = activeTasks.get(position);
-        switch(selectedTask.getType()) {
-            case "BASIC":
-                Intent toEditBasicTask = new Intent(MainActivity.this, NewBasicTaskActivity.class);
-                toEditBasicTask.putExtra("taskID", selectedTask.getID());
-                MainActivity.this.startActivity(toEditBasicTask);
-                break;
-            case "SHOPPING":
-                Intent toEditShoppingTask = new Intent(MainActivity.this, NewShoppingTaskActivity.class);
-                toEditShoppingTask.putExtra("taskID", selectedTask.getID());
-                MainActivity.this.startActivity(toEditShoppingTask);
-                break;
-            case "SCHEDULED":
-                Intent toEditScheduledTask = new Intent(MainActivity.this, NewScheduledTaskActivity.class);
-                toEditScheduledTask.putExtra("taskID", selectedTask.getID());
-                MainActivity.this.startActivity(toEditScheduledTask);
-                break;
-            default:
-                Log.e("MainActivity", "task to edit has unknown type");
-        }
+
+    public void updateContent() {
+        taskList.clear();
+        taskList.addAll(myDatabaseHelper.getAllActiveTasks());
+        taskAdapter.notifyDataSetChanged();
+    }
+
+    public void update() {
+        // call every time you want to refresh the list
+        updateContent();
+        updateButtons();
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         this.finishAffinity();
     }
-
-    public void setEmailAddress(String email){
-        SharedPreferences mPreferences = getSharedPreferences("CurrentUser",
-                MODE_PRIVATE);
-
-        SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString("Email", email);
-        editor.commit();
-    }
 }
+
+
+

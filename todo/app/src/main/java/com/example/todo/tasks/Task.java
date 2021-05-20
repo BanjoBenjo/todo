@@ -38,4 +38,7 @@ public class Task {
     public String toString() {
         return title;
     }
+
+    public String getNotes() { return "Notes"; }
+
 }
