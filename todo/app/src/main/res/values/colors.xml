@@ -20,4 +20,7 @@
     //button colors
     <color name="ButtonEnabled">#96e084</color>
     <color name="ButtonDisabled">#e08484</color>
+    //swipe
+    <color name="GreenSwipe">@android:color/holo_green_light</color>
+    <color name="RedSwipe">@android:color/holo_red_light</color>
 </resources>

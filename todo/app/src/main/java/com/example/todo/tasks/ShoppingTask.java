@@ -28,5 +28,5 @@ public class ShoppingTask extends Task {
         return "SHOPPING";
     }
 
-    public String getNotes() { return "Notes"; }
+    public String getNotes() { return ""; }
 }

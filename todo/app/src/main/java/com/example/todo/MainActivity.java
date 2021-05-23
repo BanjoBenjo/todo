@@ -2,11 +2,13 @@ package com.example.todo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,8 @@ import com.example.todo.command.Invoker;
 import com.example.todo.tasks.Task;
 
 import java.util.ArrayList;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -142,6 +146,19 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.ButtonEnabled))
+                    .addSwipeLeftActionIcon(R.drawable.baseline_done_black_24dp)
+                    .addSwipeRightBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.RedSwipe))
+                    .addSwipeRightActionIcon(R.drawable.baseline_delete_black_24dp)
+                    .create()
+                    .decorate();
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+
     };
 
 

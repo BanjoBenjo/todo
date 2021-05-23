@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 
@@ -105,6 +107,7 @@ public class NewShoppingTaskActivity extends Activity {
                 itemToCheck.toggleCheck();
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 checkedTextView.setChecked(itemToCheck.isChecked());
+                strikeThroughItem(checkedTextView, itemToCheck);
                 shoppingItemsAdapter.notifyDataSetChanged();
             }
         });
@@ -147,6 +150,14 @@ public class NewShoppingTaskActivity extends Activity {
                 return true;
             }
         });
+    }
+
+    private void strikeThroughItem (CheckedTextView tv, ShoppingItem si){
+        if (si.isChecked()){
+            tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }else {
+            tv.setPaintFlags(tv.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
     }
 
     private void addItemToList(View view) {
