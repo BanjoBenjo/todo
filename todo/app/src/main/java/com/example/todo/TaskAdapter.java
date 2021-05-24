@@ -51,9 +51,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         switch (taskType) {
             case "SHOPPING":
                 holder.taskImage.setImageResource(R.drawable.list);
+                holder.taskImage.setPadding(5,5,5,5); // to adjust size
+                holder.taskImage.setImageAlpha(150);
                 break;
             case "SCHEDULED":
                 holder.taskImage.setImageResource(R.drawable.termin);
+                holder.taskImage.setImageAlpha(150);
                 break;
             default:
                 holder.taskImage.setImageResource(0);
