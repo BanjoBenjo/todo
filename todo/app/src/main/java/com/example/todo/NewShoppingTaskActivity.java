@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.InputType;
@@ -72,6 +73,7 @@ public class NewShoppingTaskActivity extends Activity {
                 for (ShoppingItem i: shoppingItemsList) {
                     shoppingItemsAdapter.add(i.toString());
                     shoppingListView.setItemChecked(counter, i.isChecked());
+                    shoppingItemsAdapter.notifyDataSetChanged();
                     counter++;
                 }
             }
@@ -107,10 +109,10 @@ public class NewShoppingTaskActivity extends Activity {
                 itemToCheck.toggleCheck();
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 checkedTextView.setChecked(itemToCheck.isChecked());
-                strikeThroughItem(checkedTextView, itemToCheck);
                 shoppingItemsAdapter.notifyDataSetChanged();
             }
         });
+
         shoppingListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -150,14 +152,6 @@ public class NewShoppingTaskActivity extends Activity {
                 return true;
             }
         });
-    }
-
-    private void strikeThroughItem (CheckedTextView tv, ShoppingItem si){
-        if (si.isChecked()){
-            tv.setPaintFlags(tv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }else {
-            tv.setPaintFlags(tv.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-        }
     }
 
     private void addItemToList(View view) {

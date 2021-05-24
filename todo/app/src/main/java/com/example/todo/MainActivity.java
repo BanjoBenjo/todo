@@ -12,6 +12,7 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ImageButton;
 
 import com.example.todo.command.Complete;
@@ -20,6 +21,7 @@ import com.example.todo.command.Invoker;
 import com.example.todo.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
@@ -116,10 +118,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback
-            (0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            (3, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            return false;
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+
+            Collections.swap(taskList, fromPosition, toPosition);
+
+            recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+
+            return true;
         }
 
         @Override
