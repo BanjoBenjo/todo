@@ -10,9 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ImageButton;
 
 import com.example.todo.command.Complete;
@@ -28,7 +26,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 public class MainActivity extends AppCompatActivity {
 
-    DatabaseHelper myDatabaseHelper = new DatabaseHelper(this);
+    DatabaseHelper myDatabaseHelper = DatabaseHelper.getInstance(this);
 
     private ArrayList<Task> taskList;
     TaskAdapter taskAdapter;
@@ -63,16 +61,21 @@ public class MainActivity extends AppCompatActivity {
         Intent toNewBasicTask = new Intent(this, NewBasicTaskActivity.class);
         Intent toNewScheduledTask = new Intent(this, NewScheduledTaskActivity.class);
         Intent toNewShoppingTask = new Intent(this, NewShoppingTaskActivity.class);
+        Intent toOverview = new Intent(this, OverviewActivity.class);
+
 
         // Initialize Buttons
         ImageButton scheduledButton = findViewById(R.id.scheduled_button);
         ImageButton shoppingButton = findViewById(R.id.shopping_button);
         ImageButton basicButton = findViewById(R.id.basic_button);
+        ImageButton overviewButton = findViewById(R.id.overviewButton);
+
 
         undoButton = findViewById(R.id.undo_button);
         undoButton.setEnabled(false);
         redoButton = findViewById(R.id.redo_button);
         redoButton.setEnabled(false);
+
 
 
         // Task button Listener
@@ -95,6 +98,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        overviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { MainActivity.this.startActivity(toOverview); }
+        });
+
         // Command Pattern Button Listener
         undoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -108,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 update();
             }
         });
+
     }
 
     @Override
@@ -168,9 +177,7 @@ public class MainActivity extends AppCompatActivity {
                     .decorate();
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
-
     };
-
 
     public void updateButtons() {
         undoButton.setEnabled(invoker.getUndoState());

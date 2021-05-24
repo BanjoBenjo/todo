@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -12,35 +12,32 @@
         android:label="todo"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme">
-
-        <!--
-               Set to true if your app is Standalone, that is, it does not require the handheld
-               app to run.
-        -->
-        <activity android:name="MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".NewBasicTaskActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".NewShoppingTaskActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".NewScheduledTaskActivity"
+            android:label="@string/app_name" />
+        <activity android:name=".OverviewActivity" />
+        <activity android:name=".OverviewList"/>
 
-        <activity android:label="@string/app_name" android:name=".NewBasicTaskActivity">
-        </activity>
-
-        <activity android:label="@string/app_name" android:name=".NewShoppingTaskActivity">
-        </activity>
-
-        <activity android:label="@string/app_name" android:name=".NewScheduledTaskActivity">
-        </activity>
-        
         <receiver
             android:name=".ReminderBroadcast"
             android:enabled="true"
-            android:exported="true">
-        </receiver>
-
+            android:exported="true" />
     </application>
 
 </manifest>

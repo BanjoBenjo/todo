@@ -9,24 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo.tasks.Task;
 
-import java.nio.channels.NonReadableChannelException;
 import java.util.ArrayList;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
+public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHolder>{
 
     ArrayList<Task> taskDataList;
     Context context;
 
-    public TaskAdapter(ArrayList<Task> taskData, Activity activity) {
+    public OverviewAdapter(ArrayList<Task> taskData, Activity activity) {
         this.taskDataList = taskData;
         this.context = activity;
     }
@@ -63,31 +59,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
                 holder.taskImage.setImageResource(0);
                 break;
         }
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (taskType) {
-                    case "BASIC":
-                        Intent toEditBasicTask = new Intent(context, NewBasicTaskActivity.class);
-                        toEditBasicTask.putExtra("taskID", taskData.getID());
-                        context.startActivity(toEditBasicTask);
-                        break;
-                    case "SHOPPING":
-                        Intent toEditShoppingTask = new Intent(context, NewShoppingTaskActivity.class);
-                        toEditShoppingTask.putExtra("taskID", taskData.getID());
-                        context.startActivity(toEditShoppingTask);
-                        break;
-                    case "SCHEDULED":
-                        Intent toEditScheduledTask = new Intent(context, NewScheduledTaskActivity.class);
-                        toEditScheduledTask.putExtra("taskID", taskData.getID());
-                        context.startActivity(toEditScheduledTask);
-                        break;
-                    default:
-                        Log.e("MainActivity", "task to edit has unknown type");
-                }
-            }
-        });
     }
 
     @Override

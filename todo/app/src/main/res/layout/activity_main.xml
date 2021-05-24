@@ -79,6 +79,20 @@
             app:layout_constraintEnd_toStartOf="@+id/redo_button"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/baseline_undo_black_24dp" />
+
+        <ImageButton
+            android:id="@+id/overviewButton"
+            android:layout_width="@dimen/standard_height"
+            android:layout_height="@dimen/standard_height"
+            android:layout_marginStart="@dimen/component_padding"
+            android:layout_marginTop="@dimen/component_padding"
+            android:layout_marginBottom="@dimen/component_padding"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/statistiken" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

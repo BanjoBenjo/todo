@@ -76,7 +76,7 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         notificationArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         notificationSpinner.setAdapter(notificationArrayAdapter);
 
-        myDatabaseHelper = new DatabaseHelper(this);
+        myDatabaseHelper = DatabaseHelper.getInstance(this);
 
         createNotificationChannel();
 

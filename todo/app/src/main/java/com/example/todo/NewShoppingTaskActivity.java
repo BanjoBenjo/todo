@@ -59,7 +59,7 @@ public class NewShoppingTaskActivity extends Activity {
         shoppingItemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice);
         shoppingListView.setAdapter(shoppingItemsAdapter);
 
-        myDatabaseHelper = new DatabaseHelper(this);
+        myDatabaseHelper = DatabaseHelper.getInstance(this);
 
         Intent thisIntent = getIntent();
         if (thisIntent.getExtras() != null) {

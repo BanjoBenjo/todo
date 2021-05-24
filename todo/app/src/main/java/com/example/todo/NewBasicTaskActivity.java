@@ -41,7 +41,7 @@ public class NewBasicTaskActivity extends Activity {
         submitButton = findViewById(R.id.submitButton);
         notes = findViewById(R.id.editNote);
 
-        myDatabaseHelper = new DatabaseHelper(this);
+        myDatabaseHelper = DatabaseHelper.getInstance(this);
 
         final Intent thisIntent = getIntent();
         if (thisIntent.getExtras() != null) {

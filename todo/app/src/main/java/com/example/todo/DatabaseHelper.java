@@ -3,6 +3,7 @@ package com.example.todo;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
@@ -49,9 +50,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "TABLE_DELETED (ID INTEGER PRIMARY KEY, TYPE TEXT, TITLE TEXT, DEADLINE TEXT," +
                     "NOTIFICATION TEXT, NOTES TEXT)";
 
+    private static DatabaseHelper single_instance = null;
 
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, 1);
+    }
+
+    public static DatabaseHelper getInstance(Context context)
+    {
+        if (single_instance == null)
+            single_instance = new DatabaseHelper(context);
+
+        return single_instance;
     }
 
     @Override
@@ -89,6 +99,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public long getActiveTaskCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_ACTIVE);
+        db.close();
+        return count;
+    }
+
+    public long getCompletedTaskCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_COMPLETED);
+        db.close();
+        return count;
+    }
+
+    public long getDeletedTaskCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_DELETED);
+        db.close();
+        return count;
+    }
+
     /**
      * Updates a Task to the Active Table
      */
@@ -123,6 +154,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return listTasks;
     }
 
+    public ArrayList<Task> getAllCompletedTasks(){
+        ArrayList<Task> listTasks = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_COMPLETED;
+        Cursor data = db.rawQuery(query, null);
+
+        while(data.moveToNext()){
+            listTasks.add(convertRowToTask(data));
+        }
+
+        return listTasks;
+    }
+
+    public ArrayList<Task> getAllDeletedTasks(){
+        ArrayList<Task> listTasks = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_DELETED;
+        Cursor data = db.rawQuery(query, null);
+
+        while(data.moveToNext()){
+            listTasks.add(convertRowToTask(data));
+        }
+
+        return listTasks;
+    }
+
     /**
      * gets Task with the given ID
      */
@@ -132,7 +191,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_ACTIVE + " WHERE ID = " + ID;
         Cursor data = db.rawQuery(query, null);
 
-        // TODO find better solution for this case, than this workaround (only one return)
+        while(data.moveToNext()){
+            myTask = convertRowToTask(data);
+        }
+        return myTask;
+    }
+
+    public Task getCompletedTask(int ID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Task myTask = null;
+        String query = "SELECT * FROM " + TABLE_COMPLETED + " WHERE ID = " + ID;
+        Cursor data = db.rawQuery(query, null);
+
+        while(data.moveToNext()){
+            myTask = convertRowToTask(data);
+        }
+        return myTask;
+    }
+
+    public Task getDeletedTask(int ID) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Task myTask = null;
+        String query = "SELECT * FROM " + TABLE_DELETED + " WHERE ID = " + ID;
+        Cursor data = db.rawQuery(query, null);
+
         while(data.moveToNext()){
             myTask = convertRowToTask(data);
         }
