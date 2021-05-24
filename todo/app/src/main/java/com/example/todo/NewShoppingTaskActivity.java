@@ -210,6 +210,7 @@ public class NewShoppingTaskActivity extends Activity {
 
     public void saveTask(ShoppingTask mTask) {
         // Todo load task object into database / test with name only
+        mTask.setTitle(String.valueOf(inputListName.getText()));
         myDatabaseHelper.addTask(mTask);
     }
 

@@ -31,7 +31,6 @@ public class OverviewActivity extends AppCompatActivity {
         completedNumber.setText(String.valueOf(myDatabaseHelper.getCompletedTaskCount()));
         deletedNumber.setText(String.valueOf(myDatabaseHelper.getDeletedTaskCount()));
 
-        ConstraintLayout activeRow = findViewById(R.id.activeTasksRow);
         ConstraintLayout completedRow = findViewById(R.id.completedRow);
         ConstraintLayout deletedRow = findViewById(R.id.deletedTasksRow);
 
@@ -45,11 +44,6 @@ public class OverviewActivity extends AppCompatActivity {
 
 
         backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { OverviewActivity.this.startActivity(toMain); }
-        });
-
-        activeRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { OverviewActivity.this.startActivity(toMain); }
         });
