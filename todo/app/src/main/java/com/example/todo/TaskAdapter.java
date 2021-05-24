@@ -53,7 +53,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
                 holder.taskImage.setImageResource(R.drawable.list);
                 break;
             case "SCHEDULED":
-                holder.taskImage.setImageResource(R.drawable.baseline_event_black_24dp);
+                holder.taskImage.setImageResource(R.drawable.termin);
                 break;
             default:
                 holder.taskImage.setImageResource(0);

@@ -93,13 +93,14 @@ public class NewShoppingTaskActivity extends Activity {
             public void onClick(View v) {
             if(!isEmpty(inputListName) && shoppingItemsList.size() > 0) {
                 shoppingTask.setTitle(String.valueOf(inputListName.getText()));
-                addTask(shoppingTask);
+                saveTask(shoppingTask);
+                toMainActivity();
             }
             }
         });
-
         setUpListViewListener();
     }
+
 
     private void setUpListViewListener() {
         shoppingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -140,13 +141,24 @@ public class NewShoppingTaskActivity extends Activity {
                             shoppingItemsAdapter.add(i.toString());
                         }
                         shoppingItemsAdapter.notifyDataSetChanged();
+                        saveTask(shoppingTask);
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        shoppingItemsAdapter.clear();
+                        shoppingItemsList.remove(itemToEdit);
+
+                        shoppingItemsList = shoppingTask.getItems();
+                        for (ShoppingItem i: shoppingItemsList) {
+                            shoppingItemsAdapter.add(i.toString());
+                        }
+                        shoppingItemsAdapter.notifyDataSetChanged();
+                        saveTask(shoppingTask);
                         dialog.cancel();
                     }
+
                 });
                 builder.show();
                 return true;
@@ -170,6 +182,7 @@ public class NewShoppingTaskActivity extends Activity {
             shoppingItemsAdapter.add(i.toString());
         }
         shoppingItemsAdapter.notifyDataSetChanged();
+        saveTask(shoppingTask);
     }
 
     private int getGlobalTaskId(){
@@ -188,19 +201,16 @@ public class NewShoppingTaskActivity extends Activity {
         return etText.getText().toString().trim().length() == 0;
     }
 
-    public void addTask(ShoppingTask mTask) {
+    public void toMainActivity(){
+        Intent to_mainactivity = new Intent(this, MainActivity.class);
+        // prevents MainActivity's onCreate call
+        to_mainactivity.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
+        NewShoppingTaskActivity.this.startActivity(to_mainactivity);
+    }
+
+    public void saveTask(ShoppingTask mTask) {
         // Todo load task object into database / test with name only
-        boolean insertData = myDatabaseHelper.addTask(mTask);
-
-        if (insertData) {
-            Intent to_mainactivity = new Intent(this, MainActivity.class);
-            // prevents MainActivity's onCreate call
-            to_mainactivity.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
-            NewShoppingTaskActivity.this.startActivity(to_mainactivity);
-
-        } else {
-            Log.e("NewShoppingTaskActivity", "Error while creating task from Shopping List.");
-        }
+        myDatabaseHelper.addTask(mTask);
     }
 
 }
