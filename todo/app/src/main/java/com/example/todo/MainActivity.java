@@ -23,7 +23,6 @@ import java.util.Collections;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-
 public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper myDatabaseHelper = DatabaseHelper.getInstance(this);
@@ -122,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         // when coming back from other NewTaskActivities, this gets called
-        // TODO test why this is needed
         super.onResume();
         update();
     }

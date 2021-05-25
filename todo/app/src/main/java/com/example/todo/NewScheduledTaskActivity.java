@@ -1,18 +1,17 @@
 package com.example.todo;
 
-import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.RadioAccessSpecifier;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,14 +20,13 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.todo.dialogfragments.DatePickerFragment;
 import com.example.todo.dialogfragments.TimePickerFragment;
+import com.example.todo.notifications.AlarmNotification;
+import com.example.todo.notifications.NoNotification;
 import com.example.todo.notifications.Notification;
+import com.example.todo.notifications.PushNotification;
 import com.example.todo.tasks.ScheduledTask;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
 
@@ -40,7 +38,6 @@ public class NewScheduledTaskActivity extends FragmentActivity {
     DatabaseHelper myDatabaseHelper;
 
     private EditText nameView;
-    private Spinner notificationSpinner;
     private Button submitButton;
     private EditText notes;
     private TimePickerFragment timePicker;
@@ -49,32 +46,30 @@ public class NewScheduledTaskActivity extends FragmentActivity {
     private Button dateButton;
     private Button timeButton;
 
-    private ArrayAdapter<String> notificationArrayAdapter;
 
-    private List<String> notifications = new ArrayList<>();
+
+    private RadioButton noneRadioButton, pushRadioButton, alarmRadioButton;
+    private RadioGroup radioGroup;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scheduled_task);
 
-        notifications.add("None");
-        notifications.add("Push");
-        notifications.add("Alarm");
-
         nameView = findViewById(R.id.editName);
-        notificationSpinner = findViewById(R.id.spinner_notifications);
+        radioGroup = findViewById(R.id.radio_group);
+        noneRadioButton = findViewById(R.id.radio_none);
+        noneRadioButton.setChecked(false);
+        pushRadioButton = findViewById(R.id.radio_push);
+        pushRadioButton.setChecked(false);
+        alarmRadioButton = findViewById(R.id.radio_alarm);
+        alarmRadioButton.setChecked(false);
         submitButton = findViewById(R.id.submitButton);
         notes = findViewById(R.id.editTextTextMultiLine);
         dateButton = findViewById(R.id.date_button);
         timeButton = findViewById(R.id.time_button);
         timePicker = new TimePickerFragment();
         datePicker = new DatePickerFragment();
-
-        notificationArrayAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, notifications);
-        notificationArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        notificationSpinner.setAdapter(notificationArrayAdapter);
 
         myDatabaseHelper = DatabaseHelper.getInstance(this);
 
@@ -86,7 +81,18 @@ public class NewScheduledTaskActivity extends FragmentActivity {
                 taskID = thisIntent.getIntExtra("taskID", 0);
                 thisTask = (ScheduledTask) myDatabaseHelper.getTask(taskID);
                 nameView.setText(thisTask.getTitle());
-                notificationSpinner.setSelection(notifications.indexOf(thisTask.getNotification().toString()));
+                switch(thisTask.getNotification().toString()){
+                    case "None":
+                        noneRadioButton.setChecked(true);
+                        break;
+                    case "Push":
+                        pushRadioButton.setChecked(true);
+                        break;
+                    case "Alarm":
+                        alarmRadioButton.setChecked(true);
+                        break;
+                }
+
                 notes.setText(thisTask.getNotes());
                 setDate(thisTask.getDeadline());
             }
@@ -94,7 +100,7 @@ public class NewScheduledTaskActivity extends FragmentActivity {
             taskID = getGlobalTaskId();
             thisTask = new ScheduledTask(taskID, nameView.getText().toString(),
                     notes.getText().toString(),
-                    notifications.get(notificationSpinner.getSelectedItemPosition())
+                    "None"
                     );
         }
 
@@ -109,7 +115,7 @@ public class NewScheduledTaskActivity extends FragmentActivity {
                     thisTask.setTitle(titleStr);
                     thisTask.setDeadline(selectedDate);
                     thisTask.setNotes(notesStr);
-                    thisTask.setNotificationType(notifications.get(notificationSpinner.getSelectedItemPosition()));
+                    thisTask.setNotificationType(getNotificationType());
                     toastMessage("Task created");
                     thisTask.remind(getApplicationContext());
                     addTask(thisTask);
@@ -133,6 +139,23 @@ public class NewScheduledTaskActivity extends FragmentActivity {
             setDateString(selectedDate);
         }
 
+    }
+
+    private String getNotificationType(){
+        String notificationType;
+        switch(radioGroup.getCheckedRadioButtonId()){
+            default:
+            case R.id.radio_none:
+                notificationType = "None";
+                break;
+            case R.id.radio_push:
+                notificationType = "Push";
+                break;
+            case R.id.radio_alarm:
+                notificationType = "Alarm";
+                break;
+        }
+        return notificationType;
     }
 
     private void addTask(ScheduledTask mTask){
@@ -201,7 +224,6 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         timeButton.setText(timeString);
     }
 
-    //todo do something with date and time provided by pickers
     public void showTimePickerDialog(View view) {
         timePicker.show(getSupportFragmentManager(), "timePicker");
     }
