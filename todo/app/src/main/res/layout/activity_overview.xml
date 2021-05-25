@@ -13,6 +13,7 @@
         android:layout_height="@dimen/standard_height"
         android:layout_marginStart="@dimen/component_padding"
         android:layout_marginTop="@dimen/component_padding"
+        android:elevation="@dimen/button_elevation"
         android:padding="@dimen/button_padding"
         android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"

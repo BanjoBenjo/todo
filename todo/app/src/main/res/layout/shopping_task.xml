@@ -30,7 +30,6 @@
         android:layout_marginBottom="@dimen/component_padding"
         android:backgroundTint="@color/LightGray"
         android:text="Add"
-        android:textColor="@color/DavysGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
