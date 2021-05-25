@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class OverviewActivity extends AppCompatActivity {
 
@@ -23,9 +26,9 @@ public class OverviewActivity extends AppCompatActivity {
 
         ImageButton backButton = findViewById(R.id.backButton);
 
-        EditText activeNumber = findViewById(R.id.activeNumber);
-        EditText completedNumber = findViewById(R.id.completedNumber);
-        EditText deletedNumber = findViewById(R.id.deletedNumber);
+        TextView activeNumber = findViewById(R.id.activeNumber);
+        TextView completedNumber = findViewById(R.id.completedNumber);
+        TextView deletedNumber = findViewById(R.id.deletedNumber);
 
         activeNumber.setText(String.valueOf(myDatabaseHelper.getActiveTaskCount()));
         completedNumber.setText(String.valueOf(myDatabaseHelper.getCompletedTaskCount()));
