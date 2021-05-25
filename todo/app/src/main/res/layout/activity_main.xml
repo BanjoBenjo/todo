@@ -46,18 +46,15 @@
             android:layout_marginTop="@dimen/component_padding"
             android:layout_marginEnd="@dimen/component_padding"
             android:layout_marginBottom="@dimen/component_padding"
-            android:background="@android:color/transparent"
-            android:elevation="@dimen/elevation"
-            android:paddingTop="3dp"
-            android:paddingBottom="7dp"
-            android:paddingStart="3dp"
-            android:paddingEnd="7dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/baseline_redo_black_24dp"
+
+            android:elevation="@dimen/button_elevation"
+            android:padding="@dimen/button_padding"
+            android:scaleType="fitCenter"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/baseline_redo_black_24dp" />
+            app:srcCompat="@drawable/baseline_redo_black_24dp" />
 
         <ImageButton
             android:id="@+id/undo_button"
@@ -66,19 +63,15 @@
             android:layout_marginTop="@dimen/component_padding"
             android:layout_marginEnd="@dimen/component_padding"
             android:layout_marginBottom="@dimen/component_padding"
-            android:background="@android:color/transparent"
-            android:elevation="@dimen/elevation"
-            android:paddingTop="3dp"
-            android:paddingBottom="7dp"
-            android:paddingStart="7dp"
-            android:paddingEnd="3dp"
-            android:rotation="0"
-            android:scaleType="fitXY"
-            android:src="@drawable/baseline_undo_black_24dp"
+
+            android:elevation="@dimen/button_elevation"
+            android:padding="@dimen/button_padding"
+            android:scaleType="fitCenter"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/redo_button"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/baseline_undo_black_24dp" />
+            app:srcCompat="@drawable/baseline_undo_black_24dp" />
 
         <ImageButton
             android:id="@+id/overviewButton"
@@ -87,12 +80,14 @@
             android:layout_marginStart="@dimen/component_padding"
             android:layout_marginTop="@dimen/component_padding"
             android:layout_marginBottom="@dimen/component_padding"
-            android:scaleType="fitXY"
+            android:elevation="@dimen/button_elevation"
+            android:padding="@dimen/button_padding"
+            android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/statistiken" />
+            app:srcCompat="@drawable/baseline_equalizer_black_24dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -112,16 +107,16 @@
             android:layout_marginTop="@dimen/component_padding"
             android:layout_marginEnd="@dimen/component_padding"
             android:layout_marginBottom="@dimen/component_padding"
-            android:background="@android:color/transparent"
-            android:elevation="@dimen/elevation"
-            android:paddingVertical="5dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/termin"
+
+            android:elevation="@dimen/button_elevation"
+            android:padding="@dimen/button_padding"
+
+            android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/shopping_button"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            tools:src="@drawable/termin" />
+            app:srcCompat="@drawable/termin" />
 
         <ImageButton
             android:id="@+id/shopping_button"
@@ -130,17 +125,16 @@
             android:layout_marginTop="@dimen/component_padding"
             android:layout_marginEnd="@dimen/component_padding"
             android:layout_marginBottom="@dimen/component_padding"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"
-            android:elevation="@dimen/elevation"
-            android:padding="5dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/list"
+
+            android:elevation="@dimen/button_elevation"
+            android:padding="@dimen/button_padding"
+            android:scaleType="fitCenter"
+
+            android:src="@drawable/baseline_checklist_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/basic_button"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            tools:src="@drawable/list" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageButton
             android:id="@+id/basic_button"
@@ -149,10 +143,11 @@
             android:layout_marginTop="@dimen/component_padding"
             android:layout_marginEnd="@dimen/component_padding"
             android:layout_marginBottom="@dimen/component_padding"
-            android:background="@android:color/transparent"
-            android:paddingTop="3dp"
-            android:paddingEnd="3dp"
-            android:scaleType="fitXY"
+
+            android:elevation="@dimen/button_elevation"
+            android:padding="@dimen/button_padding"
+            android:scaleType="fitCenter"
+
             android:src="@drawable/baseline_add_task_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
