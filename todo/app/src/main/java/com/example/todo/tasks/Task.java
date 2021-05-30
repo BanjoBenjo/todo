@@ -30,6 +30,8 @@ public class Task {
         return this.ID;
     }
 
+    public void setID(int newID) { this.ID = newID; }
+
     public String getType(){
         return "TASK";
     }

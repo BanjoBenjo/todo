@@ -121,23 +121,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Updates a Task to the Active Table
-     */
-    public boolean updateTask(Task my_task){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = createContentFromTask(my_task);
-
-        long result = db.update(TABLE_ACTIVE, contentValues,"ID=" + my_task.getID(),null);
-
-        // if data is inserted incorrectly result will be -1
-        if (result == -1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * gets complete Active Table, builds Tasks and returns list
      */
     public ArrayList<Task> getAllActiveTasks(){

@@ -48,13 +48,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         taskList = myDatabaseHelper.getAllActiveTasks();
-
         taskAdapter = new TaskAdapter(taskList, MainActivity.this);
         recyclerView.setAdapter(taskAdapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
-
 
         // Initialize Intents
         Intent toNewBasicTask = new Intent(this, NewBasicTaskActivity.class);
@@ -62,20 +60,16 @@ public class MainActivity extends AppCompatActivity {
         Intent toNewShoppingTask = new Intent(this, NewShoppingTaskActivity.class);
         Intent toOverview = new Intent(this, OverviewActivity.class);
 
-
         // Initialize Buttons
         ImageButton scheduledButton = findViewById(R.id.scheduled_button);
         ImageButton shoppingButton = findViewById(R.id.shopping_button);
         ImageButton basicButton = findViewById(R.id.basic_button);
         ImageButton overviewButton = findViewById(R.id.overviewButton);
 
-
         undoButton = findViewById(R.id.undo_button);
         undoButton.setEnabled(false);
         redoButton = findViewById(R.id.redo_button);
         redoButton.setEnabled(false);
-
-
 
         // Task button Listener
         basicButton.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 update();
             }
         });
-
     }
 
     @Override
@@ -132,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
             int fromPosition = viewHolder.getAdapterPosition();
             int toPosition = target.getAdapterPosition();
 
+            Task task1 = taskList.get(fromPosition);
+            Task task2 = taskList.get(toPosition);
+            swapTaskId(task1, task2);
             Collections.swap(taskList, fromPosition, toPosition);
 
             recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
@@ -192,6 +188,17 @@ public class MainActivity extends AppCompatActivity {
         // call every time you want to refresh the list
         updateContent();
         updateButtons();
+    }
+
+    private void swapTaskId(Task task1, Task task2){
+        int taskId1 = task1.getID();
+        int taskId2 = task2.getID();
+
+        task1.setID(taskId2);
+        task2.setID(taskId1);
+
+        myDatabaseHelper.addTask(task1);
+        myDatabaseHelper.addTask(task2);
     }
 
     @Override
