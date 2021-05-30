@@ -4,17 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:foregroundTint="@color/Cultured"
     tools:context=".OverviewActivity">
 
     <ImageButton
         android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/standard_height"
+        android:layout_height="@dimen/standard_height"
         android:layout_marginStart="@dimen/component_padding"
         android:layout_marginTop="@dimen/component_padding"
+        android:elevation="@dimen/button_elevation"
+        android:padding="@dimen/button_padding"
+        android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="?attr/actionModeCloseDrawable" />
+        app:srcCompat="@drawable/baseline_arrow_back_black_24dp" />
 
     <View
         android:id="@+id/divider5"
@@ -43,7 +47,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
+        <TextView
             android:id="@+id/activeNumber"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
@@ -52,6 +56,7 @@
             android:ems="10"
             android:gravity="center_horizontal"
             android:inputType="number"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -74,7 +79,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
+        <TextView
             android:id="@+id/completedNumber"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
@@ -83,6 +88,7 @@
             android:ems="10"
             android:gravity="center_horizontal"
             android:inputType="number"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -105,7 +111,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
+        <TextView
             android:id="@+id/deletedNumber"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
@@ -114,6 +120,7 @@
             android:ems="10"
             android:gravity="center_horizontal"
             android:inputType="number"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

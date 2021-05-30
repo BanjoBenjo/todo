@@ -28,5 +28,13 @@ public class ShoppingTask extends Task {
         return "SHOPPING";
     }
 
-    public String getNotes() { return ""; }
+    public String getNotes() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (ShoppingItem shoppingItem: shoppingItems){
+            stringBuilder.append(shoppingItem.toString());
+            stringBuilder.append(", ");
+        }
+        stringBuilder.setLength(stringBuilder.length() - 2);
+        return stringBuilder.toString();
+    }
 }
