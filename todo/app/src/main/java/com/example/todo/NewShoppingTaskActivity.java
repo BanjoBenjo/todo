@@ -1,3 +1,4 @@
+
 package com.example.todo;
 
 import android.app.Activity;
@@ -27,6 +28,8 @@ import androidx.annotation.Nullable;
 import com.example.todo.tasks.ShoppingTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
 
@@ -68,6 +71,7 @@ public class NewShoppingTaskActivity extends Activity {
                 shoppingTask = (ShoppingTask) myDatabaseHelper.getTask(taskID);
                 inputListName.setText(shoppingTask.getTitle());
                 shoppingItemsList = shoppingTask.getItems();
+                Collections.sort(shoppingItemsList);
 
                 int counter = 0;
                 for (ShoppingItem i: shoppingItemsList) {
@@ -110,7 +114,7 @@ public class NewShoppingTaskActivity extends Activity {
                 itemToCheck.toggleCheck();
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 checkedTextView.setChecked(itemToCheck.isChecked());
-                shoppingItemsAdapter.notifyDataSetChanged();
+                saveTask(shoppingTask);
             }
         });
 

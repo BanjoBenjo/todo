@@ -2,7 +2,7 @@ package com.example.todo.tasks;
 
 import com.example.todo.notifications.Notification;
 
-public class Task {
+public class Task implements Comparable<Task> {
 
     private String title;
     private int ID;
@@ -12,6 +12,11 @@ public class Task {
     public Task(int ID, String title){
         this.ID = ID;
         this.title = title;
+    }
+
+    @Override
+    public int compareTo(Task o) {
+        return Integer.compare(this.ID, o.getID());
     }
 
     public void setTitle(String newTitle){
