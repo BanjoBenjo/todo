@@ -10,7 +10,7 @@
 
     <string name="basic_task">Basic</string>
     <string name="scheduled_task">Appointment</string>
-    <string name="shopping_list">Shopping List</string>
+    <string name="item_list">Item List</string>
     <string name="location_task">Location Task</string>
     <string name="title_activity_overview">overview</string>
     <!-- Strings used for fragments for navigation -->

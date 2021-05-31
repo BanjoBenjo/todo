@@ -3,15 +3,11 @@ package com.example.todo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -19,31 +15,26 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 
-import com.example.todo.tasks.ShoppingTask;
+import com.example.todo.tasks.ListTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
 
-public class NewShoppingTaskActivity extends Activity {
-    private static final String TAG = "NewShoppingTaskActivity";
-
-    private ArrayList<ShoppingItem> shoppingItemsList;
-    private ArrayAdapter<String> shoppingItemsAdapter;
-    private ListView shoppingListView;
-    private Button addShoppingItem;
-    private Button submitShoppingList;
+public class EditListTaskActivity extends Activity {
+    private ArrayList<ListItem> listItemList;
+    private ArrayAdapter<String> listItemAdapter;
+    private ListView itemListView;
+    private Button addItem;
+    private Button submitList;
     private EditText inputItemName;
     private EditText inputListName;
-    private ShoppingTask shoppingTask;
+    private ListTask listTask;
     private int taskID;
 
     private DatabaseHelper myDatabaseHelper;
@@ -51,16 +42,16 @@ public class NewShoppingTaskActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.shopping_task);
-        shoppingListView = findViewById(R.id.shoppingListView);
-        shoppingListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        addShoppingItem = findViewById(R.id.addShoppingItem);
-        submitShoppingList = findViewById(R.id.submitButton);
-        inputItemName = findViewById(R.id.nameOfShoppingItem);
-        inputListName = findViewById(R.id.shopping_list_name);
-        shoppingItemsList = new ArrayList<>();
-        shoppingItemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice);
-        shoppingListView.setAdapter(shoppingItemsAdapter);
+        setContentView(R.layout.list_task);
+        itemListView = findViewById(R.id.itemListView);
+        itemListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        addItem = findViewById(R.id.addListItem);
+        submitList = findViewById(R.id.submitButton);
+        inputItemName = findViewById(R.id.nameOfListItem);
+        inputListName = findViewById(R.id.itemListName);
+        listItemList = new ArrayList<>();
+        listItemAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice);
+        itemListView.setAdapter(listItemAdapter);
 
         myDatabaseHelper = DatabaseHelper.getInstance(this);
 
@@ -68,36 +59,36 @@ public class NewShoppingTaskActivity extends Activity {
         if (thisIntent.getExtras() != null) {
             if (thisIntent.getExtras().containsKey("taskID")) {
                 taskID = thisIntent.getIntExtra("taskID", 0);
-                shoppingTask = (ShoppingTask) myDatabaseHelper.getTask(taskID);
-                inputListName.setText(shoppingTask.getTitle());
-                shoppingItemsList = shoppingTask.getItems();
-                Collections.sort(shoppingItemsList);
+                listTask = (ListTask) myDatabaseHelper.getTask(taskID);
+                inputListName.setText(listTask.getTitle());
+                listItemList = listTask.getItems();
+                Collections.sort(listItemList);
 
                 int counter = 0;
-                for (ShoppingItem i: shoppingItemsList) {
-                    shoppingItemsAdapter.add(i.toString());
-                    shoppingListView.setItemChecked(counter, i.isChecked());
-                    shoppingItemsAdapter.notifyDataSetChanged();
+                for (ListItem i: listItemList) {
+                    listItemAdapter.add(i.toString());
+                    itemListView.setItemChecked(counter, i.isChecked());
+                    listItemAdapter.notifyDataSetChanged();
                     counter++;
                 }
             }
         } else {
-            shoppingTask  = new ShoppingTask(getGlobalTaskId(), "dummytext");
+            listTask = new ListTask(getGlobalTaskId(), "dummytext");
         }
 
-        addShoppingItem.setOnClickListener(new View.OnClickListener() {
+        addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addItemToList(v);
             }
         });
 
-        submitShoppingList.setOnClickListener(new View.OnClickListener() {
+        submitList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if(!isEmpty(inputListName) && shoppingItemsList.size() > 0) {
-                shoppingTask.setTitle(String.valueOf(inputListName.getText()));
-                saveTask(shoppingTask);
+            if(!isEmpty(inputListName) && listItemList.size() > 0) {
+                listTask.setTitle(String.valueOf(inputListName.getText()));
+                saveTask(listTask);
                 toMainActivity();
             }
             }
@@ -107,23 +98,23 @@ public class NewShoppingTaskActivity extends Activity {
 
 
     private void setUpListViewListener() {
-        shoppingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ShoppingItem itemToCheck = shoppingItemsList.get(position);
+                ListItem itemToCheck = listItemList.get(position);
                 itemToCheck.toggleCheck();
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 checkedTextView.setChecked(itemToCheck.isChecked());
-                saveTask(shoppingTask);
+                saveTask(listTask);
             }
         });
 
-        shoppingListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        itemListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                ShoppingItem itemToEdit = shoppingItemsList.get(position);
-                final EditText editText = new EditText(NewShoppingTaskActivity.this);
-                AlertDialog.Builder builder = new AlertDialog.Builder(NewShoppingTaskActivity.this);
+                ListItem itemToEdit = listItemList.get(position);
+                final EditText editText = new EditText(EditListTaskActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditListTaskActivity.this);
                 builder.setTitle("Edit Item");
                 editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
                 String oldName = itemToEdit.getName();
@@ -133,33 +124,33 @@ public class NewShoppingTaskActivity extends Activity {
                 builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        shoppingItemsAdapter.clear();
+                        listItemAdapter.clear();
                         if(!isEmpty(editText)) {
                             itemToEdit.setName(editText.getText().toString());
 
                         } else {
                             itemToEdit.setName(oldName);
                         }
-                        shoppingItemsList = shoppingTask.getItems();
-                        for (ShoppingItem i: shoppingItemsList) {
-                            shoppingItemsAdapter.add(i.toString());
+                        listItemList = listTask.getItems();
+                        for (ListItem i: listItemList) {
+                            listItemAdapter.add(i.toString());
                         }
-                        shoppingItemsAdapter.notifyDataSetChanged();
-                        saveTask(shoppingTask);
+                        listItemAdapter.notifyDataSetChanged();
+                        saveTask(listTask);
                     }
                 });
                 builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        shoppingItemsAdapter.clear();
-                        shoppingItemsList.remove(itemToEdit);
+                        listItemAdapter.clear();
+                        listItemList.remove(itemToEdit);
 
-                        shoppingItemsList = shoppingTask.getItems();
-                        for (ShoppingItem i: shoppingItemsList) {
-                            shoppingItemsAdapter.add(i.toString());
+                        listItemList = listTask.getItems();
+                        for (ListItem i: listItemList) {
+                            listItemAdapter.add(i.toString());
                         }
-                        shoppingItemsAdapter.notifyDataSetChanged();
-                        saveTask(shoppingTask);
+                        listItemAdapter.notifyDataSetChanged();
+                        saveTask(listTask);
                         dialog.cancel();
                     }
 
@@ -172,21 +163,21 @@ public class NewShoppingTaskActivity extends Activity {
 
     private void addItemToList(View view) {
         String itemName = inputItemName.getText().toString();
-        shoppingItemsAdapter.clear();
+        listItemAdapter.clear();
 
         if(!isEmpty(inputItemName)) {
-            ShoppingItem newItem = new ShoppingItem(itemName);
-            shoppingTask.addItem(newItem);
+            ListItem newItem = new ListItem(itemName);
+            listTask.addItem(newItem);
             inputItemName.setText("");
         } else {
-            Toast.makeText(NewShoppingTaskActivity.this, "Enter name first!", Toast.LENGTH_LONG);
+            Toast.makeText(EditListTaskActivity.this, "Enter name first!", Toast.LENGTH_LONG);
         }
-        shoppingItemsList = shoppingTask.getItems();
-        for (ShoppingItem i: shoppingItemsList) {
-            shoppingItemsAdapter.add(i.toString());
+        listItemList = listTask.getItems();
+        for (ListItem i: listItemList) {
+            listItemAdapter.add(i.toString());
         }
-        shoppingItemsAdapter.notifyDataSetChanged();
-        saveTask(shoppingTask);
+        listItemAdapter.notifyDataSetChanged();
+        saveTask(listTask);
     }
 
     private int getGlobalTaskId(){
@@ -209,10 +200,10 @@ public class NewShoppingTaskActivity extends Activity {
         Intent to_mainactivity = new Intent(this, MainActivity.class);
         // prevents MainActivity's onCreate call
         to_mainactivity.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
-        NewShoppingTaskActivity.this.startActivity(to_mainactivity);
+        EditListTaskActivity.this.startActivity(to_mainactivity);
     }
 
-    public void saveTask(ShoppingTask mTask) {
+    public void saveTask(ListTask mTask) {
         // Todo load task object into database / test with name only
         mTask.setTitle(String.valueOf(inputListName.getText()));
         myDatabaseHelper.addTask(mTask);

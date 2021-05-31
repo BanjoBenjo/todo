@@ -1,14 +1,10 @@
 package com.example.todo;
 
-import android.util.Log;
-
-import com.example.todo.tasks.Task;
-
-public class ShoppingItem implements Comparable<ShoppingItem>{
+public class ListItem implements Comparable<ListItem>{
     private boolean checked;
     private String name;
 
-    public ShoppingItem(String newName) {
+    public ListItem(String newName) {
         checked = false;
         name = newName;
     }
@@ -34,7 +30,7 @@ public class ShoppingItem implements Comparable<ShoppingItem>{
     }
 
     @Override
-    public int compareTo(ShoppingItem i) {
+    public int compareTo(ListItem i) {
         return Boolean.compare(this.checked, i.isChecked());
     }
 }

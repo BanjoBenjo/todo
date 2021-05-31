@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/nameOfShoppingItem"
+        android:id="@+id/nameOfListItem"
         android:layout_width="0dp"
         android:layout_height="@dimen/standard_height"
         android:layout_marginStart="@dimen/component_padding"
@@ -18,11 +18,11 @@
         android:inputType="text|textCapSentences"
         android:textColor="@color/DavysGrey"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/addShoppingItem"
+        app:layout_constraintEnd_toStartOf="@+id/addListItem"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/addShoppingItem"
+        android:id="@+id/addListItem"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/standard_height"
         android:layout_marginStart="@dimen/component_padding"
@@ -33,7 +33,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/nameOfShoppingItem" />
+        app:layout_constraintStart_toEndOf="@+id/nameOfListItem" />
 
     <View
         android:id="@+id/divider2"
@@ -43,7 +43,7 @@
         android:layout_marginEnd="@dimen/component_padding"
         android:layout_marginBottom="@dimen/component_padding"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/nameOfShoppingItem"
+        app:layout_constraintBottom_toTopOf="@+id/nameOfListItem"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -62,7 +62,7 @@
         app:layout_constraintTop_toBottomOf="@+id/divider">
 
         <ListView
-            android:id="@+id/shoppingListView"
+            android:id="@+id/itemListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
@@ -77,19 +77,18 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shopping_list_name" />
+        app:layout_constraintTop_toBottomOf="@+id/itemListName" />
 
     <EditText
-        android:id="@+id/shopping_list_name"
+        android:id="@+id/itemListName"
         android:layout_width="0dp"
         android:layout_height="@dimen/standard_height"
         android:layout_marginStart="@dimen/component_padding"
         android:layout_marginTop="@dimen/component_padding"
         android:layout_marginEnd="@dimen/component_padding"
         android:gravity="left|center_vertical"
-        android:hint="New Shopping List"
+        android:hint="New List"
         android:inputType="text|textCapSentences"
-        android:textAlignment="textStart"
         android:textAppearance="@android:style/TextAppearance.Material"
         android:textColor="@color/DavysGrey"
         app:layout_constraintEnd_toStartOf="@+id/submitButton"
