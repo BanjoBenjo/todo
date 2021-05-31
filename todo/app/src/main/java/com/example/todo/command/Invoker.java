@@ -33,8 +33,8 @@ public class Invoker {
             return;
         }
         if (counter > 0){
-            commandList.get(counter - 1).undo();
             counter--;
+            commandList.get(counter).undo();
         }
     }
 
@@ -44,8 +44,8 @@ public class Invoker {
             return;
         }
         if (counter < commandList.size()) {
+            commandList.get(counter).execute();
             counter++;
-            commandList.get(counter - 1).execute();
         }
     }
 

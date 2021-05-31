@@ -44,12 +44,10 @@ public class Complete implements Command {
         }
     }
 
-    @Override
     public String getType() {
         return "COMPLETE";
     }
 
-    @Override
     public int getTaskId() {
         Log.d("DEBUG Complete", "TaskId  " + String.valueOf(taskId));
         return taskId;
