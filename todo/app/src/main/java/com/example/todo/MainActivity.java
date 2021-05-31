@@ -174,8 +174,19 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void updateButtons() {
-        undoButton.setEnabled(invoker.getUndoState());
-        redoButton.setEnabled(invoker.getRedoState());
+        // undoButton.setElevation(0.0f);
+        // redoButton.setElevation(0.0f);
+        undoButton.setEnabled(false);
+        redoButton.setEnabled(false);
+
+        if (invoker.getRedoState()){
+            // redoButton.setElevation(getApplicationContext().getResources().getDimension(R.dimen.button_elevation));
+            redoButton.setEnabled(true);
+        }
+        if (invoker.getUndoState()){
+            // undoButton.setElevation(getApplicationContext().getResources().getDimension(R.dimen.button_elevation));
+            undoButton.setEnabled(true);
+        }
     }
 
     public void updateContent() {
