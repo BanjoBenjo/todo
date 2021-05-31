@@ -45,10 +45,17 @@ public class MainActivity extends AppCompatActivity {
         // Initialize RecyclerView with Adapter
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
 
         taskList = myDatabaseHelper.getAllActiveTasks();
         Collections.sort(taskList);
+        System.out.println(taskList);
+
+        Collections.reverse(taskList);
+        System.out.println(taskList);
+
         taskAdapter = new TaskAdapter(taskList, MainActivity.this);
         recyclerView.setAdapter(taskAdapter);
 
@@ -56,14 +63,14 @@ public class MainActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         // Initialize Intents
-        Intent toNewBasicTask = new Intent(this, NewBasicTaskActivity.class);
-        Intent toNewScheduledTask = new Intent(this, NewScheduledTaskActivity.class);
-        Intent toNewShoppingTask = new Intent(this, NewShoppingTaskActivity.class);
+        Intent toNewBasicTask = new Intent(this, EditBasicTaskActivity.class);
+        Intent toNewScheduledTask = new Intent(this, EditScheduledTaskActivity.class);
+        Intent toNewListTask = new Intent(this, EditListTaskActivity.class);
         Intent toOverview = new Intent(this, OverviewActivity.class);
 
         // Initialize Buttons
         ImageButton scheduledButton = findViewById(R.id.scheduled_button);
-        ImageButton shoppingButton = findViewById(R.id.shopping_button);
+        ImageButton listButton = findViewById(R.id.list_button);
         ImageButton basicButton = findViewById(R.id.basic_button);
         ImageButton overviewButton = findViewById(R.id.overviewButton);
 
@@ -85,10 +92,10 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(toNewScheduledTask);
             }
         });
-        shoppingButton.setOnClickListener(new View.OnClickListener() {
+        listButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.this.startActivity(toNewShoppingTask);
+                MainActivity.this.startActivity(toNewListTask);
             }
         });
 

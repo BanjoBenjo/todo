@@ -46,7 +46,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
         String taskType = taskData.getType();
 
         switch (taskType) {
-            case "SHOPPING":
+            case "LIST":
                 holder.taskImage.setImageResource(R.drawable.list);
                 holder.taskImage.setPadding(5,5,5,5); // to adjust size
                 holder.taskImage.setImageAlpha(150);

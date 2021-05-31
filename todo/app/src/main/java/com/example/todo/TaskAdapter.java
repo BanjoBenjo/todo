@@ -9,17 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todo.tasks.Task;
 
-import java.nio.channels.NonReadableChannelException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
 
@@ -50,7 +47,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         String taskType = taskData.getType();
 
         switch (taskType) {
-            case "SHOPPING":
+            case "LIST":
                 holder.taskImage.setImageResource(R.drawable.baseline_checklist_black_24dp);
                 holder.taskImage.setPadding(5,5,5,5); // to adjust size
                 holder.taskImage.setImageAlpha(150);
@@ -69,17 +66,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
             public void onClick(View v) {
                 switch (taskType) {
                     case "BASIC":
-                        Intent toEditBasicTask = new Intent(context, NewBasicTaskActivity.class);
+                        Intent toEditBasicTask = new Intent(context, EditBasicTaskActivity.class);
                         toEditBasicTask.putExtra("taskID", taskData.getID());
                         context.startActivity(toEditBasicTask);
                         break;
-                    case "SHOPPING":
-                        Intent toEditShoppingTask = new Intent(context, NewShoppingTaskActivity.class);
-                        toEditShoppingTask.putExtra("taskID", taskData.getID());
-                        context.startActivity(toEditShoppingTask);
+                    case "LIST":
+                        Intent toEditListTask = new Intent(context, EditListTaskActivity.class);
+                        toEditListTask.putExtra("taskID", taskData.getID());
+                        context.startActivity(toEditListTask);
                         break;
                     case "SCHEDULED":
-                        Intent toEditScheduledTask = new Intent(context, NewScheduledTaskActivity.class);
+                        Intent toEditScheduledTask = new Intent(context, EditScheduledTaskActivity.class);
                         toEditScheduledTask.putExtra("taskID", taskData.getID());
                         context.startActivity(toEditScheduledTask);
                         break;

@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.RadioAccessSpecifier;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -20,10 +18,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.todo.dialogfragments.DatePickerFragment;
 import com.example.todo.dialogfragments.TimePickerFragment;
-import com.example.todo.notifications.AlarmNotification;
-import com.example.todo.notifications.NoNotification;
-import com.example.todo.notifications.Notification;
-import com.example.todo.notifications.PushNotification;
 import com.example.todo.tasks.ScheduledTask;
 
 import java.time.LocalDateTime;
@@ -31,7 +25,7 @@ import java.time.LocalDateTime;
 import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
 
 
-public class NewScheduledTaskActivity extends FragmentActivity {
+public class EditScheduledTaskActivity extends FragmentActivity {
 
     private ScheduledTask thisTask;
     int taskID;
@@ -164,7 +158,7 @@ public class NewScheduledTaskActivity extends FragmentActivity {
         if (insertData) {
             Intent to_mainactivity = new Intent(this, MainActivity.class);
             to_mainactivity.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
-            NewScheduledTaskActivity.this.startActivity(to_mainactivity);
+            EditScheduledTaskActivity.this.startActivity(to_mainactivity);
         } else {
             toastMessage("There went something wrong..");
         }

@@ -5,23 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.todo.tasks.BasicTask;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
 
-public class NewBasicTaskActivity extends Activity {
+public class EditBasicTaskActivity extends Activity {
 
     private static final String TAG = "NewBasicTaskActivity";
     int taskID;
@@ -76,9 +70,9 @@ public class NewBasicTaskActivity extends Activity {
         boolean insertData = myDatabaseHelper.addTask(mTask);
 
         if (insertData) {
-            Intent to_mainactivity = new Intent(NewBasicTaskActivity.this, MainActivity.class);
+            Intent to_mainactivity = new Intent(EditBasicTaskActivity.this, MainActivity.class);
             to_mainactivity.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
-            NewBasicTaskActivity.this.startActivity(to_mainactivity);
+            EditBasicTaskActivity.this.startActivity(to_mainactivity);
 
         } else {
             toastMessage("There went something wrong..");

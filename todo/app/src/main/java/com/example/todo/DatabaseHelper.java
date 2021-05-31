@@ -6,13 +6,11 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 import android.util.Log;
 
-import com.example.todo.command.Command;
 import com.example.todo.tasks.BasicTask;
 import com.example.todo.tasks.ScheduledTask;
-import com.example.todo.tasks.ShoppingTask;
+import com.example.todo.tasks.ListTask;
 import com.example.todo.tasks.Task;
 
 import java.io.ByteArrayInputStream;
@@ -28,10 +26,8 @@ import java.util.Base64;
 import java.util.HashMap;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private static final String TAG = "DatabaseHelper";
-
     private static final String DATABASE_NAME = "TASK_DB";
-    private ArrayList<ShoppingItem> shoppingItems;
+    private ArrayList<ListItem> listItems;
 
     //  Table + COLS
     private static final String TABLE_ACTIVE = "TABLE_ACTIVE";
@@ -287,22 +283,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 contentValues.put("NOTES", sched_task.getNotes());
                 break;
 
-            case "SHOPPING":
-                ShoppingTask shop_task = (ShoppingTask)my_task;
-                contentValues.put("ID", shop_task.getID());
-                contentValues.put("TYPE", "SHOPPING");
-                contentValues.put("TITLE", shop_task.getTitle());
+            case "LIST":
+                ListTask list_task = (ListTask)my_task;
+                contentValues.put("ID", list_task.getID());
+                contentValues.put("TYPE", "LIST");
+                contentValues.put("TITLE", list_task.getTitle());
                 contentValues.put("DEADLINE", "");
                 contentValues.put("NOTIFICATION", "");
-                shoppingItems = shop_task.getItems();
+                listItems = list_task.getItems();
                 HashMap<String, Boolean> hash_map = new HashMap<>();
-                for (ShoppingItem i:shoppingItems) {
+                for (ListItem i: listItems) {
                     hash_map.put(i.toString(), i.isChecked());
                 }
                 try {
                     contentValues.put("NOTES", serialize(hash_map));
                 } catch (IOException e ){
-                    Log.e("databaseHelper", "Exception while storing notes of shopping task");
+                    Log.e("databaseHelper", "Exception while storing notes of list task");
                 }
                 break;
             //TODO ADD DEFAULT EXCEPTION
@@ -344,19 +340,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                 break;
 
-            case "SHOPPING":
+            case "LIST":
+            case "SHOPPING": //stays because there may be old shopping items in db
                 ID = data.getInt(data.getColumnIndex("ID"));
                 title = data.getString(data.getColumnIndex("TITLE"));
-                my_task = new ShoppingTask(ID, title);
+                my_task = new ListTask(ID, title);
                 notes = data.getString(data.getColumnIndex("NOTES"));
                 //split notes into item names, create items and add them to shopping task
 
                 try {
                     HashMap<String, Boolean> hash_map = (HashMap<String, Boolean>) deserialize(notes);
                     for ( String key : hash_map.keySet() ) {
-                        ShoppingItem newItem = new ShoppingItem(key);
+                        ListItem newItem = new ListItem(key);
                         newItem.setChecked(hash_map.get(key));
-                        ((ShoppingTask)my_task).addItem(newItem);
+                        ((ListTask)my_task).addItem(newItem);
                     }
                 } catch (IOException e ){
                 } catch (ClassNotFoundException ce){}
