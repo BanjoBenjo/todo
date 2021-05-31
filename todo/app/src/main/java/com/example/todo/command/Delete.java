@@ -45,12 +45,10 @@ public class Delete implements Command {
         }
     }
 
-    @Override
     public String getType() {
         return "DELETE";
     }
 
-    @Override
     public int getTaskId() {
         return taskId;
     }
