@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         taskAdapter = new TaskAdapter(taskList, MainActivity.this);
         recyclerView.setAdapter(taskAdapter);
+        recyclerView.scrollToPosition(taskList.size() - 1);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
