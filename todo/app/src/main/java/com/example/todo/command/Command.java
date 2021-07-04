@@ -1,7 +1,9 @@
 package com.example.todo.command;
 
 public interface Command {
-    // every command holds the main operation in execute() and the inverse operation in undo()
+    /**
+     * Interface for the commands, without execute() and undo() they would not be operational.
+     */
     void execute();
     void undo();
 }
