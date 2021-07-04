@@ -12,36 +12,31 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
-
 import com.example.todo.dialogfragments.DatePickerFragment;
 import com.example.todo.dialogfragments.TimePickerFragment;
 import com.example.todo.tasks.ScheduledTask;
-
 import java.time.LocalDateTime;
 
 import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
 
-
 public class EditScheduledTaskActivity extends FragmentActivity {
-
+    /**
+     * Activity for displaying existing or creating new scheduled tasks. Scheduled tasks have a
+     * title, notes, one of three notification types and a deadline.
+     */
     private ScheduledTask thisTask;
     int taskID;
     DatabaseHelper myDatabaseHelper;
-
     private EditText nameView;
     private Button submitButton;
     private EditText notes;
     private TimePickerFragment timePicker;
     private DatePickerFragment datePicker;
-
     private Button dateButton;
     private Button timeButton;
-
-
-
+    // radio group for choosing notification type
     private RadioButton noneRadioButton, pushRadioButton, alarmRadioButton;
     private RadioGroup radioGroup;
 
@@ -60,18 +55,21 @@ public class EditScheduledTaskActivity extends FragmentActivity {
         alarmRadioButton.setChecked(false);
         submitButton = findViewById(R.id.submitButton);
         notes = findViewById(R.id.editTextTextMultiLine);
+        // date and time picker to set deadline
         dateButton = findViewById(R.id.date_button);
         timeButton = findViewById(R.id.time_button);
         timePicker = new TimePickerFragment();
         datePicker = new DatePickerFragment();
-
         myDatabaseHelper = DatabaseHelper.getInstance(this);
-
+        // notification channel for alarm or push notification
         createNotificationChannel();
 
         final Intent thisIntent = getIntent();
+        // check intent to know differentiate between new scheduled task or scheduled list task
         if (thisIntent.getExtras() != null) {
+            // existing task
             if (thisIntent.getExtras().containsKey("taskID")) {
+                // display all attributes
                 taskID = thisIntent.getIntExtra("taskID", 0);
                 thisTask = (ScheduledTask) myDatabaseHelper.getTask(taskID);
                 nameView.setText(thisTask.getTitle());
@@ -86,10 +84,10 @@ public class EditScheduledTaskActivity extends FragmentActivity {
                         alarmRadioButton.setChecked(true);
                         break;
                 }
-
                 notes.setText(thisTask.getNotes());
                 setDate(thisTask.getDeadline());
             }
+        // new scheduled task
         }else {
             taskID = getGlobalTaskId();
             thisTask = new ScheduledTask(taskID, nameView.getText().toString(),
@@ -97,7 +95,7 @@ public class EditScheduledTaskActivity extends FragmentActivity {
                     "None"
                     );
         }
-
+        // save the task
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,7 +130,6 @@ public class EditScheduledTaskActivity extends FragmentActivity {
             LocalDateTime selectedDate = getSelectedDate();
             setDateString(selectedDate);
         }
-
     }
 
     private String getNotificationType(){
@@ -153,8 +150,9 @@ public class EditScheduledTaskActivity extends FragmentActivity {
     }
 
     private void addTask(ScheduledTask mTask){
+        // add task to database
         boolean insertData = myDatabaseHelper.addTask(mTask);
-
+        // return to main activity if task was added successfully
         if (insertData) {
             Intent to_mainactivity = new Intent(this, MainActivity.class);
             to_mainactivity.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -165,51 +163,43 @@ public class EditScheduledTaskActivity extends FragmentActivity {
     }
 
     private int getGlobalTaskId(){
-        SharedPreferences mPreferences = getSharedPreferences("CurrentUser",
-                MODE_PRIVATE);
-
+        // needed after restart of app so we know highest task id
+        SharedPreferences mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
         int task_id = mPreferences.getInt("GlobalTaskID", 1);
-
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putInt("GlobalTaskID", task_id+1);
         editor.commit();
-
         return task_id;
     }
 
     private LocalDateTime getSelectedDate(){
-
+        // get deadline from date picker
         int hour = 0;
         int min = 0;
-
         int day = datePicker.getSelectedDay();
         int month = datePicker.getSelectedMonth();
         int year = datePicker.getSelectedYear();
-
         try {
              hour = timePicker.getSelectedHour();
              min = timePicker.getSelectedMin();
-        }catch(Exception e){
-        }
-
+        }catch(Exception e){}
         return LocalDateTime.of(year, month + 1, day, hour, min);
     }
 
     private void setDate(LocalDateTime date){
+        // when task already has existing deadline
         datePicker.setSelectedDay(date.getDayOfMonth());
         datePicker.setSelectedMonth(date.getMonthValue()-1);
         datePicker.setSelectedYear(date.getYear());
-
         try {
             timePicker.setSelectedHour(date.getHour());
             timePicker.setSelectedMin(date.getMinute());
-
-        }catch(Exception e){
-        }
+        }catch(Exception e){}
         datePicker.setSelected();
     }
 
     private void setDateString(LocalDateTime date){
+        // set button text to selected date
         String dateString = "" + date.getDayOfMonth() + "." + (date.getMonthValue()-1) + "."
                 + date.getYear();
         dateButton.setText(dateString);
