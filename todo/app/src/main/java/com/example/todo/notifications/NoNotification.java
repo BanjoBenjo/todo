@@ -2,9 +2,10 @@ package com.example.todo.notifications;
 
 import android.content.Context;
 
-import java.time.LocalDateTime;
-
 public class NoNotification implements Notification {
+    /**
+     * An Empty Notification for Tasks that only have a date set for informative causes.
+     */
 
     public NoNotification(){}
 
@@ -13,7 +14,5 @@ public class NoNotification implements Notification {
     public void do_notify(Context context){}
 
     @Override
-    public void cancel(Context context) {
-
-    }
+    public void cancel(Context context) {}
 }

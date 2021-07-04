@@ -1,6 +1,5 @@
 package com.example.todo.notifications;
 
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -15,6 +14,11 @@ import java.time.LocalDateTime;
 import static android.content.Context.ALARM_SERVICE;
 
 public class PushNotification implements Notification {
+    /**
+     * Notification that triggers a Push Notification on the set Deadline,
+     * When do_notify() is called the Alarm is set in the Android system.
+     * When cancel() is called the Alarm is canceled.
+     */
 
     private LocalDateTime deadline;
     private int taskId;
@@ -32,18 +36,19 @@ public class PushNotification implements Notification {
 
     @Override
     public void do_notify(Context context){
+        // activates Alarm in Android Backend
         PendingIntent pushIntent = getPushIntent(context, taskId, title, notes);
-        Log.wtf("PushNotification/notify", "TaskId: " + taskId);
 
         long millisTillDeadline = getDeadlineMillis(deadline);
 
         AlarmManager alarmManager =(AlarmManager) context.getSystemService(ALARM_SERVICE);
-        alarmManager.cancel(pushIntent); // cancel alarm
+        alarmManager.cancel(pushIntent);
         alarmManager.set(AlarmManager.RTC_WAKEUP, millisTillDeadline, pushIntent);
     }
 
     @Override
     public void cancel(Context context) {
+        // cancels the Alarm in Android Backend
         PendingIntent popUpIntent = getPushIntent(context, taskId, title, notes);
 
         AlarmManager alarmManager =(AlarmManager) context.getSystemService(ALARM_SERVICE);
@@ -51,6 +56,7 @@ public class PushNotification implements Notification {
     }
 
     private PendingIntent getPushIntent(Context context, int taskID, String titleStr, String notesStr){
+        // gets the Intent from Android
         Intent pushIntent = new Intent(context, ReminderBroadcast.class);
         pushIntent.putExtra("title", titleStr);
         pushIntent.putExtra("notes", notesStr);
@@ -60,10 +66,10 @@ public class PushNotification implements Notification {
     }
 
     private long getDeadlineMillis(LocalDateTime deadline){
+        // calculate milliseconds from date
         LocalDateTime timeNow = LocalDateTime.now();
 
         long millisTillDeadline = Duration.between(timeNow, deadline).toMillis();
-
         return System.currentTimeMillis() + millisTillDeadline;
     }
 
