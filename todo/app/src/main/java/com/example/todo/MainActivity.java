@@ -6,21 +6,17 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-
 import com.example.todo.command.Complete;
 import com.example.todo.command.Delete;
 import com.example.todo.command.Invoker;
 import com.example.todo.tasks.Task;
-
 import java.util.ArrayList;
 import java.util.Collections;
-
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class MainActivity extends AppCompatActivity {
