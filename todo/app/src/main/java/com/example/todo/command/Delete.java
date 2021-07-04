@@ -1,11 +1,7 @@
 package com.example.todo.command;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
-
 import com.example.todo.DatabaseHelper;
-import com.example.todo.command.Command;
 import com.example.todo.tasks.ScheduledTask;
 import com.example.todo.tasks.Task;
 
@@ -28,7 +24,7 @@ public class Delete implements Command {
     public void execute() {
         // cancel notifications on Scheduled Tasks when completed
         Task task = databaseHelper.getTask(taskId);
-        if(task.getType() == "SCHEDULED") {
+        if(task.getType().equals("SCHEDULED")) {
             ((ScheduledTask)task).cancel(context);
         }
         databaseHelper.deleteTask(taskId);
@@ -39,7 +35,7 @@ public class Delete implements Command {
         databaseHelper.reloadTask(taskId);
         // activate notifications on Scheduled Tasks when reloaded
         Task task = databaseHelper.getTask(taskId);
-        if (task.getType() == "SCHEDULED") {
+        if (task.getType().equals("SCHEDULED")) {
             ((ScheduledTask)task).remind(context);
         }
     }
