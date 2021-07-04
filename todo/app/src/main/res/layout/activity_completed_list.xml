@@ -44,15 +44,14 @@
             android:layout_height="@dimen/standard_height"
             android:layout_marginStart="@dimen/component_padding"
             android:layout_marginTop="@dimen/component_padding"
-            android:layout_marginBottom="@dimen/component_padding"
-            android:scaleType="fitXY"
+            android:elevation="@dimen/button_elevation"
+            android:padding="@dimen/button_padding"
+            android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="?attr/actionModeCloseDrawable" />
+            app:srcCompat="@drawable/baseline_arrow_back_black_24dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

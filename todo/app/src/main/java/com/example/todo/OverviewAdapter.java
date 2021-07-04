@@ -52,7 +52,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
 
         switch (taskType) {
             case "LIST":
-                holder.taskImage.setImageResource(R.drawable.list);
+                holder.taskImage.setImageResource(R.drawable.baseline_checklist_black_24dp);
                 holder.taskImage.setPadding(5,5,5,5); // to adjust size
                 holder.taskImage.setImageAlpha(150);
                 break;
