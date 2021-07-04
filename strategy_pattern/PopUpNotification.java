@@ -1,4 +1,3 @@
-package com.company;
 
 public class PopUpNotification implements Notification{
 
@@ -11,6 +10,6 @@ public class PopUpNotification implements Notification{
     }
 
     public void do_notify(){
-        System.out.format("It's %s, %s! PopUp Notification \n", deadline, title);
+        System.out.format("It's %s, %s! PopUp Notification \n\n", deadline, title);
     }
 }

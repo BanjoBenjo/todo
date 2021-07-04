@@ -46,6 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "TABLE_DELETED (ID INTEGER PRIMARY KEY, TYPE TEXT, TITLE TEXT, DEADLINE TEXT," +
                     "NOTIFICATION TEXT, NOTES TEXT)";
 
+    // singleton Variable
     private static DatabaseHelper single_instance = null;
 
     public DatabaseHelper(Context context){
@@ -79,9 +80,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Adds a Task to the Active Table
+     *
      */
     public boolean addTask(Task my_task){
+        // Adds a Task to the Active Table, if the task exists the values are edited and no
+        // new Task is created
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = createContentFromTask(my_task);
 
@@ -116,10 +119,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    /**
-     * gets complete Active Table, builds Tasks and returns list
-     */
     public ArrayList<Task> getAllActiveTasks(){
+        // returns a list of all active tasks
         ArrayList<Task> listTasks = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -134,6 +135,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<Task> getAllCompletedTasks(){
+        // returns a list of all completed tasks
         ArrayList<Task> listTasks = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -148,6 +150,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<Task> getAllDeletedTasks(){
+        // returns a list of all deleted tasks
         ArrayList<Task> listTasks = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -161,10 +164,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return listTasks;
     }
 
-    /**
-     * gets Task with the given ID
-     */
     public Task getTask(int ID) {
+        // gets active Task with the given ID
         SQLiteDatabase db = this.getWritableDatabase();
         Task myTask = null;
         String query = "SELECT * FROM " + TABLE_ACTIVE + " WHERE ID = " + ID;
@@ -177,6 +178,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Task getCompletedTask(int ID) {
+        // gets completed Task with the given ID
         SQLiteDatabase db = this.getWritableDatabase();
         Task myTask = null;
         String query = "SELECT * FROM " + TABLE_COMPLETED + " WHERE ID = " + ID;
@@ -189,6 +191,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Task getDeletedTask(int ID) {
+        // gets deleted Task with the given ID
         SQLiteDatabase db = this.getWritableDatabase();
         Task myTask = null;
         String query = "SELECT * FROM " + TABLE_DELETED + " WHERE ID = " + ID;
@@ -200,11 +203,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return myTask;
     }
 
-    /**
-     * Methods to move Data from one Table to another
-     */
     public void completeTask(int task_id) {
-        //TODO add return statement if function was successful
+        // moves task from active table to completed table
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -217,7 +217,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void reopenTask(int task_id) {
-        //TODO add return statement if function was successful
+        // moves task from completed table to active table
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -230,7 +230,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void deleteTask(int task_id) {
-        //TODO add return statement if function was successful
+        // moves task from active table to deleted table
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -243,7 +243,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void reloadTask(int task_id) {
-        //TODO add return statement if function was successfull
+        // moves task from deleted table to active table
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -255,10 +255,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    /**
-     * Creates a ContenValue from a Task object, which now is able to be uploaded to DB
-     */
     public ContentValues createContentFromTask(Task my_task){
+        // Creates a ContenValue object from a Task object, which is able to be uploaded to the DB
         ContentValues contentValues = new ContentValues();
         String task_type = my_task.getType();
         switch(task_type)
@@ -301,15 +299,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     Log.e("databaseHelper", "Exception while storing notes of list task");
                 }
                 break;
-            //TODO ADD DEFAULT EXCEPTION
         }
         return contentValues;
     }
 
-    /**
-     * converts a Row from the DB to a Task
-     */
     public Task convertRowToTask(Cursor data){
+        // converts a Row from the DB to a Task object
         String task_type = data.getString(data.getColumnIndex("TYPE"));
         int ID;
         String title;
@@ -357,7 +352,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     }
                 } catch (IOException e ){
                 } catch (ClassNotFoundException ce){}
-
                 break;
             default:
                 my_task = null;
@@ -366,6 +360,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     private static String serialize(Serializable o) throws IOException {
+        // serialize objects for storing in db
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(o);
@@ -373,8 +368,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return Base64.getEncoder().encodeToString(baos.toByteArray());
     }
 
-    private static Object deserialize(String s) throws IOException,
-            ClassNotFoundException {
+    private static Object deserialize(String s) throws IOException, ClassNotFoundException {
+        // deserialize objects
         byte[] data = Base64.getDecoder().decode(s);
         ObjectInputStream ois = new ObjectInputStream(
                 new ByteArrayInputStream(data));

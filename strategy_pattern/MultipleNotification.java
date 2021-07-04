@@ -1,4 +1,3 @@
-package com.company;
 
 public class MultipleNotification implements Notification {
 
@@ -16,7 +15,7 @@ public class MultipleNotification implements Notification {
 
     public void do_notify(){
         for (int i = count-1; i >= 0; i--) {
-            System.out.format("It's %d minutes till %s then %s ! MultipleNotification \n", i*interval, deadline, title);
+            System.out.format("It's %d minutes till %s then %s ! MultipleNotification \n\n", i*interval, deadline, title);
         }
     }
 }

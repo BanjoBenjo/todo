@@ -1,4 +1,3 @@
-package com.company;
 
 public class NoNotification implements Notification{
 

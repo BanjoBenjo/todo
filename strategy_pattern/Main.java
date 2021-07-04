@@ -1,19 +1,33 @@
-package com.company;
 
 public class Main {
     public static void main(String[] args) {
-	// write your code here
-        /*TODO the call of remind has to happen IN the Notification object called by a timer.
-           Very important if the notificationType is changed OR the time is changed to CANCEL/EDIT the old Timer */
+        BasicTask basicTask1 = new BasicTask("Mittagessen");
+        basicTask1.setNotes("Chilli Sin Carne");
 
-        Task mittagessen = new BasicTask("Mittagessen");
-        Task termin = new ScheduledTask("Termin", "12:00");
+        ScheduledTask scheduledTask1 = new ScheduledTask("Termin", "12:00", "popup");
+        ScheduledTask scheduledTask2 = new ScheduledTask("Email Erinnerung", "18:00", "email");
+        ScheduledTask scheduledTask3 = new ScheduledTask("Wichtig", "18:00", "no");
+        scheduledTask3.setNotificationType(
+                new MultipleNotification(
+                        scheduledTask3.getTitle(),
+                        "22:00",
+                        5,
+                        3  )
+        );
 
-        mittagessen.remind();
-        termin.remind();
+        basicTask1.taskInfo();
 
-        mittagessen.setNotificationType(new MultipleNotification(mittagessen.getTitle(),"15:00", 5, 3));
+        // PopUp
+        scheduledTask1.taskInfo();
+        scheduledTask1.setNotes("Zahnarzt Str.1");
+        scheduledTask1.taskInfo();
+        scheduledTask1.remind();
 
-        mittagessen.remind();
+        // Email
+        scheduledTask2.taskInfo();
+        scheduledTask2.remind();
+
+        // Mutiple
+        scheduledTask3.remind();
     }
 }
