@@ -10,6 +10,10 @@ import com.example.todo.tasks.ScheduledTask;
 import com.example.todo.tasks.Task;
 
 public class Delete implements Command {
+    /**
+     * Calls deleteTask() and reloadTask() to move tasks between active and deleted table. If task
+     * is of type scheduled the notification gets cancelled or activated.
+     */
     private int taskId;
     private DatabaseHelper databaseHelper;
     private Context context;
@@ -24,11 +28,8 @@ public class Delete implements Command {
     public void execute() {
         // cancel notifications on Scheduled Tasks when completed
         Task task = databaseHelper.getTask(taskId);
-        try{
+        if(task.getType() == "SCHEDULED") {
             ((ScheduledTask)task).cancel(context);
-
-        }catch(Exception e){
-            Log.e("Delete", "got exception in execute()");
         }
         databaseHelper.deleteTask(taskId);
     }
@@ -38,10 +39,8 @@ public class Delete implements Command {
         databaseHelper.reloadTask(taskId);
         // activate notifications on Scheduled Tasks when reloaded
         Task task = databaseHelper.getTask(taskId);
-        try{
+        if (task.getType() == "SCHEDULED") {
             ((ScheduledTask)task).remind(context);
-        }catch(Exception e){
-            Log.e("Delete", "got exception in undo()");
         }
     }
 
