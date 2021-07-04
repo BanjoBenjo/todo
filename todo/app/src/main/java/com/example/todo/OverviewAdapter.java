@@ -18,7 +18,10 @@ import com.example.todo.tasks.Task;
 import java.util.ArrayList;
 
 public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHolder>{
-
+    /**
+     * Custom Adapter for the Task List on the Overview Activities.
+     * It holds a list of Tasks and creates Cards from the Task information
+     */
     ArrayList<Task> taskDataList;
     Context context;
 
@@ -30,6 +33,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // creates the view
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.task_item_list, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
@@ -39,6 +43,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        // binds all Cards and fills them with the Task Information
         final Task taskData = taskDataList.get(position);
         holder.textViewName.setText(taskData.getTitle());
         holder.textViewInfo.setText(taskData.getNotes());

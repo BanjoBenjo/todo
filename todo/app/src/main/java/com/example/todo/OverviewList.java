@@ -14,6 +14,9 @@ import com.example.todo.tasks.Task;
 import java.util.ArrayList;
 
 public class OverviewList extends AppCompatActivity {
+    /**
+     * Activity that shows a List of all (deleted or completed) Tasks
+     */
 
     DatabaseHelper myDatabaseHelper;
     private ArrayList<Task> taskList;
@@ -43,12 +46,17 @@ public class OverviewList extends AppCompatActivity {
                 break;
         }
 
+        // set adapter
         OverviewAdapter taskAdapter = new OverviewAdapter(taskList, OverviewList.this);
         recyclerView.setAdapter(taskAdapter);
 
+        // button reference
         ImageButton backButton = findViewById(R.id.backButtonCL);
+
+        // intent init
         Intent toOverview = new Intent(this, OverviewActivity.class);
 
+        // button listener
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { OverviewList.this.startActivity(toOverview); }

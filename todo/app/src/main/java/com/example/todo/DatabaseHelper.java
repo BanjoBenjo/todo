@@ -26,6 +26,12 @@ import java.util.Base64;
 import java.util.HashMap;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+    /**
+     * API for the Database.
+     * Creates the tables after a fresh install.
+     * It has all methods needed to enter and load data from the database.
+     */
+
     private static final String DATABASE_NAME = "TASK_DB";
     private ArrayList<ListItem> listItems;
 
