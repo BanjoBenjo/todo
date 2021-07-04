@@ -26,7 +26,8 @@ import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
 
 public class EditListTaskActivity extends Activity {
     /**
-     * Activity for displaying existing or creating new list tasks.
+     * Activity for displaying existing or creating new list tasks. Originally thought as shopping
+     * list, this task has a list of checkable items (ListItem) and a title.
      */
     private ArrayList<ListItem> listItemList;
     private ArrayAdapter<String> listItemAdapter;
