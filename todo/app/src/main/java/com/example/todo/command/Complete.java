@@ -12,7 +12,7 @@ public class Complete implements Command {
      */
     private int taskId;
     private DatabaseHelper databaseHelper;
-    Context context;
+    private Context context;
 
     public Complete( int newTaskId, DatabaseHelper newDateBaseHelper, Context newContext) {
         taskId = newTaskId;
