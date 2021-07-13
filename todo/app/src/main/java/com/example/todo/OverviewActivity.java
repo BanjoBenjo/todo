@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import static android.content.Intent.FLAG_ACTIVITY_REORDER_TO_FRONT;
+
 
 public class OverviewActivity extends AppCompatActivity {
     /**
@@ -41,8 +43,6 @@ public class OverviewActivity extends AppCompatActivity {
         deletedNumber.setText(String.valueOf(myDatabaseHelper.getDeletedTaskCount()));
 
         // init Intents
-        Intent toMain = new Intent(this, MainActivity.class);
-
         Intent toCompletedList = new Intent(this, OverviewList.class);
         toCompletedList.putExtra("TYPE", "COMPLETED");
 
@@ -52,7 +52,12 @@ public class OverviewActivity extends AppCompatActivity {
         // Button listeners
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { OverviewActivity.this.startActivity(toMain); }
+            public void onClick(View v) {
+                // return to main activity without calling onCreate()
+                Intent to_mainactivity = new Intent(OverviewActivity.this, MainActivity.class);
+                to_mainactivity.setFlags(FLAG_ACTIVITY_REORDER_TO_FRONT);
+                OverviewActivity.this.startActivity(to_mainactivity);
+            }
         });
 
         completedRow.setOnClickListener(new View.OnClickListener() {
