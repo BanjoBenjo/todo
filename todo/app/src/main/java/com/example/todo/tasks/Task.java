@@ -3,6 +3,10 @@ package com.example.todo.tasks;
 import com.example.todo.notifications.Notification;
 
 public class Task implements Comparable<Task> {
+    /**
+     * Parent class for all task types. Contains title and ID, specific attributes are in child
+     * classes.
+     */
 
     private String title;
     private int ID;

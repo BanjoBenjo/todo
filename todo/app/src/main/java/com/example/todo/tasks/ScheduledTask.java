@@ -11,6 +11,10 @@ import com.example.todo.notifications.PushNotification;
 import java.time.LocalDateTime;
 
 public class ScheduledTask extends Task {
+    /**
+     * Contains a deadline and a NotificationType for Alarms. Uses the Strategy Pattern to switch
+     * between the notification types.
+     */
 
     private String notes;
     private LocalDateTime deadline;
@@ -33,10 +37,12 @@ public class ScheduledTask extends Task {
     }
 
     public void remind(Context context){
+        // show short information and execute the notification
         notificationType.do_notify(context);
     }
 
     public void cancel(Context context){
+        // show short information and cancel the reminder
         notificationType.cancel(context);
     }
 
@@ -47,6 +53,7 @@ public class ScheduledTask extends Task {
     public void setDeadline(LocalDateTime deadline) { this.deadline = deadline; }
 
     public void setNotificationType(String notificationType){
+        // corresponds to setStrategy() in strategy pattern
         switch (notificationType){
             case "Push":
                 Log.wtf("ScheduledTask", "Push created ID: " + super.getID());

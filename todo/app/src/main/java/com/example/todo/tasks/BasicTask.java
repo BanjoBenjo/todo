@@ -1,6 +1,10 @@
 package com.example.todo.tasks;
 
 public class BasicTask extends Task {
+    /**
+     * Basic task, does only have a title and notes.
+     */
+    private String notes;
 
     public BasicTask(int ID, String title, String notes){
         super(ID, title);
