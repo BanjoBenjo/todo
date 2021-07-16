@@ -1,6 +1,9 @@
 package com.example.todo.notifications;
 
+import android.app.PendingIntent;
 import android.content.Context;
+
+import com.example.todo.tasks.ScheduledTask;
 
 public class NoNotification implements Notification {
     /**
@@ -11,8 +14,8 @@ public class NoNotification implements Notification {
 
     public String toString(){ return  "None"; }
 
-    public void do_notify(Context context){}
-
     @Override
-    public void cancel(Context context) {}
+    public PendingIntent getIntent(Context context, ScheduledTask task){
+        return null;
+    };
 }

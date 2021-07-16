@@ -56,7 +56,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
                 holder.taskImage.setPadding(5,5,5,5); // to adjust size
                 holder.taskImage.setImageAlpha(150);
                 break;
-            case "SCHEDULED":
+            case "SCHEDULED": 
                 holder.taskImage.setImageResource(R.drawable.termin);
                 holder.taskImage.setImageAlpha(150);
                 break;
