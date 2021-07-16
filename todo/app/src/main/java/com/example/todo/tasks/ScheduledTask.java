@@ -1,7 +1,8 @@
 package com.example.todo.tasks;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.todo.notifications.AlarmNotification;
@@ -9,7 +10,10 @@ import com.example.todo.notifications.NoNotification;
 import com.example.todo.notifications.Notification;
 import com.example.todo.notifications.PushNotification;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+
+import static android.content.Context.ALARM_SERVICE;
 
 public class ScheduledTask extends Task {
     /**
@@ -39,14 +43,29 @@ public class ScheduledTask extends Task {
 
     public void remind(Context context){
         // show short information and execute the notification
-        Toast.makeText(context, "Alarm has been set", Toast.LENGTH_SHORT).show();
-        notificationType.do_notify(context);
+        long millisTillDeadline = getDeadlineMillis(deadline);
+
+        PendingIntent alarmIntent = notificationType.getIntent(context, this);
+
+        if (alarmIntent != null) {
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+            alarmManager.cancel(alarmIntent); // cancel alarm
+            alarmManager.set(AlarmManager.RTC_WAKEUP, millisTillDeadline, alarmIntent);
+
+            Toast.makeText(context, "Alarm has been set", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void cancel(Context context){
         // show short information and cancel the reminder
-        Toast.makeText(context, "Alarm has been canceled", Toast.LENGTH_SHORT).show();
-        notificationType.cancel(context);
+        PendingIntent alarmIntent = notificationType.getIntent(context, this);
+
+        if (alarmIntent != null) {
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+            alarmManager.cancel(alarmIntent); // cancel alarm
+
+            Toast.makeText(context, "Alarm has been canceled", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void setNotes(String notes) {
@@ -59,16 +78,23 @@ public class ScheduledTask extends Task {
         // corresponds to setStrategy() in strategy pattern
         switch (notificationType){
             case "Push":
-                Log.wtf("ScheduledTask", "Push created ID: " + super.getID());
-                this.notificationType = new PushNotification(deadline, super.getID() , super.getTitle(), notes);
+                this.notificationType = new PushNotification();
                 break;
             case "Alarm":
-                this.notificationType = new AlarmNotification(deadline, super.getID() , super.getTitle(), notes);
+                this.notificationType = new AlarmNotification();
                 break;
             case "None":
                 this.notificationType = new NoNotification();
                 break;
         }
+    }
+
+    private long getDeadlineMillis(LocalDateTime deadline){
+        // calculate milliseconds from date
+        LocalDateTime timeNow = LocalDateTime.now();
+
+        long millisTillDeadline = Duration.between(timeNow, deadline).toMillis();
+        return System.currentTimeMillis() + millisTillDeadline;
     }
 
     public String getNotes(){

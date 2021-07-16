@@ -35,7 +35,12 @@
         <activity android:name=".OverviewList"/>
 
         <receiver
-            android:name=".ReminderBroadcast"
+            android:name=".notifications.AlarmNotification"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".notifications.PushNotification"
             android:enabled="true"
             android:exported="true" />
     </application>

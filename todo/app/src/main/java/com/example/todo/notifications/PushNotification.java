@@ -1,76 +1,75 @@
 package com.example.todo.notifications;
 
-import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import android.graphics.Color;
+import android.os.Build;
 
-import com.example.todo.ReminderBroadcast;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import com.example.todo.R;
+import com.example.todo.tasks.ScheduledTask;
 
-import static android.content.Context.ALARM_SERVICE;
 
-public class PushNotification implements Notification {
+public class PushNotification extends BroadcastReceiver implements Notification {
     /**
      * Notification that triggers a Push Notification on the set Deadline,
      * When do_notify() is called the Alarm is set in the Android system.
      * When cancel() is called the Alarm is canceled.
      */
 
-    private LocalDateTime deadline;
-    private int taskId;
-    private String title;
-    private String notes;
-
-    public PushNotification(LocalDateTime deadline, int taskId , String title, String notes) {
-        this.deadline = deadline;
-        this.taskId = taskId;
-        this.title = title;
-        this.notes = notes;
+    public PushNotification() {
     }
 
+    @Override
     public String toString(){ return  "Push"; }
 
     @Override
-    public void do_notify(Context context){
-        // activates Alarm in Android Backend
-        PendingIntent pushIntent = getPushIntent(context, taskId, title, notes);
+    public PendingIntent getIntent(Context context, ScheduledTask task){
+        // gets the Intent from Android
+        Intent pushIntent = new Intent(context, PushNotification.class);
+        pushIntent.putExtra("title", task.getTitle());
+        pushIntent.putExtra("notes", task.getNotes());
+        pushIntent.putExtra("type", this.toString());
 
-        long millisTillDeadline = getDeadlineMillis(deadline);
-
-        AlarmManager alarmManager =(AlarmManager) context.getSystemService(ALARM_SERVICE);
-        alarmManager.cancel(pushIntent);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, millisTillDeadline, pushIntent);
+        return PendingIntent.getBroadcast(context, task.getID(), pushIntent, 0);
     }
 
     @Override
-    public void cancel(Context context) {
-        // cancels the Alarm in Android Backend
-        PendingIntent popUpIntent = getPushIntent(context, taskId, title, notes);
-
-        AlarmManager alarmManager =(AlarmManager) context.getSystemService(ALARM_SERVICE);
-        alarmManager.cancel(popUpIntent); // cancel alarm
+    public void onReceive(Context context, Intent intent) {
+        startPushNotification(context, intent);
     }
 
-    private PendingIntent getPushIntent(Context context, int taskID, String titleStr, String notesStr){
-        // gets the Intent from Android
-        Intent pushIntent = new Intent(context, ReminderBroadcast.class);
-        pushIntent.putExtra("title", titleStr);
-        pushIntent.putExtra("notes", notesStr);
-        pushIntent.putExtra("type", this.toString());
+    private void startPushNotification(Context context, Intent intent){
+        // setting up the PushNotification
+        String CHANNEL_ID="1";
+        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel mChannel;
 
-        return PendingIntent.getBroadcast(context, taskID, pushIntent, 0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mChannel = new NotificationChannel(CHANNEL_ID, "Alarm", NotificationManager.IMPORTANCE_HIGH);
+            mChannel.setLightColor(Color.GRAY);
+            mChannel.enableLights(true);
+            mChannel.setDescription("Alarm");
+
+            if (mNotificationManager != null) {
+                mNotificationManager.createNotificationChannel( mChannel );
+            }
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "1")
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle(intent.getStringExtra("title"))
+                .setContentText(intent.getStringExtra("notes"))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
+        notificationManager.notify(1, builder.build());
     }
-
-    private long getDeadlineMillis(LocalDateTime deadline){
-        // calculate milliseconds from date
-        LocalDateTime timeNow = LocalDateTime.now();
-
-        long millisTillDeadline = Duration.between(timeNow, deadline).toMillis();
-        return System.currentTimeMillis() + millisTillDeadline;
-    }
-
 }
