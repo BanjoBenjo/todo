@@ -45,6 +45,7 @@ public class ScheduledTask extends Task {
         // show short information and execute the notification
         long millisTillDeadline = getDeadlineMillis(deadline);
 
+        // here is the primitive operation function call of the strategy pattern
         PendingIntent alarmIntent = notificationType.getIntent(context);
 
         if (alarmIntent != null) {
@@ -57,9 +58,10 @@ public class ScheduledTask extends Task {
     }
 
     public void doCancel(Context context){
-        // show short information and cancel the reminder
+        // here is the primitive operation function call of the strategy pattern
         PendingIntent alarmIntent = notificationType.getIntent(context);
 
+        // show short information and cancel the reminder
         if (alarmIntent != null) {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
             alarmManager.cancel(alarmIntent); // cancel alarm

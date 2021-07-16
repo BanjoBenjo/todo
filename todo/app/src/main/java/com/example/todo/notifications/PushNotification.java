@@ -68,7 +68,7 @@ public class PushNotification extends BroadcastReceiver implements Notification 
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "1")
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.mipmap.ic_launcher_foreground2)
                 .setContentTitle(intent.getStringExtra("title"))
                 .setContentText(intent.getStringExtra("notes"))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
