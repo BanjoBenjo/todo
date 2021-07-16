@@ -2,6 +2,7 @@ package com.example.todo.tasks;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.todo.notifications.AlarmNotification;
 import com.example.todo.notifications.NoNotification;
@@ -38,11 +39,13 @@ public class ScheduledTask extends Task {
 
     public void remind(Context context){
         // show short information and execute the notification
+        Toast.makeText(context, "Alarm has been set", Toast.LENGTH_SHORT).show();
         notificationType.do_notify(context);
     }
 
     public void cancel(Context context){
         // show short information and cancel the reminder
+        Toast.makeText(context, "Alarm has been canceled", Toast.LENGTH_SHORT).show();
         notificationType.cancel(context);
     }
 
