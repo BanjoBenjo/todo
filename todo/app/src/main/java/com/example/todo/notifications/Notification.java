@@ -1,16 +1,12 @@
 package com.example.todo.notifications;
 
-
 import android.app.PendingIntent;
 import android.content.Context;
 
-import com.example.todo.tasks.ScheduledTask;
-
 public interface Notification {
     /**
-     * Interface for the Notification, every Child has to implement do_notify() and cancel().
+     * Interface for the Notification, Class implementing this Interface has to implement the method getIntent().
      */
 
-    String toString();
-    PendingIntent getIntent(Context context, ScheduledTask task);
+    PendingIntent getIntent(Context context);
 }

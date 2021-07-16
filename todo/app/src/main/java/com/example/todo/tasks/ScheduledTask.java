@@ -41,11 +41,11 @@ public class ScheduledTask extends Task {
         setNotificationType(notification);
     }
 
-    public void remind(Context context){
+    public void doRemind(Context context){
         // show short information and execute the notification
         long millisTillDeadline = getDeadlineMillis(deadline);
 
-        PendingIntent alarmIntent = notificationType.getIntent(context, this);
+        PendingIntent alarmIntent = notificationType.getIntent(context);
 
         if (alarmIntent != null) {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
@@ -56,9 +56,9 @@ public class ScheduledTask extends Task {
         }
     }
 
-    public void cancel(Context context){
+    public void doCancel(Context context){
         // show short information and cancel the reminder
-        PendingIntent alarmIntent = notificationType.getIntent(context, this);
+        PendingIntent alarmIntent = notificationType.getIntent(context);
 
         if (alarmIntent != null) {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
@@ -78,13 +78,13 @@ public class ScheduledTask extends Task {
         // corresponds to setStrategy() in strategy pattern
         switch (notificationType){
             case "Push":
-                this.notificationType = new PushNotification();
+                this.notificationType = new PushNotification(this);
                 break;
             case "Alarm":
-                this.notificationType = new AlarmNotification();
+                this.notificationType = new AlarmNotification(this);
                 break;
             case "None":
-                this.notificationType = new NoNotification();
+                this.notificationType = new NoNotification(this);
                 break;
         }
     }

@@ -23,19 +23,24 @@ public class PushNotification extends BroadcastReceiver implements Notification 
      * When cancel() is called the Alarm is canceled.
      */
 
+    private ScheduledTask task;
+
     public PushNotification() {
     }
 
-    @Override
-    public String toString(){ return  "Push"; }
+    public PushNotification(ScheduledTask task) {
+        this.task = task;
+    }
 
     @Override
-    public PendingIntent getIntent(Context context, ScheduledTask task){
+    public String toString(){ return "Push"; }
+
+    @Override
+    public PendingIntent getIntent(Context context){
         // gets the Intent from Android
         Intent pushIntent = new Intent(context, PushNotification.class);
         pushIntent.putExtra("title", task.getTitle());
         pushIntent.putExtra("notes", task.getNotes());
-        pushIntent.putExtra("type", this.toString());
 
         return PendingIntent.getBroadcast(context, task.getID(), pushIntent, 0);
     }

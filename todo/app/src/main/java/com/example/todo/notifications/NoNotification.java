@@ -7,15 +7,22 @@ import com.example.todo.tasks.ScheduledTask;
 
 public class NoNotification implements Notification {
     /**
-     * An Empty Notification for Tasks that only have a date set for informative causes.
+     * An Empty Notification for Tasks that only have date and time set for informative reasons.
      */
+
+    private ScheduledTask task;
 
     public NoNotification(){}
 
-    public String toString(){ return  "None"; }
+    public NoNotification(ScheduledTask task) {
+        this.task = task;
+    }
 
     @Override
-    public PendingIntent getIntent(Context context, ScheduledTask task){
+    public String toString(){ return "None"; }
+
+    @Override
+    public PendingIntent getIntent(Context context){
         return null;
     };
 }

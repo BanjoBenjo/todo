@@ -25,7 +25,7 @@ public class Complete implements Command {
         // cancel Notifications on Scheduled Tasks when completed
         Task task = databaseHelper.getTask(taskId);
         if (task.getType().equals("SCHEDULED")) {
-            ((ScheduledTask)task).cancel(context);
+            ((ScheduledTask)task).doCancel(context);
         }
         databaseHelper.completeTask(taskId);
     }
@@ -36,7 +36,7 @@ public class Complete implements Command {
         // activate Notifications on Scheduled Tasks when reopened
         Task task = databaseHelper.getTask(taskId);
         if (task.getType().equals("SCHEDULED")) {
-            ((ScheduledTask)task).remind(context);
+            ((ScheduledTask)task).doRemind(context);
         }
     }
 

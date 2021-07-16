@@ -109,7 +109,7 @@ public class EditScheduledTaskActivity extends FragmentActivity {
                     thisTask.setNotes(notesStr);
                     thisTask.setNotificationType(getNotificationType());
                     toastMessage("Task created");
-                    thisTask.remind(getApplicationContext());
+                    thisTask.doRemind(getApplicationContext());
                     addTask(thisTask);
 
                 }else {

@@ -25,7 +25,7 @@ public class Delete implements Command {
         // cancel notifications on Scheduled Tasks when completed
         Task task = databaseHelper.getTask(taskId);
         if(task.getType().equals("SCHEDULED")) {
-            ((ScheduledTask)task).cancel(context);
+            ((ScheduledTask)task).doCancel(context);
         }
         databaseHelper.deleteTask(taskId);
     }
@@ -36,7 +36,7 @@ public class Delete implements Command {
         // activate notifications on Scheduled Tasks when reloaded
         Task task = databaseHelper.getTask(taskId);
         if (task.getType().equals("SCHEDULED")) {
-            ((ScheduledTask)task).remind(context);
+            ((ScheduledTask)task).doRemind(context);
         }
     }
 
