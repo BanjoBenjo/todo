@@ -1,5 +1,7 @@
 package com.example.todo.command;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class Invoker {
@@ -28,6 +30,7 @@ public class Invoker {
         // execute the command and count up
         theCommand.execute();
         counter++;
+        printCommandList();
     }
 
     public void clickUndo() {
@@ -40,6 +43,7 @@ public class Invoker {
             counter--;
             commandList.get(counter).undo();
         }
+        printCommandList();
     }
 
     public void clickRedo() {
@@ -52,6 +56,7 @@ public class Invoker {
             commandList.get(counter).execute();
             counter++;
         }
+        printCommandList();
     }
 
     public boolean getUndoState() {
@@ -62,5 +67,23 @@ public class Invoker {
     public boolean getRedoState() {
         // this method is used to update the clickable state of the redo button
         return counter != commandList.size();
+    }
+
+    private void printCommandList() {
+        // show the current command list in log
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\t---------------------------------\n");
+        for (Command command : commandList) {
+            stringBuilder.append("\t\t");
+            stringBuilder.append(command.getType());
+            stringBuilder.append(" Task with ID ");
+            stringBuilder.append(command.getTaskId());
+            stringBuilder.append("\n");
+        }
+        stringBuilder.append("\n\t\tCounter:\t").append(Integer.valueOf(counter));
+        stringBuilder.append("\n");
+        stringBuilder.append("\t\tSize:\t\t").append(Integer.valueOf(commandList.size()));
+        stringBuilder.append("\n\t\t---------------------------------");
+        Log.i("Invoker", stringBuilder.toString());
     }
 }
