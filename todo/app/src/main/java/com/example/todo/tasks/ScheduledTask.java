@@ -50,7 +50,7 @@ public class ScheduledTask extends Task {
 
         if (alarmIntent != null) {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-            alarmManager.cancel(alarmIntent); // cancel alarm
+            alarmManager.cancel(alarmIntent);
             alarmManager.set(AlarmManager.RTC_WAKEUP, millisTillDeadline, alarmIntent);
 
             Toast.makeText(context, "Alarm has been set", Toast.LENGTH_SHORT).show();
@@ -64,7 +64,7 @@ public class ScheduledTask extends Task {
         // show short information and cancel the reminder
         if (alarmIntent != null) {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-            alarmManager.cancel(alarmIntent); // cancel alarm
+            alarmManager.cancel(alarmIntent);
 
             Toast.makeText(context, "Alarm has been canceled", Toast.LENGTH_SHORT).show();
         }
