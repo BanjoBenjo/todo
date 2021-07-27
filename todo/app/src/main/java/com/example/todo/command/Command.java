@@ -6,4 +6,8 @@ public interface Command {
      */
     void execute();
     void undo();
+
+    // helper methods
+    String getType();
+    int getTaskId();
 }
